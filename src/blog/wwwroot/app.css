@@ -1,5 +1,9 @@
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+@media (prefers-color-scheme: dark) {
+    html, body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: var(--bs-dark);
+        color: var(--bs-light);
+    }
 }
 
 a, .btn-link {
@@ -42,6 +46,32 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
+
+.home {
+    min-height: 120px;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+}
+
+.breadcrumb {
+    margin: 20px 30px -10px 30px; 
+    background-color: transparent;
+    padding-bottom: 3px;
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: #6C757D;
+}
+
+.root {
+    color: #16C60C;
+}
+
+.blue {
+    color: #3973F5;
+}
