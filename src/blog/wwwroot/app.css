@@ -1,6 +1,6 @@
 @media (prefers-color-scheme: dark) {
     html, body {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: 'Verdana', Verdana, Arial, sans-serif;
         background-color: var(--bs-dark);
         color: var(--bs-light);
     }
@@ -74,4 +74,42 @@ h1:focus {
 
 .blue {
     color: #3973F5;
+}
+
+.socials {
+    width: 100%;
+}
+
+.pagetitle {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.pagedivider {
+    width: 45%;
+    margin: auto;
+    margin-bottom: 30px;
+    margin-top: -10px;
+}
+
+.pagesocials {
+    width: 60%
+}
+
+.spacer {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.detailstable {
+    width: 100%;
+    text-align: left;
+}
+
+.detailsrow {
+    height: 50px;
+}
+
+.button {
+    height: 50px;
 }

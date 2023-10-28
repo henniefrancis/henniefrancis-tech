@@ -1,25 +1,52 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager _navManager;
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+@if (_navManager.Uri == _navManager.BaseUri)
+{
+    <PageTitle>Hennie Francis</PageTitle>
+
+    <div class="page">
+        <main>
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
     </div>
+}
+else
+{
+    PageName = _navManager.Uri.Replace(_navManager.BaseUri, "");
 
-    <main>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page"><span class="root">root@@hennie's-blog</span><span class="text-white">:</span><span class="blue">~</span><span class="text-white">$</span> </li>
-            </ol>
-        </nav>
+    <PageTitle>Hennie Francis's @Models.FixName(PageName)</PageTitle>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    <div class="page">
+        @if (!PageName.Contains("career"))
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        }
+
+        <main>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page"><span class="root">root@@hennie's-@PageName</span><span class="text-white">:</span><span class="blue">~</span><span class="text-white">$</span> </li>
+                </ol>
+            </nav>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
+}
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code{
+    public string PageName { get; set; }
+}
