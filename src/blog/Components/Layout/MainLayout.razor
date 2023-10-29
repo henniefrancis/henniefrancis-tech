@@ -20,10 +20,10 @@ else
     <PageTitle>Hennie Francis's @Models.FixName(PageName)</PageTitle>
 
     <div class="page">
-        @if (!PageName.Contains("career"))
+        @if (ShowMenu(PageName))
         {
             <div class="sidebar">
-                <NavMenu />
+                <NavMenu Page=@PageName />
             </div>
         }
 
@@ -49,4 +49,10 @@ else
 
 @code{
     public string PageName { get; set; }
+
+    public bool ShowMenu(string currentPage)
+    {
+        bool results = new[] { "currentrole", "biography", "specialawards" }.Any(c => currentPage.Contains(c));
+        return !results;
+    }
 }

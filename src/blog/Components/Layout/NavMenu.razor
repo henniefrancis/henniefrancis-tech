@@ -22,6 +22,148 @@
             </NavLink>
         </div>
 
+        @if (Page == "techstack")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Languages
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Front-end
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Back-end
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Web
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Desktop App
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Cloud
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> BaaS
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> IoT
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Big Data
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Analytics
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Web Hosting
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Source Control
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Testing &amp; QA
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> DevOps
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Monitoring
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Databases
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Security
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-list-nested" aria-hidden="true"></span> Software
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-list-nested" aria-hidden="true"></span> Other
+                </NavLink>
+            </div>
+
+            @*other*@
+
+            @*
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> DevOps &amp; Monitoring
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Databases
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Security
+                </NavLink>
+            </div>
+
+            *@
+        }
+
+        
+
         @* <div class="nav-item px-3">
         <NavLink class="nav-link" href="counter">
         <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Counter
@@ -35,3 +177,8 @@
         </div> *@
     </nav>
 </div>
+
+@code{
+    [Parameter]
+    public string Page { get; set; }
+}

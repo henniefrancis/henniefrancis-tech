@@ -16,6 +16,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+var AppName = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AppSettings")["APP_Name"];
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
