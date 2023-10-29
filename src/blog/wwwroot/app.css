@@ -76,6 +76,16 @@ h1:focus {
     color: #3973F5;
 }
 
+.badgediv {
+    margin-right: 25px;
+}
+
+.badges {
+    height: 175px;
+    width: 175px;
+    margin-right: 150px;
+}
+
 .socials {
     width: 100%;
 }
@@ -95,6 +105,11 @@ h1:focus {
     height: 800px;
 }
 
+.socials4 {
+    margin-top: -30px;
+    margin-left: -50px;
+    width: 130%;
+}
 .pagetitle {
     text-align: center;
     vertical-align: middle;

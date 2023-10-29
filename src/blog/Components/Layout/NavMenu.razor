@@ -161,6 +161,26 @@
 
             *@
         }
+        else if (Page == "certifications" || Page == "certifications/aws" || Page == "certifications/microsoft" || Page == "certifications/other")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/certifications/aws" Match="NavLinkMatch.All">
+                    <span class="bi bi-amazon" aria-hidden="true"></span> AWS
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/certifications/microsoft" Match="NavLinkMatch.All">
+                    <span class="bi bi-microsoft" aria-hidden="true"></span> Microsoft
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/certifications/other">
+                    <span class="bi bi-mortarboard" aria-hidden="true"></span> Other
+                </NavLink>
+            </div>
+        }
 
         
 
