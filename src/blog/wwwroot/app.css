@@ -80,10 +80,20 @@ h1:focus {
     margin-right: 25px;
 }
 
+.badgediv2 {
+    margin-right: 50px;
+}
+
 .badges {
     height: 175px;
     width: 175px;
     margin-right: 150px;
+}
+
+.badges2 {
+    height: 175px;
+    width: 175px;
+    margin-right: 200px;
 }
 
 .socials {

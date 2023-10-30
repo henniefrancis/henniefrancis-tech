@@ -52,7 +52,7 @@ else
 
     public bool ShowMenu(string currentPage)
     {
-        bool results = new[] { "currentrole", "biography", "specialawards" }.Any(c => currentPage.Contains(c));
+        bool results = new[] { "currentrole", "biography", "specialawards", "certifications/microsoft/cert/" }.Any(c => currentPage.Contains(c));
         return !results;
     }
 }
