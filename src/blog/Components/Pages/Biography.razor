@@ -1,0 +1,45 @@
+﻿@page "/biography"
+
+<div class="row">
+    <div class="col-auto">
+        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Back" class="button" title="Back" /></a>
+    </div>
+    <div class="col">
+        <div class="pagetitle">
+            <h1>Biography</h1>
+            <hr class="pagedivider" />
+        </div>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="row text-center">
+    <div class="col-3 divider">
+        <div class="spacer"></div>
+        <img alt="Hennie Francis" src="@Config.Portrait" class="portrait" title="Hennie Francis" />
+    </div>
+    <div class="col-8 blankdivider">
+        <table class="blogtable">
+            <tr class="blogrow">
+                <td>@(Config.Blog1)</td>
+            </tr>
+            <tr class="blogrow">
+                <td>@(Config.Blog2)</td>
+            </tr>
+            <tr class="blogrow">
+                <td>@(Config.Blog3)</td>
+            </tr>
+            <tr class="blogrow">
+                <td>@(Config.Blog4)</td>
+            </tr>
+            <tr class="blogrow">
+                <td>@(Config.Blog5)</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-2">
+    </div>
+</div>
+
+
