@@ -101,6 +101,16 @@ h1:focus {
     .socials3 {
         height: 800px;
     }
+
+    .blogrow {
+        height: 100px;
+    }
+
+    .divider {
+        border-right: solid;
+        border-width: 1px;
+        border-color: #575A5E;
+    }
 }
 
 /* Mobile View */
@@ -119,6 +129,10 @@ h1:focus {
 
     .socials3 {
         height: auto;
+    }
+
+    .blogrow {
+        height: 200px;
     }
 }
 
@@ -173,12 +187,6 @@ h1:focus {
     margin-bottom: 45px;
 }
 
-.divider {
-    border-right: solid;
-    border-width: 1px;
-    border-color: #575A5E;
-}
-
 .blankdivider {
     padding-left: 60px;
 }
@@ -192,11 +200,6 @@ h1:focus {
     width: 100%;
     text-align: left;
     padding-left: 200px;
-}
-
-
-.blogrow {
-    height: 100px;
 }
 
 .detailsrow {
