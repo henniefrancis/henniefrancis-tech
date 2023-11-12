@@ -17,7 +17,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -46,9 +46,9 @@ h1:focus {
     color: white;
 }
 
-.blazor-error-boundary::after {
-    content: "An error has occurred."
-}
+    .blazor-error-boundary::after {
+        content: "An error has occurred."
+    }
 
 .home {
     min-height: 120px;
@@ -60,7 +60,7 @@ h1:focus {
 }
 
 .breadcrumb {
-    margin: 20px 30px -10px 30px; 
+    margin: 20px 30px -10px 30px;
     background-color: transparent;
     padding-bottom: 3px;
     border-bottom: solid;
@@ -84,22 +84,63 @@ h1:focus {
     margin-right: 50px;
 }
 
-.badges {
-    height: 175px;
-    width: 175px;
-    margin-right: 150px;
+/* Web View */
+@media (min-width: 800px) {
+    .badges {
+        margin-right: 165px;
+        max-width: 172px;
+        height: auto;
+    }
+
+    .badges2 {
+        margin-right: 200px;
+        max-width: 172px;
+        height: auto;
+    }
+
+    .socials3 {
+        height: 800px;
+    }
+
+    .blogrow {
+        height: 100px;
+    }
+
+    .divider {
+        border-right: solid;
+        border-width: 1px;
+        border-color: #575A5E;
+    }
 }
 
-.badges2 {
-    height: 175px;
-    width: 175px;
-    margin-right: 200px;
+/* Mobile View */
+@media (max-width: 700px) {
+    .badges {
+        margin-right: 165px;
+        max-width: 250px;
+        height: auto;
+    }
+
+    .badges2 {
+        margin-right: 200px;
+        max-width: 250px;
+        height: auto;
+    }
+
+    .socials3 {
+        height: auto;
+    }
+
+    .blogrow {
+        height: 200px;
+    }
 }
 
 .socials0 {
     padding-top: 50px;
     width: 100%;
 }
+
 .socials {
     width: 100%;
 }
@@ -115,15 +156,12 @@ h1:focus {
     width: 130%;
 }
 
-.socials3 {
-    height: 800px;
-}
-
 .socials4 {
     margin-top: -30px;
     margin-left: -50px;
     width: 130%;
 }
+
 .pagetitle {
     text-align: center;
     vertical-align: middle;
@@ -149,12 +187,6 @@ h1:focus {
     margin-bottom: 45px;
 }
 
-.divider {
-    border-right: solid;
-    border-width: 1px;
-    border-color: #575A5E;
-}
-
 .blankdivider {
     padding-left: 60px;
 }
@@ -168,11 +200,6 @@ h1:focus {
     width: 100%;
     text-align: left;
     padding-left: 200px;
-}
-
-
-.blogrow {
-    height: 100px;
 }
 
 .detailsrow {
@@ -199,19 +226,19 @@ h1:focus {
     transition: all 0.7s ease-out;
 }
 
-.circle > img {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-}
+    .circle > img {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+    }
 
-.circle:hover {
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    transform: scale(1.1);
-}
+    .circle:hover {
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        -o-transform: scale(1.1);
+        transform: scale(1.1);
+    }
 
 .view {
     align-content: center;
