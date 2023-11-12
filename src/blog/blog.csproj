@@ -7,19 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\app.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\app.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\app.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configs\" />
+    <Compile Remove="Configs\**" />
+    <Content Remove="Configs\**" />
+    <EmbeddedResource Remove="Configs\**" />
+    <None Remove="Configs\**" />
   </ItemGroup>
 
 </Project>
