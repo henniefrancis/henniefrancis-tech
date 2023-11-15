@@ -1,191 +1,92 @@
 ﻿@page "/"
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
-                <div class="view">
-                    <div class="circle">
-                        <img src="@Config.Profile">
-                    </div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4">
+        <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
+            <div class="view">
+                <div class="circle">
+                    <img src="@Config.Profile">
                 </div>
-                <h1>Hennie Francis</h1>
-                <p>Senior Full Stack Engineer | Senior Tech Lead</p>
-                <p>2 x AWS Certified | 19x Microsoft Certified | Microsoft Certified Trainer | Microsoft Certified Specialist</p>
-                <hr />
-                <p>With more than @(DateTime.Now.Year - 2005) years’ experience in the industry. @Config.Section1</p>
-                <hr />
-                <p>@Config.Section2</p>
-                <hr />
-                <p>@Config.Section3</p>
             </div>
+            <h1>Hennie Francis</h1>
+            <p>Senior Full Stack Engineer | Senior Tech Lead</p>
+            <p>2 x AWS Certified | 19x Microsoft Certified | Microsoft Certified Trainer | Microsoft Certified Specialist</p>
+            <hr />
+            <p>With more than @(DateTime.Now.Year - 2005) years’ experience in the industry. @Config.Section1</p>
+            <hr />
+            <p>@Config.Section2</p>
+            <hr />
+            <p>@Config.Section3</p>
         </div>
-        <div class="col-sm-8">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <a href="/biography" title="Biography">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
-                                <img alt="biography" src="@Config.Biography" class="socials1" title="Biography" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="/currentrole" title="Current Role">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="currentrole" src="@Config.CurrentRole" class="socials1" title="Current Role" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="/blog" title="Blog">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
-                                <img alt="blog" src="@Config.Blog" class="socials1" title="Blog" />
-                            </div>
-                        </a>
-                    </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-8">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="/biography" title="Biography">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center">
+                            <img alt="biography" src="@Config.Biography" class="img-fluid" title="Biography" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/currentrole" title="Current Role">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="currentrole" src="@Config.CurrentRole" class="img-fluid" title="Current Role" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/blog" title="Blog">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="blog" src="@Config.Blog" class="img-fluid" title="Blog" />
+                        </div>
+                    </a>
+                </div>
 
-                    <div class="col-sm-4">
-                        <a href="https://www.linkedin.com/in/henniefrancis" target="_blank" title="LinkedIn">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="linkedin" src="@Config.LinkedIn" class="socials" title="LinkedIn" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="https://github.com/henniefrancis" target="_blank" title="GitHub">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="github" src="@Config.GitHub" class="socials" title="GitHub" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="https://sessionize.com/henniefrancis" target="_blank" title="Sessionize">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="sessionize" src="@Config.Sessionize" class="socials0" title="Sessionize" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="/techstack" title="Tech Stack">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="techstack" src="@Config.TechStack" class="socials" title="Tech Stack" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="/certifications" title="Certifications">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="certifications" src="@Config.Certifications" class="socials2" title="Certifications" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="/specialawards" title="Special Awards">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="specialawards" src="@Config.SpecialAwards" class="socials" title="Special Awards" />
-                            </div>
-                        </a>
-                    </div>
-
+                <div class="col-sm-4">
+                    <a href="https://www.linkedin.com/in/henniefrancis" target="_blank" title="LinkedIn">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="linkedin" src="@Config.LinkedIn" class="img-fluid" title="LinkedIn" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="https://github.com/henniefrancis" target="_blank" title="GitHub">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="github" src="@Config.GitHub" class="img-fluid" title="GitHub" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="https://sessionize.com/henniefrancis" target="_blank" title="Sessionize">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center">
+                            <img alt="sessionize" src="@Config.Sessionize" class="img-fluid" title="Sessionize" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/techstack" title="Tech Stack">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="techstack" src="@Config.TechStack" class="img-fluid" title="Tech Stack" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/certifications" title="Certifications">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="certifications" src="@Config.Certifications" class="img-fluid" title="Certifications" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/specialawards" title="Special Awards">
+                        <div class="mt-4 p-5 px-1 bg-gradient text-white rounded text-center ">
+                            <img alt="specialawards" src="@Config.SpecialAwards" class="img-fluid" title="Special Awards" />
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@*
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-4">
-            <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
-                <div class="view">
-                    <div class="circle">
-                        <img src="@Config.Profile">
-                    </div>
-                </div>
-                <h1>Hennie Francis</h1>
-                <p>Senior Full Stack Engineer | Senior Tech Lead</p>
-                <p>2 x AWS Certified | 19x Microsoft Certified | Microsoft Certified Trainer | Microsoft Certified Specialist</p>
-                <hr />
-                <p>With more than @(DateTime.Now.Year - 2005) years’ experience in the industry. @Config.Section1</p>
-                <hr />
-                <p>@Config.Section2</p>
-                <hr />
-                <p>@Config.Section3</p>
-            </div>
-        </div>
-        <div class="col-8">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-4">
-                        <a href="/biography" title="Biography">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
-                                <img alt="biography" src="@Config.Biography" class="socials1 img-fluid" title="Biography" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="/currentrole" title="Current Role">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="currentrole" src="@Config.CurrentRole" class="socials1 img-fluid" title="Current Role" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="/blog" title="Blog">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center">
-                                <img alt="blog" src="@Config.Blog" class="socials1 img-fluid" title="Blog" />
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-4">
-                        <a href="https://www.linkedin.com/in/henniefrancis" target="_blank" title="LinkedIn">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="linkedin" src="@Config.LinkedIn" class="socials img-fluid" title="LinkedIn" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="https://github.com/henniefrancis" target="_blank" title="GitHub">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="github" src="@Config.GitHub" class="socials img-fluid" title="GitHub" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="https://sessionize.com/henniefrancis" target="_blank" title="Sessionize">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="sessionize" src="@Config.Sessionize" class="socials0 img-fluid" title="Sessionize" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="/techstack" title="Tech Stack">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="techstack" src="@Config.TechStack" class="socials img-fluid" title="Tech Stack" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="/certifications" title="Certifications">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="certifications" src="@Config.Certifications" class="socials2 img-fluid" title="Certifications" />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="/specialawards" title="Special Awards">
-                            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                                <img alt="specialawards" src="@Config.SpecialAwards" class="socials img-fluid" title="Special Awards" />
-                            </div>
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-*@
