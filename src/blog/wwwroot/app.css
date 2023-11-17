@@ -134,32 +134,6 @@ h1:focus {
     }
 }
 
-.socials0 {
-    padding-top: 50px;
-    width: 100%;
-}
-
-.socials {
-    width: 100%;
-}
-
-.socials1 {
-    margin-left: -30px;
-    width: 120%;
-}
-
-.socials2 {
-    margin-top: -30px;
-    margin-left: -50px;
-    width: 130%;
-}
-
-.socials4 {
-    margin-top: -30px;
-    margin-left: -50px;
-    width: 130%;
-}
-
 .pagetitle {
     text-align: center;
     vertical-align: middle;
@@ -244,4 +218,20 @@ h1:focus {
 
 .blanklink {
     text-decoration: none;
+}
+
+.hometile {
+    overflow: hidden;
+    -webkit-transition: all 0.7s ease-out;
+    -moz-transition: all 0.7s ease-out;
+    -o-transition: all 0.7s ease-out;
+    transition: all 0.7s ease-out;
+}
+
+.hometile:hover {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
 }
