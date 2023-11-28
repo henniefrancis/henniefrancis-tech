@@ -1,9 +1,7 @@
-@media (prefers-color-scheme: dark) {
-    html, body {
-        font-family: 'Verdana', Verdana, Arial, sans-serif;
-        background-color: var(--bs-dark);
-        color: var(--bs-light);
-    }
+html, body {
+    font-family: 'Verdana', Verdana, Arial, sans-serif;
+    background: rgb(30, 30, 30);
+    color: rgb(200, 200, 200);
 }
 
 a, .btn-link {
@@ -99,7 +97,7 @@ h1:focus {
     }
 
     .socials3 {
-        height: 800px;
+        height: 750px;
     }
 
     .blogrow {
@@ -134,32 +132,6 @@ h1:focus {
     .blogrow {
         height: 200px;
     }
-}
-
-.socials0 {
-    padding-top: 50px;
-    width: 100%;
-}
-
-.socials {
-    width: 100%;
-}
-
-.socials1 {
-    margin-left: -30px;
-    width: 120%;
-}
-
-.socials2 {
-    margin-top: -30px;
-    margin-left: -50px;
-    width: 130%;
-}
-
-.socials4 {
-    margin-top: -30px;
-    margin-left: -50px;
-    width: 130%;
 }
 
 .pagetitle {
@@ -242,4 +214,24 @@ h1:focus {
 
 .view {
     align-content: center;
+}
+
+.blanklink {
+    text-decoration: none;
+}
+
+.hometile {
+    overflow: hidden;
+    -webkit-transition: all 0.7s ease-out;
+    -moz-transition: all 0.7s ease-out;
+    -o-transition: all 0.7s ease-out;
+    transition: all 0.7s ease-out;
+}
+
+.hometile:hover {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
 }

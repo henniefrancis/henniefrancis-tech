@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace blog
+namespace blog.Config
 {
-    public static class Config
+    public static class About
     {
-        private static string content = "content.json";
-
+        private static string content = "content/about.json";
         //About
         public static string Name { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("About")["Name"];
         public static string Title { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("About")["Title"];
+        public static string TagLine { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("About")["TagLine"];
         public static string Section1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("About")["Section1"];
         public static string Section2 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("About")["Section2"];
         public static string Section3 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("About")["Section3"];
@@ -19,6 +19,21 @@ namespace blog
         public static string Blog3 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Biography")["Section3"];
         public static string Blog4 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Biography")["Section4"];
         public static string Blog5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Biography")["Section5"];
+    }
+    public static class Links
+    {
+        private static string content = "content/links.json";
+
+        public static string Blog { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Blog"];
+        public static string GitHubProject { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("DotNetConference2023")["IaC"];
+    }
+}
+
+namespace blog.Config.Images
+{
+    public static class General
+    {
+        private static string content = "content/images.json";
 
         //Home
         public static string Profile { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Profile"];
@@ -36,76 +51,96 @@ namespace blog
         public static string Capitec { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Capitec"];
         public static string Back { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Back"];
 
+    }
+
+    public static class SpecialAwards
+    {
+        private static string content = "content/specialawards.json";
+
         //Special Awards
         public static string Rockstar { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("SpecialAwards")["Rockstar"];
 
+    }
+
+    public static class AWS
+    {
+        private static string content = "content/aws.json";
+
         //Certifications: AWS
-        public static string CloudPractitioner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Foundational")["CloudPractitioner"];
-        public static string SolutionsArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Associate")["SolutionsArchitect"];
-        public static string CloudQuestCloudPractitioner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:CloudQuest")["CloudPractitioner"];
-        public static string CloudQuestSolutionsArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:CloudQuest")["SolutionsArchitect"];
-        public static string EducateGettingStartedWithCompute { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Educate")["GettingStartedWithCompute"];
-        public static string EducateGettingStartedWithNetworking { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Educate")["GettingStartedWithNetworking"];
-        public static string EducateGettingStartedWithDatabases { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Educate")["GettingStartedWithDatabases"];
-        public static string EducateGettingStartedWithStorage { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Educate")["GettingStartedWithStorage"];
-        public static string EducateGettingStartedWithCloudOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:AWS:Educate")["GettingStartedWithCloudOps"];
+        public static string CloudPractitioner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Foundational")["CloudPractitioner"];
+        public static string SolutionsArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Associate")["SolutionsArchitect"];
+        public static string CloudQuestCloudPractitioner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["CloudPractitioner"];
+        public static string CloudQuestSolutionsArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["SolutionsArchitect"];
+        public static string EducateGettingStartedWithCompute { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithCompute"];
+        public static string EducateGettingStartedWithNetworking { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithNetworking"];
+        public static string EducateGettingStartedWithDatabases { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithDatabases"];
+        public static string EducateGettingStartedWithStorage { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithStorage"];
+        public static string EducateGettingStartedWithCloudOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithCloudOps"];
+
+    }
+
+    public static class Microsoft
+    {
+        private static string other = "content/other.json";
+        //Certification: Other
+        public static string MCT2018_2019 { get; set; } = new ConfigurationBuilder().AddJsonFile(other).Build().GetSection("Certifications:Microsoft:MCT")["2018-2019"];
+
+        private static string microsoft = "content/microsoft.json";
+        private static string badges = "content/badges.json";
 
         //Certification: Microsoft
-        public static string Microsoft_badge_Power_Platform_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["power-platform-fundamentals"];
-        public static string Microsoft_cert_Power_Platform_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Certificates:Data")["power-platform-fundamentals"];
+        public static string Microsoft_badge_Power_Platform_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["power-platform-fundamentals"];
+        public static string Microsoft_cert_Power_Platform_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:Data")["power-platform-fundamentals"];
 
-        public static string Microsoft_badge_Azure_Data_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["azure-data-fundamentals"];
-        public static string Microsoft_cert_Azure_Data_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Certificates:Data")["azure-data-fundamentals"];
+        public static string Microsoft_badge_Azure_Data_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["azure-data-fundamentals"];
+        public static string Microsoft_cert_Azure_Data_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:Data")["azure-data-fundamentals"];
 
-        public static string Microsoft_badge_Azure_AI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["azure-ai-fundamentals"];
-        public static string Microsoft_cert_Azure_AI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Certificates:Data")["azure-ai-fundamentals"];
+        public static string Microsoft_badge_Azure_AI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["azure-ai-fundamentals"];
+        public static string Microsoft_cert_Azure_AI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:Data")["azure-ai-fundamentals"];
 
-        public static string Microsoft_badge_Azure_SCI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["azure-sci-fundamentals"];
-        public static string Microsoft_cert_Azure_SCI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Certificates:Data")["azure-sci-fundamentals"];
+        public static string Microsoft_badge_Azure_SCI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["azure-sci-fundamentals"];
+        public static string Microsoft_cert_Azure_SCI_Fundamentals { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:Data")["azure-sci-fundamentals"];
 
-        public static string Microsoft_badge_MCPD_Web { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCPD_Web"];
-        public static string Microsoft_cert_MCPD_Web { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCPD_Web"];
+        public static string Microsoft_badge_MCPD_Web { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCPD_Web"];
+        public static string Microsoft_cert_MCPD_Web { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCPD_Web"];
 
-        public static string Microsoft_badge_dotnet_35_BID { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_BID"];
-        public static string Microsoft_cert_dotnet_35_BID { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_BID"];
+        public static string Microsoft_badge_dotnet_35_BID { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_BID"];
+        public static string Microsoft_cert_dotnet_35_BID { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_BID"];
 
-        public static string Microsoft_badge_MCTS_SQL_BI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCTS_SQL_BI"];
-        public static string Microsoft_cert_MCTS_SQL_BI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCTS_SQL_BI"];
+        public static string Microsoft_badge_MCTS_SQL_BI { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCTS_SQL_BI"];
+        public static string Microsoft_cert_MCTS_SQL_BI { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCTS_SQL_BI"];
 
-        public static string Microsoft_badge_MCTS_SPD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCTS_SPD"];
-        public static string Microsoft_cert_MCTS_SPD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCTS_SPD"];
+        public static string Microsoft_badge_MCTS_SPD { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCTS_SPD"];
+        public static string Microsoft_cert_MCTS_SPD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCTS_SPD"];
 
-        public static string Microsoft_badge_MCTS_DA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCTS_DA"];
-        public static string Microsoft_cert_MCTS_DA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCTS_DA"];
+        public static string Microsoft_badge_MCTS_DA { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCTS_DA"];
+        public static string Microsoft_cert_MCTS_DA { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCTS_DA"];
 
-        public static string Microsoft_badge_dotnet_35_DBD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_DBD"];
-        public static string Microsoft_cert_dotnet_35_DBD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_DBD"];
+        public static string Microsoft_badge_dotnet_35_DBD { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_DBD"];
+        public static string Microsoft_cert_dotnet_35_DBD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_DBD"];
 
-        public static string Microsoft_badge_dotnet_35_WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_WCF"];
-        public static string Microsoft_cert_dotnet_35_WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_WCF"];
+        public static string Microsoft_badge_dotnet_35_WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_WCF"];
+        public static string Microsoft_cert_dotnet_35_WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_WCF"];
 
-        public static string Microsoft_badge_dotnet_35_EAD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_EAD"];
-        public static string Microsoft_cert_dotnet_35_EAD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_EAD"];
+        public static string Microsoft_badge_dotnet_35_EAD { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_EAD"];
+        public static string Microsoft_cert_dotnet_35_EAD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_EAD"];
 
-        public static string Microsoft_badge_dotnet_35_ADO { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_ADO"];
-        public static string Microsoft_cert_dotnet_35_ADO { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_ADO"];
+        public static string Microsoft_badge_dotnet_35_ADO { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_ADO"];
+        public static string Microsoft_cert_dotnet_35_ADO { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_ADO"];
 
-        public static string Microsoft_badge_dotnet_35_ASP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_ASP"];
-        public static string Microsoft_cert_dotnet_35_ASP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_ASP"];
+        public static string Microsoft_badge_dotnet_35_ASP { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_ASP"];
+        public static string Microsoft_cert_dotnet_35_ASP { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_ASP"];
 
-        public static string Microsoft_badge_dotnet_35_WFA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["dotnet_3.5_WFA"];
-        public static string Microsoft_cert_dotnet_35_WFA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["dotnet_3.5_WFA"];
+        public static string Microsoft_badge_dotnet_35_WFA { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["dotnet_3.5_WFA"];
+        public static string Microsoft_cert_dotnet_35_WFA { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["dotnet_3.5_WFA"];
 
-        public static string Microsoft_badge_MCTS_WA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCTS_WA"];
-        public static string Microsoft_cert_MCTS_WA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCTS_WA"];
+        public static string Microsoft_badge_MCTS_WA { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCTS_WA"];
+        public static string Microsoft_cert_MCTS_WA { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCTS_WA"];
 
-        public static string Microsoft_badge_MCTS_SCA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCTS_SCA"];
-        public static string Microsoft_cert_MCTS_SCA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCTS_SCA"];
+        public static string Microsoft_badge_MCTS_SCA { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCTS_SCA"];
+        public static string Microsoft_cert_MCTS_SCA { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCTS_SCA"];
 
-        public static string Microsoft_badge_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:Badges")["MCPD"];
-        public static string Microsoft_cert_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Microsoft:CertificateID")["MCPD"];
-
-        //Certification: Other
-        public static string MCT2018_2019 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Other:MCT")["2018-2019"];
+        public static string Microsoft_badge_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCPD"];
+        public static string Microsoft_cert_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCPD"];
     }
 }
