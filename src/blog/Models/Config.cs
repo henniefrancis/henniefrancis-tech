@@ -221,6 +221,16 @@ namespace blog.Config.Tech.Links
         public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["HTML5BoilerPlate"];
         public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Angular"];
     }
+
+    public static class BackEnd
+    {
+        private static string content = "content/tech/backend.json";
+
+        public static string WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["WCF"];
+        public static string DNC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["DNC"];
+        public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Microservices"];
+        public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Swagger"];
+    }
 }
 
 namespace blog.Config.Tech.Rating
@@ -252,6 +262,16 @@ namespace blog.Config.Tech.Rating
         public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["HTML5BoilerPlate"];
         public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Angular"];
     }
+
+    public static class BackEnd
+    {
+        private static string content = "content/tech/backend.json";
+
+        public static string WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["WCF"];
+        public static string DNC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["DNC"];
+        public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Microservices"];
+        public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Swagger"];
+    }
 }
 
 namespace blog.Config.Images.TechStack
@@ -281,5 +301,15 @@ namespace blog.Config.Images.TechStack
         public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["HTML5"];
         public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["HTML5BoilerPlate"];
         public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Angular"];
+    }
+
+    public static class BackEnd
+    {
+        private static string content = "content/tech/backend.json";
+
+        public static string WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["WCF"];
+        public static string DNC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["DNC"];
+        public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Microservices"];
+        public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Swagger"];
     }
 }
