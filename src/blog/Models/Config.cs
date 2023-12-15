@@ -25,6 +25,25 @@ namespace blog.Config
         private static string content = "content/links.json";
 
         public static string Blog { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Blog"];
+        public static string Sessionize { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Sessionize"];
+        public static string Facebook { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Facebook"];
+        public static string Twitter { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Twitter"];
+        public static string Instagram { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Instagram"];
+        public static string YouTube { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["YouTube"];
+        public static string Twitch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Twitch"];
+        public static string LinkedIn { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["LinkedIn"];
+        public static string TikTok { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["TikTok"];
+        public static string Discord { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Discord"];
+        public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GitHub"];
+        public static string StackOverflow { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["StackOverflow"];
+        public static string DEV { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["DEV"];
+        public static string Medium { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Medium"];
+        public static string BMAC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["BMAC"];
+        public static string Kofi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Kofi"];
+        public static string dotcoreSolutions { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["dotcoreSolutions"];
+        public static string GoogleDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GoogleDev"];
+        public static string Credly { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Credly"];
+
         public static string GitHubProject { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("DotNetConference2023")["IaC"];
     }
 }
@@ -53,6 +72,32 @@ namespace blog.Config.Images
 
     }
 
+    public static class Socials
+    {
+        private static string content = "content/socials.json";
+
+        //Socials
+        public static string Sessionize { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Sessionize"];
+        public static string Facebook { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Facebook"];
+        public static string Twitter { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Twitter"];
+        public static string Instagram { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Instagram"];
+        public static string YouTube { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["YouTube"];
+        public static string Twitch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Twitch"];
+        public static string LinkedIn { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["LinkedIn"];
+        public static string TikTok { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["TikTok"];
+        public static string Discord { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Discord"];
+        public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GitHub"];
+        public static string StackOverflow { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["StackOverflow"];
+        public static string DEV { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["DEV"];
+        public static string Medium { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Medium"];
+        public static string BMAC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["BMAC"];
+        public static string Kofi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Kofi"];
+        public static string dotcoreSolutions { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["dotcoreSolutions"];
+        public static string GoogleDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GoogleDev"];
+        public static string Credly { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Credly"];
+
+    }
+
     public static class SpecialAwards
     {
         private static string content = "content/specialawards.json";
@@ -76,6 +121,9 @@ namespace blog.Config.Images
         public static string EducateGettingStartedWithDatabases { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithDatabases"];
         public static string EducateGettingStartedWithStorage { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithStorage"];
         public static string EducateGettingStartedWithCloudOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithCloudOps"];
+        public static string EducateGettingStartedWithServerless { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithServerless"];
+        public static string EducateGettingStartedWithSecurity { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithSecurity"];
+
 
     }
 
@@ -142,5 +190,56 @@ namespace blog.Config.Images
 
         public static string Microsoft_badge_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCPD"];
         public static string Microsoft_cert_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCPD"];
+    }
+}
+
+namespace blog.Config.Tech.Links
+{
+    public static class Languages
+    {
+        private static string content = "content/tech/languages.json";
+
+        public static string CSharp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["C#"];
+        public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JAVA"];
+        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JS"];
+        public static string MSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MSSQL"];
+        public static string TSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TSQL"];
+        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["HTML5"];
+        public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Python"];
+        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Angular"];
+    }
+}
+
+namespace blog.Config.Tech.Rating
+{
+    public static class Languages
+    {
+        private static string content = "content/tech/languages.json";
+
+        public static string CSharp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["C#"];
+        public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JAVA"];
+        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JS"];
+        public static string MSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MSSQL"];
+        public static string TSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TSQL"];
+        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["HTML5"];
+        public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Python"];
+        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Angular"];
+    }
+}
+
+namespace blog.Config.Images.TechStack
+{
+    public static class Languages
+    {
+        private static string content = "content/tech/languages.json";
+
+        public static string CSharp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["C#"];
+        public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JAVA"];
+        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JS"];
+        public static string MSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MSSQL"];
+        public static string TSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TSQL"];
+        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["HTML5"];
+        public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Python"];
+        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Angular"];
     }
 }
