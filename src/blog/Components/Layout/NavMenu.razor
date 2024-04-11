@@ -5,7 +5,7 @@
                 <a class="navbar-brand" href=""><img alt="logo" src="@Config.Images.General.Logo" class="logo" /></a>
             </td>
             <td>
-                <a class="navbar-brand" href="">Hennie's @Models.CleanName(Page)</a>
+                <a class="navbar-brand" href="">Hennie's @Models.CleanName(Page, "nav")</a>
                 <p style="font-size: x-small; text-align:center;">Code, Tech and other things</p>
             </td>
         </tr>
@@ -21,8 +21,20 @@
                 <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-
-        @if (Page == "techstack" || Page.StartsWith("techstack/"))
+        @if (Page == "poe" || Page.StartsWith("poe/"))
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/poe/experience">
+                    Experience
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/poe/projects">
+                    Projects
+                </NavLink>
+            </div>
+        }
+        else if (Page == "techstack" || Page.StartsWith("techstack/"))
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="/techstack/languages">

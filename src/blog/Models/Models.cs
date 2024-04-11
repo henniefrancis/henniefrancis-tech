@@ -2,18 +2,26 @@
 {
     public static class Models
     {
-        public static string FixName(this string input) =>
-        input switch
-        {
-            null => throw new ArgumentNullException(nameof(input)),
-            "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
-            _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
-        };
-
-        public static string CleanName(string input)
+        public static string FixName(this string input)
         {
             string results = "";
 
+            if (input == "poe")
+            {
+                input = "PoE";
+            }
+
+            results = string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1));
+            
+            return results;
+        }
+        
+
+        public static string CleanName(string input, string src)
+        {
+            string results = "";
+
+            
             if (input.Contains('/'))
             {
                 int index = input.IndexOf('/');
@@ -25,12 +33,29 @@
                 results = input;
             }
 
+            if (results == "poe")
+            {
+                if (src == "brdc")
+                {
+                    results = "portfolio-of-evidence";
+                }
+                else
+                {
+                    results = "PoE";
+                }
+            }
+
             return FixName(results);
         }
 
         public static string SubNames(string input)
         {
             string results = "";
+
+            if (input == "poe")
+            {
+                input = "portfolio-of-evidance";
+            }
 
             if (input.Contains('/'))
             {
