@@ -1,14 +1,11 @@
-﻿@page "/certifications"
+﻿@inherits CertificationsModel
+@page "/certifications"
 
 <h1>Certifications</h1>
 
 <div class="container-fluid">
     <div class="row" style="margin:0">
-        <div class="col-lg-1 badgediv">
-            <a href="https://www.credly.com/badges/00cf5451-6ea7-4774-afb2-d0342929a174" title="AWS Cloud Quest: Solutions Architect" target="_blank">
-                <img alt="AWS Cloud Quest: Solutions Architect" src="@Config.Images.AWS.CloudQuestSolutionsArchitect" class="badges img-fluid" title="AWS Cloud Quest: Solutions Architect" />
-            </a>
-        </div>
+
         <div class="col-lg-1 badgediv">
             <a href="https://www.credly.com/badges/d09ec7ed-9a44-42ce-92fb-b2e2787910f0" title="AWS Certified Solutions Architect – Associate" target="_blank">
                 <img alt="AWS Certified Solutions Architect – Associate" src="@Config.Images.AWS.SolutionsArchitect" class="badges img-fluid" title="AWS Certified Solutions Architect – Associate" />
@@ -19,12 +16,21 @@
                 <img alt="AWS Certified Cloud Practitioner" src="@Config.Images.AWS.CloudPractitioner" class="badges img-fluid" title="AWS Certified Cloud Practitioner" />
             </a>
         </div>
+
+    </div>
+    <div class="row" style="margin:0">
+        <div class="col-lg-1 badgediv">
+            <a href="https://www.credly.com/badges/00cf5451-6ea7-4774-afb2-d0342929a174" title="AWS Cloud Quest: Solutions Architect" target="_blank">
+                <img alt="AWS Cloud Quest: Solutions Architect" src="@Config.Images.AWS.CloudQuestSolutionsArchitect" class="badges img-fluid" title="AWS Cloud Quest: Solutions Architect" />
+            </a>
+        </div>
         <div class="col-lg-1 badgediv">
             <a href="https://www.credly.com/badges/1cf7622c-7524-42ed-ae20-5a2d17e37561" title="AWS Cloud Quest: Cloud Practitioner" target="_blank">
                 <img alt="AWS Cloud Quest: Cloud Practitioner" src="@Config.Images.AWS.CloudQuestCloudPractitioner" class="badges img-fluid" title="AWS Cloud Quest: Cloud Practitioner" />
             </a>
         </div>
     </div>
+
     <div class="row" style="margin:0">
         <div class="col-lg-1 badgediv">
             <a href="https://www.credly.com/badges/aef519ea-3992-4d2b-aa16-5210ec002bee" title="AWS Educate Getting Started with Security" target="_blank">
@@ -62,10 +68,17 @@
             </a>
         </div>
     </div>
+
+    <div class="row" style="margin:0">
+        <div class="col-lg-1 badgediv">
+            <a href="https://www.credly.com/badges/2a579f6d-b209-437c-9460-db0ae9e500c4" title="AWS Well-Architected Proficient" target="_blank">
+                <img alt="AWS Well-Architected Proficient" src="@Config.Images.AWS.ProficientWellArchitected" class="badges img-fluid" title="AWS Well-Architected Proficient" />
+            </a>
+        </div>
+    </div>
 </div>
 
 <hr />
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1 badgediv2"><a href="@Config.Images.Microsoft.Microsoft_cert_Power_Platform_Fundamentals" title="Microsoft Certified: Power Platform Fundamentals" target="_blank"><img src="@Config.Images.Microsoft.Microsoft_badge_Power_Platform_Fundamentals" class="badges2 img-fluid" /></a></div>
@@ -90,10 +103,19 @@
         <div class="col-lg-1 badgediv2"><a href="/certifications/microsoft/cert/@Config.Images.Microsoft.Microsoft_cert_MCTS_WA" title="Microsoft® Certified Technology Specialist: .NET Framework 4, Web Applications" target="_blank"><img src="@Config.Images.Microsoft.Microsoft_badge_MCTS_WA" class="badges2 img-fluid" /></a></div>
         <div class="col-lg-1 badgediv2"><a href="/certifications/microsoft/cert/@Config.Images.Microsoft.Microsoft_cert_MCTS_SCA" title="Microsoft® Certified Technology Specialist: .NET Framework 4, Service Communication Applications" target="_blank"><img src="@Config.Images.Microsoft.Microsoft_badge_MCTS_SCA" class="badges2 img-fluid" /></a></div>
         <div class="col-lg-1 badgediv2"><a href="/certifications/microsoft/cert/@Config.Images.Microsoft.Microsoft_cert_MCPD" title="Microsoft Certified Professional" target="_blank"><img src="@Config.Images.Microsoft.Microsoft_badge_MCPD" class="badges2 img-fluid" /></a></div>
-        <div class="col-lg-1 badgediv">
-            <a href="https://www.credly.com/badges/dcbd5185-33ae-4267-b319-740705afdbeb" title="Microsoft Certified Trainer 2018-2019" target="_blank">
-                <img alt="Microsoft Certified Trainer 2018-2019" src="@Config.Images.Microsoft.MCT2018_2019" class="badges img-fluid" title="Microsoft Certified Trainer 2018-2019" />
-            </a>
-        </div>
+    </div>
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-lg-1 badgediv2">
+        <a href="https://www.credly.com/badges/dcbd5185-33ae-4267-b319-740705afdbeb" title="Microsoft Certified Trainer 2018-2019" target="_blank">
+            <img alt="Microsoft Certified Trainer 2018-2019" src="@Config.Images.Microsoft.MCT2018_2019" class="badges img-fluid" title="Microsoft Certified Trainer 2018-2019" />
+        </a>
+    </div>
+    <div class="col-lg-1 badgediv2">
+        <a href="/certifications/microsoft/cert/@Config.Images.Microsoft.Microsoft_cert_MCT_2022_2023" title="Microsoft Certified Trainer 2022-2023" target="_blank">
+            <img alt="Microsoft Certified Trainer 2022-2023" src="@Config.Images.Microsoft.MCT2022_2023" class="badges img-fluid" title="Microsoft Certified Trainer 2022-2023" />
+        </a>
     </div>
 </div>

@@ -1,5 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 
+namespace blog.Secrets
+{
+    public static class AWS
+    {
+        public static string aws_username { get; } = "AKIA2K7ZGXNAU5EYC3YJ";
+        public static string aws_password { get; } = "T7YIdH4r4qx69+CN9RROX//2dbagsPQM7enwrlSi";
+    }
+
+}
+
 namespace blog.Config
 {
     public static class About
@@ -124,7 +134,7 @@ namespace blog.Config.Images
         public static string EducateGettingStartedWithServerless { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithServerless"];
         public static string EducateGettingStartedWithSecurity { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithSecurity"];
 
-
+        public static string ProficientWellArchitected { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Proficient")["Well-Architected"];
     }
 
     public static class Microsoft
@@ -132,6 +142,10 @@ namespace blog.Config.Images
         private static string other = "content/other.json";
         //Certification: Other
         public static string MCT2018_2019 { get; set; } = new ConfigurationBuilder().AddJsonFile(other).Build().GetSection("Certifications:Microsoft:MCT")["2018-2019"];
+        public static string MCT2022_2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(other).Build().GetSection("Certifications:Microsoft:MCT")["2022-2023"];
+
+        //public static string MCT2022_2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(other).Build().GetSection("Certifications:Microsoft:MCT")["2022-2023"];
+        //public static string Microsoft_cert_MCT2022_2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:Data")["MCT_2022-2023"];
 
         private static string microsoft = "content/microsoft.json";
         private static string badges = "content/badges.json";
@@ -190,6 +204,8 @@ namespace blog.Config.Images
 
         public static string Microsoft_badge_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(badges).Build().GetSection("Badges:Microsoft")["MCPD"];
         public static string Microsoft_cert_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCPD"];
+
+        public static string Microsoft_cert_MCT_2022_2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCT_2022-2023"];
     }
 }
 
