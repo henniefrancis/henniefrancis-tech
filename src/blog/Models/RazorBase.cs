@@ -16,7 +16,7 @@ namespace blog
         {
             try
             {
-                if (hostEnvironment.IsDevelopment())
+                if (!hostEnvironment.IsDevelopment())
                 {
                     string remoteIP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
                     string userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();

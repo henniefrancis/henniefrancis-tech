@@ -124,8 +124,19 @@ namespace blog.Config.Images
         //Certifications: AWS
         public static string CloudPractitioner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Foundational")["CloudPractitioner"];
         public static string SolutionsArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Associate")["SolutionsArchitect"];
+
         public static string CloudQuestCloudPractitioner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["CloudPractitioner"];
         public static string CloudQuestSolutionsArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["SolutionsArchitect"];
+        public static string CloudQuestSecurity { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["Security"];
+        public static string CloudQuestNetworking { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["Networking"];
+        public static string CloudQuestServerless { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["Serverless"];
+        public static string CloudQuestDataAnalytics { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["DataAnalytics"];
+        public static string CloudQuestMachineLearning { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:CloudQuest")["MachineLearning"];
+        public static string IndustryQuestHealthcare { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:IndustryQuest")["Healthcare"];
+        public static string IndustryQuestManufacturingAuto { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:IndustryQuest")["ManufacturingAuto"];
+        public static string IndustryQuestFinancialServices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:IndustryQuest")["FinancialServices"];
+
+
         public static string EducateGettingStartedWithCompute { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithCompute"];
         public static string EducateGettingStartedWithServerless { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithServerless"];
         public static string EducateGettingStartedWithStorage { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithStorage"];
@@ -152,6 +163,7 @@ namespace blog.Config.Images
         public static string KnowledgeStorageCore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Knowledge")["StorageCore"];
         public static string KnowledgeEventsAndFlows { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Knowledge")["EventsAndFlows"];
         public static string KnowledgeGamesCloudDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Knowledge")["GamesCloudDev"];
+        public static string MediaEntertainment { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Knowledge")["MediaEntertainment"];
         public static string KnowledgeDataProtection { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Knowledge")["DataProtection"];
 
         public static string DotNetAppRunner { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:DotNet")["AppRunner"];
