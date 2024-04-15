@@ -289,6 +289,10 @@ namespace blog.Config.Tech.Links
         public static string ASPNET { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASP.NET"];
         public static string ASPNETMVC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASP.NET-MVC"];
         public static string Blazor { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Blazor"];
+        public static string WPF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["WPF"];
+        public static string WindowsForms { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["WindowsForms"];
+        public static string MAUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MAUI"];
+        public static string Xamarin { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Xamarin"];
     }
 
     public static class BackEnd
@@ -299,6 +303,15 @@ namespace blog.Config.Tech.Links
         public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Swagger"];
+    }
+
+    public static class Cloud
+    {
+        private static string content = "content/tech/cloud.json";
+
+        public static string AWS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AWS"];
+        public static string Azure { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Azure"];
+        public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Google"];
     }
 }
 
@@ -342,6 +355,10 @@ namespace blog.Config.Tech.Rating
         public static string ASPNET { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["ASP.NET"];
         public static string ASPNETMVC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["ASP.NET-MVC"];
         public static string Blazor { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Blazor"];
+        public static string WPF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["WPF"];
+        public static string WindowsForms { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["WindowsForms"];
+        public static string MAUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["MAUI"];
+        public static string Xamarin { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Xamarin"];
     }
 
     public static class BackEnd
@@ -352,6 +369,15 @@ namespace blog.Config.Tech.Rating
         public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Swagger"];
+    }
+
+    public static class Cloud
+    {
+        private static string content = "content/tech/cloud.json";
+
+        public static string AWS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AWS"];
+        public static string Azure { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Azure"];
+        public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Google"];
     }
 }
 
@@ -395,6 +421,10 @@ namespace blog.Config.Images.TechStack
         public static string ASPNET { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASP.NET"];
         public static string ASPNETMVC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASP.NET-MVC"];
         public static string Blazor { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Blazor"];
+        public static string WPF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["WPF"];
+        public static string WindowsForms { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["WindowsForms"];
+        public static string MAUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MAUI"];
+        public static string Xamarin { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Xamarin"];
     }
 
     public static class BackEnd
@@ -405,5 +435,14 @@ namespace blog.Config.Images.TechStack
         public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Swagger"];
+    }
+
+    public static class Cloud
+    {
+        private static string content = "content/tech/cloud.json";
+
+        public static string AWS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AWS"];
+        public static string Azure { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Azure"];
+        public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Google"];
     }
 }
