@@ -313,6 +313,15 @@ namespace blog.Config.Tech.Links
         public static string Azure { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Azure"];
         public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Google"];
     }
+
+    public static class IoT
+    {
+        private static string content = "content/tech/iot.json";
+
+        public static string Arduino { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Arduino"];
+        public static string MQTT { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MQTT"];
+        public static string RaspberryPi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["RaspberryPi"];
+    }
 }
 
 namespace blog.Config.Tech.Rating
@@ -379,6 +388,15 @@ namespace blog.Config.Tech.Rating
         public static string Azure { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Azure"];
         public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Google"];
     }
+
+    public static class IoT
+    {
+        private static string content = "content/tech/iot.json";
+
+        public static string Arduino { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Arduino"];
+        public static string MQTT { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MQTT"];
+        public static string RaspberryPi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["RaspberryPi"];
+    }
 }
 
 namespace blog.Config.Images.TechStack
@@ -444,5 +462,14 @@ namespace blog.Config.Images.TechStack
         public static string AWS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AWS"];
         public static string Azure { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Azure"];
         public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Google"];
+    }
+
+    public static class IoT
+    {
+        private static string content = "content/tech/iot.json";
+
+        public static string Arduino { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Arduino"];
+        public static string MQTT { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MQTT"];
+        public static string RaspberryPi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["RaspberryPi"];
     }
 }
