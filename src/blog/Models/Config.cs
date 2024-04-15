@@ -257,25 +257,38 @@ namespace blog.Config.Tech.Links
 
         public static string CSharp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["C#"];
         public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JAVA"];
-        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JS"];
-        public static string MSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MSSQL"];
-        public static string TSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TSQL"];
-        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["HTML5"];
+        public static string Javascript { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Javascript"];
         public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Python"];
         public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Angular"];
+        public static string React { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["React"];
+    }
+
+    public static class Frameworks
+    {
+        private static string content = "content/tech/frameworks.json";
+
+        public static string dotnet { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["dotnet"];
+        public static string dotnetcore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["dotnetcore"];
+        public static string spring { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["spring"];
     }
 
     public static class FrontEnd
     {
         private static string content = "content/tech/frontend.json";
 
-        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JS"];
-        public static string Bootstrap { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Bootstrap"];
-        public static string CSS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["CSS"];
-        public static string jQuery { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["jQuery"];
+        public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JAVA"];
+        public static string Javascript { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Javascript"];
+        public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Python"];
+        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Angular"];
+        public static string React { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["React"];
         public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["HTML5"];
         public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["HTML5BoilerPlate"];
-        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Angular"];
+        public static string CSS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["CSS"];
+        public static string jQuery { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["jQuery"];
+        public static string Bootstrap { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Bootstrap"];
+        public static string ASPNET { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASP.NET"];
+        public static string ASPNETMVC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASP.NET-MVC"];
+        public static string Blazor { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Blazor"];
     }
 
     public static class BackEnd
@@ -283,7 +296,7 @@ namespace blog.Config.Tech.Links
         private static string content = "content/tech/backend.json";
 
         public static string WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["WCF"];
-        public static string DNC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["DNC"];
+        public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Swagger"];
     }
@@ -297,26 +310,38 @@ namespace blog.Config.Tech.Rating
 
         public static string CSharp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["C#"];
         public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JAVA"];
-        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JS"];
-        public static string MSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MSSQL"];
-        public static string TSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TSQL"];
-        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["HTML5"];
+        public static string Javascript { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Javascript"];
         public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Python"];
         public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Angular"];
+        public static string React { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["React"];
+    }
 
+    public static class Frameworks
+    {
+        private static string content = "content/tech/frameworks.json";
+
+        public static string dotnet { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["dotnet"];
+        public static string dotnetcore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["dotnetcore"];
+        public static string spring { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["spring"];
     }
 
     public static class FrontEnd
     {
         private static string content = "content/tech/frontend.json";
 
-        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JS"];
-        public static string Bootstrap { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Bootstrap"];
-        public static string CSS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["CSS"];
-        public static string jQuery { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["jQuery"];
-        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["HTML5"];
-        public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["HTML5BoilerPlate"];
-        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Angular"];
+        public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["JAVA"];
+        public static string Javascript { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Javascript"];
+        public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Python"];
+        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Angular"];
+        public static string React { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["React"];
+        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["HTML5"];
+        public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["HTML5BoilerPlate"];
+        public static string CSS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["CSS"];
+        public static string jQuery { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["jQuery"];
+        public static string Bootstrap { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Bootstrap"];
+        public static string ASPNET { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["ASP.NET"];
+        public static string ASPNETMVC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["ASP.NET-MVC"];
+        public static string Blazor { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Blazor"];
     }
 
     public static class BackEnd
@@ -324,7 +349,7 @@ namespace blog.Config.Tech.Rating
         private static string content = "content/tech/backend.json";
 
         public static string WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["WCF"];
-        public static string DNC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["DNC"];
+        public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Swagger"];
     }
@@ -338,25 +363,38 @@ namespace blog.Config.Images.TechStack
 
         public static string CSharp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["C#"];
         public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JAVA"];
-        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JS"];
-        public static string MSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MSSQL"];
-        public static string TSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TSQL"];
-        public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["HTML5"];
+        public static string Javascript { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Javascript"];
         public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Python"];
         public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Angular"];
+        public static string React { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["React"];
+    }
+
+    public static class Frameworks
+    {
+        private static string content = "content/tech/frameworks.json";
+
+        public static string dotnet { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["dotnet"];
+        public static string dotnetcore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["dotnetcore"];
+        public static string spring { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["spring"];
     }
 
     public static class FrontEnd
     {
         private static string content = "content/tech/frontend.json";
 
-        public static string JS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JS"];
-        public static string Bootstrap { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Bootstrap"];
-        public static string CSS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["CSS"];
-        public static string jQuery { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["jQuery"];
+        public static string JAVA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JAVA"];
+        public static string Javascript { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Javascript"];
+        public static string Python { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Python"];
+        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Angular"];
+        public static string React { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["React"];
         public static string HTML5 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["HTML5"];
         public static string HTML5BoilerPlate { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["HTML5BoilerPlate"];
-        public static string Angular { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Angular"];
+        public static string CSS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["CSS"];
+        public static string jQuery { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["jQuery"];
+        public static string Bootstrap { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Bootstrap"];
+        public static string ASPNET { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASP.NET"];
+        public static string ASPNETMVC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASP.NET-MVC"];
+        public static string Blazor { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Blazor"];
     }
 
     public static class BackEnd
@@ -364,7 +402,7 @@ namespace blog.Config.Images.TechStack
         private static string content = "content/tech/backend.json";
 
         public static string WCF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["WCF"];
-        public static string DNC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["DNC"];
+        public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Swagger"];
     }
