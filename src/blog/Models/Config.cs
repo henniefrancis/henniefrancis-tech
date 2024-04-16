@@ -70,6 +70,10 @@ namespace blog.Config.Images
         public static string Portrait { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Portrait"];
         public static string Biography { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Biography"];
         public static string Blog { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Blog"];
+        public static string SocialMedia { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["SocialMedia"];
+        public static string PoE { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PoE"];
+        public static string PublicSpeaking { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PublicSpeaking"];
+
         public static string CurrentRole { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["CurrentRole"];
         public static string LinkedIn { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["LinkedIn"];
         public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["GitHub"];
