@@ -1,0 +1,35 @@
+{
+  "Links": {
+    "Rancher": "",
+    "Consul": "",
+    "Mirantis": "",
+    "Ansible": "",
+    "Jenkins": "",
+    "Docker": "",
+    "Terraform": "",
+    "K8S": "",
+    "Maven": ""
+  },
+  "Images": {
+    "Rancher": "",
+    "Consul": "",
+    "Mirantis": "",
+    "Ansible": "",
+    "Jenkins": "",
+    "Docker": "",
+    "Terraform": "",
+    "K8S": "",
+    "Maven": ""
+  },
+  "Rating": {
+    "Rancher": "",
+    "Consul": "",
+    "Mirantis": "",
+    "Ansible": "",
+    "Jenkins": "",
+    "Docker": "",
+    "Terraform": "",
+    "K8S": "",
+    "Maven": ""
+  }
+}

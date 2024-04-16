@@ -374,6 +374,93 @@ namespace blog.Config.Tech.Links
         public static string TortoiseSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TortoiseSVN"];
         public static string VisualSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["VisualSVN"];
     }
+
+    public static class TestingQA
+    {
+        private static string content = "content/tech/testingqa.json";
+
+        public static string jMeter { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["jMeter"];
+        public static string Insomnia { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Insomnia"];
+        public static string Postman { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Postman"];
+        public static string ReadyAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ReadyAPI"];
+        public static string TestComplete { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TestComplete"];
+    }
+
+    public static class DevOps
+    {
+        private static string content = "content/tech/devops.json";
+
+        public static string Rancher { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Rancher"];
+        public static string Consul { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Consul"];
+        public static string Mirantis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Mirantis"];
+        public static string Ansible { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Ansible"];
+        public static string Jenkins { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Jenkins"];
+        public static string Docker { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Docker"];
+        public static string Terraform { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Terraform"];
+        public static string K8S { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["K8S"];
+        public static string Maven { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Maven"];
+    }
+
+    public static class Monitoring
+    {
+        private static string content = "content/tech/monitoring.json";
+
+        public static string Instana { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Instana"];
+        public static string Grafana { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Grafana"];
+        public static string OpenSearch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["OpenSearch"];
+        public static string Elastic { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Elastic"];
+        public static string PagerDuty { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["PagerDuty"];
+    }
+
+    public static class Databases
+    {
+        private static string content = "content/tech/databases.json";
+
+        public static string MSSQLServer { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MSSQLServer"];
+        public static string MySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MySQL"];
+        public static string PostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["PostgreSQL"];
+        public static string AmazonDynamoDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonDynamoDB"];
+        public static string AmazonRDS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRDS"];
+        public static string AmazonRDSAurora { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRDS"];
+        public static string AmazonRDSMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRDS"];
+        public static string AmazonRDSPostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRDS"];
+        public static string AmazonRDSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRDS"];
+        public static string AmazonRDSCustom { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRDS"];
+        public static string AmazonDocumentDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonDocumentDB"];
+        public static string AmazonRedshift { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AmazonRedshift"];
+        public static string AzureCosmosDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureCosmosDB"];
+        public static string AzureSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureSQL"];
+        public static string AzurePostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzurePostgreSQL"];
+        public static string AzureMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureMySQL"];
+        public static string AzureRedis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureRedis"];
+    }
+
+    public static class Security
+    {
+        private static string content = "content/tech/security.json";
+
+        public static string Vault { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Vault"];
+        
+    }
+
+    public static class Software
+    {
+        private static string content = "content/tech/software.json";
+
+        public static string JIRA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JIRA"];
+        public static string Confluence { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Confluence"];
+        public static string JIRASD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JIRASD"];
+        public static string Slack { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Slack"];
+        public static string Trello { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Trello"];
+        public static string TerraformEnterprise { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TerraformEnterprise"];
+        public static string TerraformCloud { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TerraformCloud"];
+        public static string Lucidchart { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Lucidchart"];
+        public static string Lucidspark { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Lucidspark"];
+        public static string Lucidscale { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Lucidscale"];
+        public static string DrawIO { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["DrawIO"];
+        public static string EnterpriseArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["EnterpriseArchitect"];
+        public static string C4 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["C4"];
+    }
 }
 
 namespace blog.Config.Tech.Rating
@@ -495,6 +582,93 @@ namespace blog.Config.Tech.Rating
         public static string TortoiseSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TortoiseSVN"];
         public static string VisualSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["VisualSVN"];
     }
+
+    public static class TestingQA
+    {
+        private static string content = "content/tech/testingqa.json";
+
+        public static string jMeter { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["jMeter"];
+        public static string Insomnia { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Insomnia"];
+        public static string Postman { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Postman"];
+        public static string ReadyAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["ReadyAPI"];
+        public static string TestComplete { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TestComplete"];
+    }
+
+    public static class DevOps
+    {
+        private static string content = "content/tech/devops.json";
+
+        public static string Rancher { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Rancher"];
+        public static string Consul { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Consul"];
+        public static string Mirantis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Mirantis"];
+        public static string Ansible { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Ansible"];
+        public static string Jenkins { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Jenkins"];
+        public static string Docker { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Docker"];
+        public static string Terraform { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Terraform"];
+        public static string K8S { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["K8S"];
+        public static string Maven { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Maven"];
+    }
+
+    public static class Monitoring
+    {
+        private static string content = "content/tech/monitoring.json";
+
+        public static string Instana { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Instana"];
+        public static string Grafana { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Grafana"];
+        public static string OpenSearch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["OpenSearch"];
+        public static string Elastic { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Elastic"];
+        public static string PagerDuty { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["PagerDuty"];
+    }
+
+    public static class Databases
+    {
+        private static string content = "content/tech/databases.json";
+
+        public static string MSSQLServer { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MSSQLServer"];
+        public static string MySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MySQL"];
+        public static string PostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["PostgreSQL"];
+        public static string AmazonDynamoDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonDynamoDB"];
+        public static string AmazonRDS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRDS"];
+        public static string AmazonRDSAurora { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRDS"];
+        public static string AmazonRDSMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRDS"];
+        public static string AmazonRDSPostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRDS"];
+        public static string AmazonRDSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRDS"];
+        public static string AmazonRDSCustom { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRDS"];
+        public static string AmazonDocumentDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonDocumentDB"];
+        public static string AmazonRedshift { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AmazonRedshift"];
+        public static string AzureCosmosDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureCosmosDB"];
+        public static string AzureSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureSQL"];
+        public static string AzurePostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzurePostgreSQL"];
+        public static string AzureMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureMySQL"];
+        public static string AzureRedis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureRedis"];
+    }
+
+    public static class Security
+    {
+        private static string content = "content/tech/security.json";
+
+        public static string Vault { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Vault"];
+
+    }
+
+    public static class Software
+    {
+        private static string content = "content/tech/software.json";
+
+        public static string JIRA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JIRA"];
+        public static string Confluence { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Confluence"];
+        public static string JIRASD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JIRA"];
+        public static string Slack { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Slack"];
+        public static string Trello { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Trello"];
+        public static string TerraformEnterprise { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TerraformEnterprise"];
+        public static string TerraformCloud { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TerraformCloud"];
+        public static string Lucidchart { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Lucidchart"];
+        public static string Lucidspark { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Lucidspark"];
+        public static string Lucidscale { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Lucidscale"];
+        public static string DrawIO { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["DrawIO"];
+        public static string EnterpriseArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["EnterpriseArchitect"];
+        public static string C4 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["C4"];
+    }
 }
 
 namespace blog.Config.Images.TechStack
@@ -615,5 +789,91 @@ namespace blog.Config.Images.TechStack
         public static string Bitbucket { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Bitbucket"];
         public static string TortoiseSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TortoiseSVN"];
         public static string VisualSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["VisualSVN"];
+    }
+
+    public static class TestingQA
+    {
+        private static string content = "content/tech/testingqa.json";
+
+        public static string jMeter { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["jMeter"];
+        public static string Insomnia { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Insomnia"];
+        public static string Postman { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Postman"];
+        public static string ReadyAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ReadyAPI"];
+        public static string TestComplete { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TestComplete"];
+    }
+
+    public static class DevOps
+    {
+        private static string content = "content/tech/devops.json";
+
+        public static string Rancher { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Rancher"];
+        public static string Consul { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Consul"];
+        public static string Mirantis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Mirantis"];
+        public static string Ansible { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Ansible"];
+        public static string Jenkins { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Jenkins"];
+        public static string Docker { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Docker"];
+        public static string Terraform { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Terraform"];
+        public static string K8S { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["K8S"];
+        public static string Maven { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Maven"];
+    }
+
+    public static class Monitoring
+    {
+        private static string content = "content/tech/monitoring.json";
+
+        public static string Instana { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Instana"];
+        public static string Grafana { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Grafana"];
+        public static string OpenSearch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["OpenSearch"];
+        public static string Elastic { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Elastic"];
+        public static string PagerDuty { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PagerDuty"];
+    }
+
+    public static class Databases
+    {
+        private static string content = "content/tech/databases.json";
+
+        public static string MSSQLServer { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MSSQLServer"];
+        public static string MySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MySQL"];
+        public static string PostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PostgreSQL"];
+        public static string AmazonDynamoDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonDynamoDB"];
+        public static string AmazonRDS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonRDSAurora { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonRDSMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonRDSPostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonRDSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonRDSCustom { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonDocumentDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonDocumentDB"];
+        public static string AmazonRedshift { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRedshift"];
+        public static string AzureCosmosDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureCosmosDB"];
+        public static string AzureSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureSQL"];
+        public static string AzurePostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzurePostgreSQL"];
+        public static string AzureMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureMySQL"];
+        public static string AzureRedis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureRedis"];
+    }
+
+    public static class Security
+    {
+        private static string content = "content/tech/security.json";
+
+        public static string Vault { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Vault"];
+    }
+
+    public static class Software
+    {
+        private static string content = "content/tech/software.json";
+
+        public static string JIRA { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JIRA"];
+        public static string Confluence { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Confluence"];
+        public static string JIRASD { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JIRA"];
+        public static string Slack { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Slack"];
+        public static string Trello { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Trello"];
+        public static string TerraformEnterprise { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TerraformEnterprise"];
+        public static string TerraformCloud { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TerraformCloud"];
+        public static string Lucidchart { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Lucidchart"];
+        public static string Lucidspark { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Lucidspark"];
+        public static string Lucidscale { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Lucidscale"];
+        public static string DrawIO { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["DrawIO"];
+        public static string EnterpriseArchitect { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["EnterpriseArchitect"];
+        public static string C4 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["C4"];
     }
 }
