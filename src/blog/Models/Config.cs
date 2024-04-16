@@ -359,6 +359,21 @@ namespace blog.Config.Tech.Links
         public static string IIS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["IIS"];
 
     }
+
+    public static class SourceControl
+    {
+        private static string content = "content/tech/sourcecontrol.json";
+
+        public static string Git { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Git"];
+        public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["GitHub"];
+        public static string GitLab { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["GitLab"];
+        public static string AWSCodeCommit { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AWSCodeCommit"];
+        public static string TFS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TFS"];
+        public static string AzureDevOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureDevOps"];
+        public static string Bitbucket { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Bitbucket"];
+        public static string TortoiseSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["TortoiseSVN"];
+        public static string VisualSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["VisualSVN"];
+    }
 }
 
 namespace blog.Config.Tech.Rating
@@ -464,7 +479,21 @@ namespace blog.Config.Tech.Rating
         public static string Wordpress { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Wordpress"];
         public static string Bitnami { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Bitnami"];
         public static string IIS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["IIS"];
+    }
 
+    public static class SourceControl
+    {
+        private static string content = "content/tech/sourcecontrol.json";
+
+        public static string Git { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Git"];
+        public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["GitHub"];
+        public static string GitLab { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["GitLab"];
+        public static string AWSCodeCommit { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AWSCodeCommit"];
+        public static string TFS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TFS"];
+        public static string AzureDevOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureDevOps"];
+        public static string Bitbucket { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Bitbucket"];
+        public static string TortoiseSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["TortoiseSVN"];
+        public static string VisualSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["VisualSVN"];
     }
 }
 
@@ -571,6 +600,20 @@ namespace blog.Config.Images.TechStack
         public static string Wordpress { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Wordpress"];
         public static string Bitnami { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Bitnami"];
         public static string IIS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["IIS"];
+    }
 
+    public static class SourceControl
+    {
+        private static string content = "content/tech/sourcecontrol.json";
+
+        public static string Git { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Git"];
+        public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["GitHub"];
+        public static string GitLab { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["GitLab"];
+        public static string AWSCodeCommit { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AWSCodeCommit"];
+        public static string TFS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TFS"];
+        public static string AzureDevOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureDevOps"];
+        public static string Bitbucket { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Bitbucket"];
+        public static string TortoiseSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TortoiseSVN"];
+        public static string VisualSVN { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["VisualSVN"];
     }
 }
