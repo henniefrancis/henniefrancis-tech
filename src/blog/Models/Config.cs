@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿ using Microsoft.Extensions.Configuration;
 
 namespace blog.Secrets
 {
@@ -327,6 +327,23 @@ namespace blog.Config.Tech.Links
         public static string MQTT { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MQTT"];
         public static string RaspberryPi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["RaspberryPi"];
     }
+
+    public static class BigData
+    {
+        private static string content = "content/tech/bigdata.json";
+
+        public static string Kafka { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Kafka"];
+        public static string MSK { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MSK"];
+    }
+
+    public static class Analytics
+    {
+        private static string content = "content/tech/analytics.json";
+
+        public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Google"];
+        public static string PowerBI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["PowerBI"];
+        public static string OLAP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["OLAP"];
+    }
 }
 
 namespace blog.Config.Tech.Rating
@@ -402,6 +419,23 @@ namespace blog.Config.Tech.Rating
         public static string MQTT { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MQTT"];
         public static string RaspberryPi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["RaspberryPi"];
     }
+
+    public static class BigData
+    {
+        private static string content = "content/tech/bigdata.json";
+
+        public static string Kafka { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Kafka"];
+        public static string MSK { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MSK"];
+    }
+
+    public static class Analytics
+    {
+        private static string content = "content/tech/analyics.json";
+
+        public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Google"];
+        public static string PowerBI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["PowerBI"];
+        public static string OLAP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["OLAP"];
+    }
 }
 
 namespace blog.Config.Images.TechStack
@@ -476,5 +510,22 @@ namespace blog.Config.Images.TechStack
         public static string Arduino { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Arduino"];
         public static string MQTT { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MQTT"];
         public static string RaspberryPi { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["RaspberryPi"];
+    }
+
+    public static class BigData
+    {
+        private static string content = "content/tech/bigdata.json";
+
+        public static string Kafka { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Kafka"];
+        public static string MSK { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MSK"];
+    }
+
+    public static class Analytics
+    {
+        private static string content = "content/tech/analytics.json";
+
+        public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Google"];
+        public static string PowerBI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PowerBI"];
+        public static string OLAP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["OLAP"];
     }
 }
