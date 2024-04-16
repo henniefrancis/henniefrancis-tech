@@ -150,6 +150,7 @@ namespace blog.Config.Images
         public static string EducateGettingStartedWithNetworking { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithNetworking"];
         public static string EducateGettingStartedWithSecurity { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithSecurity"];
         public static string EducateGettingStartedWithCloudOps { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["GettingStartedWithCloudOps"];
+        public static string EducateWebBuilder { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Educate")["WebBuilder"];
 
         public static string ProficientWellArchitected { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Certifications:Proficient")["Well-Architected"];
 
