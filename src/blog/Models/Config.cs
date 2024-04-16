@@ -344,6 +344,21 @@ namespace blog.Config.Tech.Links
         public static string PowerBI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["PowerBI"];
         public static string OLAP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["OLAP"];
     }
+
+    public static class Hosting
+    {
+        private static string content = "content/tech/hosting.json";
+
+        public static string Apache { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Apache"];
+        public static string xampp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["xampp"];
+        public static string nginx { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["nginx"];
+        public static string cPanel { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["cPanel"];
+        public static string Joomla { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Joomla"];
+        public static string Wordpress { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Wordpress"];
+        public static string Bitnami { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Bitnami"];
+        public static string IIS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["IIS"];
+
+    }
 }
 
 namespace blog.Config.Tech.Rating
@@ -436,6 +451,21 @@ namespace blog.Config.Tech.Rating
         public static string PowerBI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["PowerBI"];
         public static string OLAP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["OLAP"];
     }
+
+    public static class Hosting
+    {
+        private static string content = "content/tech/hosting.json";
+
+        public static string Apache { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Apache"];
+        public static string xampp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["xampp"];
+        public static string nginx { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["nginx"];
+        public static string cPanel { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["cPanel"];
+        public static string Joomla { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Joomla"];
+        public static string Wordpress { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Wordpress"];
+        public static string Bitnami { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Bitnami"];
+        public static string IIS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["IIS"];
+
+    }
 }
 
 namespace blog.Config.Images.TechStack
@@ -527,5 +557,20 @@ namespace blog.Config.Images.TechStack
         public static string Google { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Google"];
         public static string PowerBI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PowerBI"];
         public static string OLAP { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["OLAP"];
+    }
+
+    public static class Hosting
+    {
+        private static string content = "content/tech/hosting.json";
+
+        public static string Apache { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Apache"];
+        public static string xampp { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["xampp"];
+        public static string nginx { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["nginx"];
+        public static string cPanel { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["cPanel"];
+        public static string Joomla { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Joomla"];
+        public static string Wordpress { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Wordpress"];
+        public static string Bitnami { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Bitnami"];
+        public static string IIS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["IIS"];
+
     }
 }
