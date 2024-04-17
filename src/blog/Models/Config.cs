@@ -73,11 +73,7 @@ namespace blog.Config.Images
         public static string SocialMedia { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["SocialMedia"];
         public static string PoE { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PoE"];
         public static string PublicSpeaking { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PublicSpeaking"];
-
         public static string CurrentRole { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["CurrentRole"];
-        public static string LinkedIn { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["LinkedIn"];
-        public static string GitHub { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["GitHub"];
-        public static string Sessionize { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Sessionize"];
         public static string TechStack { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["TechStack"];
         public static string Certifications { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Certifications"];
         public static string SpecialAwards { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["SpecialAwards"];
@@ -251,6 +247,15 @@ namespace blog.Config.Images
         public static string Microsoft_cert_MCPD { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCPD"];
 
         public static string Microsoft_cert_MCT_2022_2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(microsoft).Build().GetSection("Certifications:CertificateID")["MCT_2022-2023"];
+    }
+
+    public static class PoE
+    {
+        private static string content = "content/images.json";
+
+        public static string CV { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["CV"];
+        public static string Experience { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Experience"];
+        public static string Projects { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Projects"];
     }
 }
 
