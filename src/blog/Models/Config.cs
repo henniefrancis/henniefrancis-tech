@@ -277,6 +277,16 @@ namespace blog.Config.Tech.Links
         public static string spring { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["spring"];
     }
 
+    public static class ORM
+    {
+        private static string content = "content/tech/orm.json";
+
+        public static string ODBC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ODBC"];
+        public static string EF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["EF"];
+        public static string EFCore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["EFCore"];
+        public static string JDBC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["JDBC"];
+    }
+
     public static class FrontEnd
     {
         private static string content = "content/tech/frontend.json";
@@ -298,6 +308,7 @@ namespace blog.Config.Tech.Links
         public static string WindowsForms { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["WindowsForms"];
         public static string MAUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MAUI"];
         public static string Xamarin { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Xamarin"];
+        public static string SharePoint { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["SharePoint"];
     }
 
     public static class BackEnd
@@ -308,6 +319,7 @@ namespace blog.Config.Tech.Links
         public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Swagger"];
+        public static string SpringBoot { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["SpringBoot"];
     }
 
     public static class Cloud
@@ -334,6 +346,8 @@ namespace blog.Config.Tech.Links
 
         public static string Kafka { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Kafka"];
         public static string MSK { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["MSK"];
+        public static string KafkaUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["KafkaUI"];
+        public static string Redpanda { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Redpanda"];
     }
 
     public static class Analytics
@@ -433,6 +447,7 @@ namespace blog.Config.Tech.Links
         public static string AzurePostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzurePostgreSQL"];
         public static string AzureMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureMySQL"];
         public static string AzureRedis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["AzureRedis"];
+        public static string Redis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Links")["Redis"];
     }
 
     public static class Security
@@ -486,6 +501,16 @@ namespace blog.Config.Tech.Rating
         public static string spring { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["spring"];
     }
 
+    public static class ORM
+    {
+        private static string content = "content/tech/orm.json";
+
+        public static string ODBC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["ODBC"];
+        public static string EF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["EF"];
+        public static string EFCore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["EFCore"];
+        public static string JDBC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["JDBC"];
+    }
+
     public static class FrontEnd
     {
         private static string content = "content/tech/frontend.json";
@@ -507,6 +532,7 @@ namespace blog.Config.Tech.Rating
         public static string WindowsForms { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["WindowsForms"];
         public static string MAUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["MAUI"];
         public static string Xamarin { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["Xamarin"];
+        public static string SharePoint { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Ratings")["SharePoint"];
     }
 
     public static class BackEnd
@@ -517,6 +543,7 @@ namespace blog.Config.Tech.Rating
         public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Swagger"];
+        public static string SpringBoot { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["SpringBoot"];
     }
 
     public static class Cloud
@@ -543,6 +570,8 @@ namespace blog.Config.Tech.Rating
 
         public static string Kafka { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Kafka"];
         public static string MSK { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["MSK"];
+        public static string KafkaUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["KafkaUI"];
+        public static string Redpanda { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Redpanda"];
     }
 
     public static class Analytics
@@ -641,6 +670,7 @@ namespace blog.Config.Tech.Rating
         public static string AzurePostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzurePostgreSQL"];
         public static string AzureMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureMySQL"];
         public static string AzureRedis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["AzureRedis"];
+        public static string Redis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Rating")["Redis"];
     }
 
     public static class Security
@@ -694,6 +724,16 @@ namespace blog.Config.Images.TechStack
         public static string spring { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["spring"];
     }
 
+    public static class ORM
+    {
+        private static string content = "content/tech/orm.json";
+
+        public static string ODBC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ODBC"];
+        public static string EF { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["EF"];
+        public static string EFCore { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["EFCore"];
+        public static string JDBC { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["JDBC"];
+    }
+
     public static class FrontEnd
     {
         private static string content = "content/tech/frontend.json";
@@ -715,6 +755,7 @@ namespace blog.Config.Images.TechStack
         public static string WindowsForms { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["WindowsForms"];
         public static string MAUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MAUI"];
         public static string Xamarin { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Xamarin"];
+        public static string SharePoint { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["SharePoint"];
     }
 
     public static class BackEnd
@@ -725,6 +766,7 @@ namespace blog.Config.Images.TechStack
         public static string ASPAPI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["ASPAPI"];
         public static string Microservices { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Microservices"];
         public static string Swagger { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Swagger"];
+        public static string SpringBoot { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["SpringBoot"];
     }
 
     public static class Cloud
@@ -751,6 +793,8 @@ namespace blog.Config.Images.TechStack
 
         public static string Kafka { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Kafka"];
         public static string MSK { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["MSK"];
+        public static string KafkaUI { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["KafkaUI"];
+        public static string Redpanda { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Redpanda"];
     }
 
     public static class Analytics
@@ -849,6 +893,7 @@ namespace blog.Config.Images.TechStack
         public static string AzurePostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzurePostgreSQL"];
         public static string AzureMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureMySQL"];
         public static string AzureRedis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureRedis"];
+        public static string Redis { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Redis"];
     }
 
     public static class Security
