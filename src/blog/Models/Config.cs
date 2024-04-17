@@ -886,11 +886,11 @@ namespace blog.Config.Images.TechStack
         public static string PostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["PostgreSQL"];
         public static string AmazonDynamoDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonDynamoDB"];
         public static string AmazonRDS { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
-        public static string AmazonRDSAurora { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
-        public static string AmazonRDSMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
-        public static string AmazonRDSPostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
-        public static string AmazonRDSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
-        public static string AmazonRDSCustom { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDS"];
+        public static string AmazonRDSAurora { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDSAurora"];
+        public static string AmazonRDSMySQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDSMySQL"];
+        public static string AmazonRDSPostgreSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDSPostgreSQL"];
+        public static string AmazonRDSSQL { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDSSQL"];
+        public static string AmazonRDSCustom { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRDSCustom"];
         public static string AmazonDocumentDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonDocumentDB"];
         public static string AmazonRedshift { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AmazonRedshift"];
         public static string AzureCosmosDB { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["AzureCosmosDB"];
