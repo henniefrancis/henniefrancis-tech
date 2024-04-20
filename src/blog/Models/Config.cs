@@ -82,6 +82,13 @@ namespace blog.Config.Images
 
     }
 
+    public static class PublicSpeaking
+    {
+        private static string content = "content/publicspeaking.json";
+
+        public static string dotnetConf2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf")["2023"];
+    }
+
     public static class Socials
     {
         private static string content = "content/socials.json";
