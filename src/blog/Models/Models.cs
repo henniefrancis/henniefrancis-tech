@@ -10,6 +10,22 @@
             {
                 input = "PoE";
             }
+            else if (input == "cv")
+            {
+                input = "CV";
+            }
+            else if (input == "careerhistory")
+            {
+                input = "Career History";
+            }
+            else if (input == "poe/projects")
+            {
+                input = "Projects";
+            }
+            else if (input == "specialawards")
+            {
+                input = "Special Awards";
+            }
 
             results = string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1));
             
@@ -42,6 +58,28 @@
                 else
                 {
                     results = "PoE";
+                }
+            }
+            else if (input == "careerhistory")
+            {
+                if (src == "brdc")
+                {
+                    results = "career-history";
+                }
+                else
+                {
+                    results = "Career History";
+                }
+            }
+            else if (input == "specialawards")
+            {
+                if (src == "brdc")
+                {
+                    results = "special-awards";
+                }
+                else
+                {
+                    results = "Special Awards";
                 }
             }
 
