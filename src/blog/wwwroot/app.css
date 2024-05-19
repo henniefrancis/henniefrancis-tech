@@ -68,14 +68,11 @@ h1:focus {
 
 .root {
     color: #16C60C;
+    font-size: 14px;
 }
 
 .blue {
     color: #3973F5;
-}
-
-.badgediv {
-    margin-right: 25px;
 }
 
 .badgediv2 {
@@ -84,16 +81,31 @@ h1:focus {
 
 /* Web View */
 @media (min-width: 800px) {
-    .badges {
-        margin-right: 165px;
-        max-width: 172px;
-        height: auto;
+    .badgediv {
+        text-align:center;
+        min-width: 170px;
+        text-align: center;
+        vertical-align: middle;
+        margin-right: 5px;
     }
+
+        .badgediv img {
+            max-width: 170px;
+            height: auto;
+            transform: translateX(-8%);
+        }
+
 
     .badges2 {
         margin-right: 200px;
         max-width: 172px;
         height: auto;
+    }
+
+    .badgediv2 img {
+        max-width: 170px;
+        height: auto;
+        transform: translateX(-8%);
     }
 
     .socials3 {
@@ -113,16 +125,27 @@ h1:focus {
 
 /* Mobile View */
 @media (max-width: 700px) {
-    .badges {
-        margin-right: 165px;
-        max-width: 250px;
-        height: auto;
+    .badgediv {
+        margin-right: 25px;
+        text-align: center;
     }
+
+        .badgediv img {
+            max-width: 170px;
+            height: auto;
+            transform: translateX(-8%);
+        }
 
     .badges2 {
         margin-right: 200px;
         max-width: 250px;
         height: auto;
+    }
+
+    .badgediv2 img {
+        max-width: 170px;
+        height: auto;
+        transform: translateX(-8%);
     }
 
     .socials3 {
@@ -234,4 +257,28 @@ h1:focus {
     -ms-transform: scale(1.1);
     -o-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+.wip {
+    font-size: 10px;
+    border-radius: 25px;
+    background-color: green;
+    padding: 5px;
+    text-align: center;
+}
+
+.active {
+    font-size: 10px;
+    border-radius: 25px;
+    background-color: transparent;
+    padding: 5px;
+    text-align: center;
+}
+
+.todo {
+    font-size: 10px;
+    border-radius: 25px;
+    background-color: blue;
+    padding: 5px;
+    text-align: center;
 }

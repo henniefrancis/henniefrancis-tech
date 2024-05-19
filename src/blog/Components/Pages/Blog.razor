@@ -1,6 +1,35 @@
 ﻿@inherits BlogModel
 @page "/blog"
 
-<h1>Blog</h1>
+<div class="row">
+    <div class="col-auto">
+        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
+    </div>
+    <div class="col">
+        <div class="pagetitle">
+            <h1>Blog</h1>
+            <hr class="pagedivider" />
+        </div>
+    </div>
+</div>
 
 Coming soon! Watch this space...
+
+For now, check my content out here
+
+<div class="row">
+    <div class="col-sm-2">
+        <a href="@Config.Links.DEV" title="DEV" target="_blank">
+            <div class="mt-3 p-4 px-1 bg-gradient text-white rounded text-center hometile">
+                <img alt="DEV" src="@Config.Images.Socials.DEV" class="img-fluid" style="width:75%" title="DEV" />
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-2">
+        <a href="@Config.Links.Medium" title="Medium" target="_blank">
+            <div class="mt-3 p-4 px-1 bg-gradient text-white rounded text-center hometile">
+                <img alt="Medium" src="@Config.Images.Socials.Medium" class="img-fluid" title="Medium" />
+            </div>
+        </a>
+    </div>
+</div>

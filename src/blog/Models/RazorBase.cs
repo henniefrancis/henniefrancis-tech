@@ -16,15 +16,15 @@ namespace blog
         {
             try
             {
-                if (hostEnvironment.IsDevelopment())
-                {
-                    string remoteIP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-                    string userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
-                    var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                //if (!hostEnvironment.IsDevelopment())
+                //{
+                //    string remoteIP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+                //    string userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
+                //    var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
 
-                    var response = "test";
-                    await SendToAwsSqS("blog", response);
-                }
+                //    var response = "test";
+                //    await SendToAwsSqS("blog", response);
+                //}
             }
             catch (Exception)
             {
