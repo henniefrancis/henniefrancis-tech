@@ -1,8 +1,9 @@
-﻿@page "/specialawards"
+﻿@inherits SpecialAwardsModel
+@page "/specialawards"
 
 <div class="row">
     <div class="col-auto">
-        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Back" class="button img-fluid" title="Back" /></a>
+        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
     </div>
     <div class="col">
         <div class="pagetitle">
@@ -13,5 +14,5 @@
 </div>
 
 <div class="mt-1 p-1 bg-gradient text-white rounded text-center ">
-    <img alt="rockstar" src="@Config.Rockstar" class="socials3 img-fluid" title="Rockstar" />
+    <img alt="rockstar" src="@Config.Images.SpecialAwards.Rockstar" class="socials3 img-fluid" title="Rockstar" />
 </div>

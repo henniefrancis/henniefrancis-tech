@@ -1,3 +1,4 @@
+using Amazon.SQS;
 using blog.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonSQS>();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

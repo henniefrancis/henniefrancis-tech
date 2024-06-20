@@ -1,8 +1,9 @@
-﻿@page "/currentrole"
+﻿@inherits CurrentRoleModel
+@page "/currentrole"
 
 <div class="row">
     <div class="col-auto">
-        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Back" class="button img-fluid" title="Back" /></a>
+        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
     </div>
     <div class="col">
         <div class="pagetitle">
@@ -15,7 +16,7 @@
 
 <div class="row text-center">
     <div class="col-12">
-        <a href="https://www.capitecbank.co.za" title="Capitec Bank" target="_blank"><img alt="capitecbank" src="@Config.Capitec" class="pagesocials" title="Capitec Bank" /></a>
+        <a href="https://www.capitecbank.co.za" title="Capitec Bank" target="_blank"><img alt="capitecbank" src="@Config.Images.General.Capitec" class="pagesocials" title="Capitec Bank" /></a>
     </div>
 </div>
 
@@ -36,8 +37,12 @@
                     <td>01 July 2022 to Present (@EmployeePeriod())</td>
                 </tr>
                 <tr class="detailsrow">
-                    <td>Title:</td>
-                    <td>Analyst Developer: Front End</td>
+                    <td>Current Title:</td>
+                    <td>Senior Software Engineer III: Full Stack <br /> Solutions Architect</td>
+                </tr>
+                <tr class="detailsrow">
+                    <td>Previous Title(s):</td>
+                    <td>Analyst Developer: Font End <br /> <sup>[01 July 2022 - 01 May 2024]</sup></td>
                 </tr>
                 <tr class="detailsrow">
                     <td>Division:</td>

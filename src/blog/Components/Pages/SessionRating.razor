@@ -1,0 +1,44 @@
+﻿@inherits SessionRatingModel
+@page "/session-rating"
+
+<div class="row">
+    <div class="col-auto">
+        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
+    </div>
+    <div class="col">
+        <div class="pagetitle">
+            <h1>Session Rating</h1>
+            <hr class="pagedivider" />
+        </div>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+@* <div class="row text-center">
+
+@if (DateTime.Now.Date == CapeTown)
+{
+    <h1>Hello Cape Town!</h1>
+
+        <p>How would you rate my session?</p>
+        <p>Did my session meet your expectation?</p>
+        <p>Did you learn something new?</p>
+        <p>What, if anything, did you dislike about my session?</p>
+        <p>What could I improve?</p>
+    }
+else if (DateTime.Now.Date == Johannesburg)
+{
+        <h1>Hello Johannesburg!</h1>
+}
+else
+{
+    <p>No Active Session.  Please watch my social media for my next session.</p>
+    
+}
+</div>
+
+@code {
+    public DateTime CapeTown { get; set; } = new DateTime(2023, 11, 17);
+    public DateTime Johannesburg { get; set; } = new DateTime(2023, 12, 02);
+} *@

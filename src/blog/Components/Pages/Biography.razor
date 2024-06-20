@@ -1,8 +1,9 @@
-﻿@page "/biography"
+﻿@inherits BiographyModel
+@page "/biography"
 
 <div class="row">
     <div class="col-auto">
-        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Back" class="button img-fluid" title="Back" /></a>
+        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
     </div>
     <div class="col">
         <div class="pagetitle">
@@ -17,29 +18,27 @@
 <div class="row text-center">
     <div class="col-sm-3 divider">
         <div class="spacer"></div>
-        <img alt="Hennie Francis" src="@Config.Portrait" class="portrait" title="Hennie Francis" />
+        <img alt="Hennie Francis" src="@Config.Images.General.Portrait" class="portrait" title="Hennie Francis" />
     </div>
     <div class="col-sm-8 blankdivider">
         <table class="blogtable">
             <tr class="blogrow">
-                <td>@(Config.Blog1)</td>
+                <td>@(Config.About.Blog1)</td>
             </tr>
             <tr class="blogrow">
-                <td>@(Config.Blog2)</td>
+                <td>@(Config.About.Blog2)</td>
             </tr>
             <tr class="blogrow">
-                <td>@(Config.Blog3)</td>
+                <td>@(Config.About.Blog3)</td>
             </tr>
             <tr class="blogrow">
-                <td>@(Config.Blog4)</td>
+                <td>@(Config.About.Blog4)</td>
             </tr>
             <tr class="blogrow">
-                <td>@(Config.Blog5)</td>
+                <td>@(Config.About.Blog5)</td>
             </tr>
         </table>
     </div>
     <div class="col-sm-2">
     </div>
 </div>
-
-
