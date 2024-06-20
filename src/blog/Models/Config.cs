@@ -264,6 +264,13 @@ namespace blog.Config.Images
         public static string Experience { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Experience"];
         public static string Projects { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Projects"];
     }
+
+    public static class Projects
+    {
+        private static string content = "content/projects.json";
+
+        public static string Website { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Projects")["Website"];
+    }
 }
 
 namespace blog.Config.Tech.Links
