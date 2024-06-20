@@ -10,6 +10,16 @@ namespace blog.Secrets
 
 }
 
+namespace blog.Secrets
+{
+    public static class AWS
+    {
+        public static string aws_username { get; } = "AKIA2K7ZGXNAU5EYC3YJ";
+        public static string aws_password { get; } = "T7YIdH4r4qx69+CN9RROX//2dbagsPQM7enwrlSi";
+    }
+
+}
+
 namespace blog.Config
 {
     public static class About
