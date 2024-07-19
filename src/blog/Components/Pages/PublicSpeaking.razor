@@ -16,20 +16,39 @@
 <div class="container-fluid" style="margin-top: 0px;">
     <div class="row">
         <div class="col-sm-4">
-            @* /publicspeaking/dotnetconf/2023 *@
-            <a href="https://cptmsdug.dev" title=".NET Conference 2023" target="_blank">
+            <a href="/publicspeaking/dotnetconf/2023" title=".NET Conference 2023">
                 <div class="mt-3 p-4 px-1 text-white rounded text-center hometile">
                     <img alt=".NET Conference 2023" src="@Config.Images.PublicSpeaking.dotnetConf2023" class="img-fluid" title=".NET Conference 2023" />
                 </div>
             </a>
         </div>
         <div class="col-sm-4">
-            @* /publicspeaking/dotnetconf/2023 *@
-            <a href="https://gdg.community.dev/events/details/google-gdg-cape-town-presents-google-io-extended-2024-cape-town/" title="Google I/O Extended 2024 Cape Town" target="_blank">
+            <a href="/publicspeaking/googleioextended/2024" title="Google I/O Extended 2024 Cape Town">
                 <div class="mt-3 p-4 px-1 text-white rounded text-center hometile">
                     <img alt="Google I/O Extended 2024 Cape Town" src="@Config.Images.PublicSpeaking.googleIOExtended2024" class="img-fluid" title="Google I/O Extended 2024 Cape Town" />
                 </div>
             </a>
         </div>
+        @if (DateTime.Now.Date == new DateTime(2024, 08, 01))
+        {
+            <div class="col-sm-4">
+                <a href="/publicspeaking/awssummit/2024" title="AWS Summit Johannesburg 2024">
+                    <div class="mt-3 p-4 px-1 text-white rounded text-center hometile">
+                        <img alt="AWS Summit Johannesburg 2024" src="@Config.Images.PublicSpeaking.awsSummit2024" class="img-fluid" title="AWS Summit Johannesburg 2024" />
+                    </div>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="col-sm-4">
+                <a href="/publicspeaking/secret" title="Secret... Shhhhhh">
+                    <div class="mt-3 p-4 px-1 text-white rounded text-center hometile">
+                        <img alt="Secret... Shhhhhh" src="@Config.Images.PublicSpeaking.awsSummit2024Secret" class="img-fluid" title="Secret... Shhhhhh" />
+                    </div>
+                </a>
+            </div>
+        }
+
     </div>
 </div>

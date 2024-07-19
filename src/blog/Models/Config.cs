@@ -89,6 +89,8 @@ namespace blog.Config.Images
 
         public static string dotnetConf2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf")["2023"];
         public static string googleIOExtended2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:googleIOExtended")["2024"];
+        public static string awsSummit2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:awsSummit")["2024"];
+        public static string awsSummit2024Secret { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:awsSummit")["2024Secret"];
     }
 
     public static class Socials
