@@ -54,7 +54,8 @@ namespace blog.Config
         public static string GoogleDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GoogleDev"];
         public static string Credly { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Credly"];
 
-        public static string GitHubProject { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("DotNetConference2023")["IaC"];
+        public static string DotNetConference2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("GitHubProjects")["DotNetConference2023"];
+        public static string GoogleIOExtended2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("GitHubProjects")["GoogleIOExtend2024"];
     }
 }
 
@@ -87,6 +88,7 @@ namespace blog.Config.Images
         private static string content = "content/publicspeaking.json";
 
         public static string dotnetConf2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf")["2023"];
+        public static string googleIOExtended2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:googleIOExtended")["2024"];
     }
 
     public static class Socials
