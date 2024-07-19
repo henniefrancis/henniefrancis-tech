@@ -20,7 +20,8 @@
     "GoogleDev": "https://developers.google.com/profile/u/henniefrancis",
     "Credly": "https://www.credly.com/users/hennie-francis/badges"
   },
-  "DotNetConference2023": {
-    "IaC": "https://github.com/henniefrancis/.net-conf-2023"
+  "GitHubProjects": {
+    "DotNetConference2023": "https://github.com/henniefrancis/.net-conf-2023",
+    "GoogleIOExtend2024": "https://github.com/henniefrancis/google-io-extended-cpt-2024"
   }
 }
