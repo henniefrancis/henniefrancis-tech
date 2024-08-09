@@ -1,17 +1,17 @@
-﻿@inherits QRModel
+﻿@inherits AWSSummitResourcesModel
 @using System;
 @using QRCoder;
 @using System.Drawing
 
-@page "/qr"
+@page "/publicspeaking/awssummit/2024/resources"
 
 <div class="row">
     <div class="col-auto">
-        <a href="/" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
+        <a href="/publicspeaking/awssummit/2024" class="button" title="Back"><img alt="back" src="@Config.Images.General.Back" class="button img-fluid" title="Back" /></a>
     </div>
     <div class="col">
         <div class="pagetitle">
-            <h1>QR Codes</h1>
+            <h1>AWS Summit 2024 Resources</h1>
             <hr class="pagedivider" />
         </div>
     </div>
@@ -20,38 +20,7 @@
 <div class="spacer"></div>
 
 <div class="row">
-    <div class="col-sm-3">
-        <a href="@Config.Links.Blog" title="Hennie Francis" target="_blank" class="blanklink">
-            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                <h4>Website</h4>
-                <p>Hennie Francis</p>
-                <hr />
-                <img src="@QRCode_WebLink(Config.Links.Blog)" title="Hennie Francis: Website" alt="Hennie Francis: Website" class="img-fluid" />
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-3">
-        <a href="@Config.Links.DotNetConference2023" title="GitHub: .NET Conference 2023" target="_blank" class="blanklink">
-            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                <h4>GitHub</h4>
-                <p>.NET Conference 2023</p>
-                <hr />
-                <img src="@QRCode_WebLink(Config.Links.DotNetConference2023)" title="GitHub Project: .NET Conference 2023" alt="GitHub Project: .NET Conference 2023" class="img-fluid" />
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-3">
-        <a href="@Config.Links.GoogleIOExtended2024" title="GitHub: Google I/O Extended 2024 - Cape Town" target="_blank" class="blanklink">
-            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                <h4>GitHub</h4>
-                <p>Google I/O Extended 2024 - Cape Town</p>
-                <hr />
-                <img src="@QRCode_WebLink(Config.Links.GoogleIOExtended2024)" title="GitHub: Google I/O Extended 2024 - Cape Town" alt="GitHub: Google I/O Extended 2024 - Cape Town" class="img-fluid" />
-            </div>
-        </a>
-    </div>
-
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="https://aws.amazon.com/blogs/compute/10-things-you-can-do-today-to-reduce-aws-costs" title="AWS: 10 Things to reduce cost" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -62,19 +31,7 @@
         </a>
     </div>
 
-    <div class="col-sm-3">
-        <a href="https://henniefrancis.tech/publicspeaking/awssummit/2024/resources" title="AWS Summit 2024 Resources" target="_blank" class="blanklink">
-            <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
-                <h4>AWS Summit 2024</h4>
-                <p>Resources</p>
-                <hr />
-                <img src="@QRCode_WebLink("https://henniefrancis.tech/publicspeaking/awssummit/2024/resources")" title="AWS Summit 2024 Resources" alt="AWS Summit 2024 Resources" class="img-fluid" />
-            </div>
-        </a>
-    </div>
-
-
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="" title="" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -84,7 +41,7 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="" title="" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -94,7 +51,7 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="" title="" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -104,7 +61,7 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="https://aws.amazon.com/step-functions" title="AWS: Step Functions" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -114,7 +71,9 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+</div>
+<div class="row">
+    <div class="col-sm-2">
         <a href="https://serverlessland.com/step-functions" title="Step Functions in Serverless Land" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>Serverless Land</h4>
@@ -126,7 +85,7 @@
     </div>
 
 
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="https://docs.aws.amazon.com/scheduler/latest/UserGuide/what-is-scheduler.html" title="AWS: EventBridge Scheduler" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -136,7 +95,7 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="https://serverlessland.com/eventbridge-scheduler" title="EventBridge Scheduler in Serverless Land" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>Serverless Land</h4>
@@ -146,7 +105,7 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="https://aws.amazon.com/lambda" title="AWS: Lambda" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>AWS</h4>
@@ -156,7 +115,7 @@
             </div>
         </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <a href="https://serverlessland.com/lambda" title="Lambda in Serverless Land" target="_blank" class="blanklink">
             <div class="mt-4 p-5 bg-gradient text-white rounded text-center ">
                 <h4>Serverless Land</h4>
