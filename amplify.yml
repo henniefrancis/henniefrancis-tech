@@ -5,11 +5,11 @@ frontend:
       commands:
         - curl -sSL https://dot.net/v1/dotnet-install.sh > dotnet-install.sh
         - chmod +x *.sh
-        - ./dotnet-install.sh -c 6.0 -InstallDir ./dotnet6
-        - ./dotnet6/dotnet --version
+        - ./dotnet-install.sh -c 8.0 -InstallDir ./dotnet8
+        - ./dotnet8/dotnet --version
     build:
       commands:
-        - ./dotnet6/dotnet publish -c Release -o release
+        - ./dotnet8/dotnet publish -c Release -o release
 artifacts:
   baseDirectory: release/wwwroot
   files:
