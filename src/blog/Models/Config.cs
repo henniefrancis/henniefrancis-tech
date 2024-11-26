@@ -88,9 +88,12 @@ namespace blog.Config.Images
         private static string content = "content/publicspeaking.json";
 
         public static string dotnetConf2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf")["2023"];
+        public static string dotnetConf2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf")["2024"];
         public static string googleIOExtended2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:googleIOExtended")["2024"];
         public static string awsSummit2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:awsSummit")["2024"];
         public static string awsSummit2024Secret { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:awsSummit")["2024Secret"];
+        public static string WeAreDevelopers2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:WeAreDevelopers")["2024"];
+        public static string SeasonOfAI2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:SeasonOfAI")["2024"];
     }
 
     public static class Socials
@@ -116,7 +119,7 @@ namespace blog.Config.Images
         public static string dotcoreSolutions { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["dotcoreSolutions"];
         public static string GoogleDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GoogleDev"];
         public static string Credly { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Credly"];
-
+        public static string YouTubeWatch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["YouTubeWatch"];
     }
 
     public static class SpecialAwards
