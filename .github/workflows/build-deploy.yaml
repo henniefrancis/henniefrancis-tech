@@ -25,7 +25,7 @@ jobs:
   build:
     name: Build Application
     runs-on: ubuntu-24.04
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.event.action == 'closed' && (github.base_ref == 'develop' || github.base_ref == 'release') && github.event.pull_request.merged == true)) }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request_target' && (github.event.action == 'closed' && (github.base_ref == 'develop' || github.base_ref == 'release') && github.event.pull_request.merged == true)) }}
     steps:
       - uses: bhowell2/github-substring-action@1.0.2
         id: directory
