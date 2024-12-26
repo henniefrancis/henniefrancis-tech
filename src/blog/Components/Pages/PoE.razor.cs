@@ -1,10 +1,6 @@
-﻿namespace blog.Components.Pages
+﻿namespace HennieFrancis.Blog.Components.Pages;
+
+public class PoEModel : RazorBase
 {
-    public class PoEModel : RazorBase
-    {
-        protected override async Task OnInitializedAsync()
-        {
-            await Initialize();
-        }
-    }
+    protected override async Task OnInitializedAsync() => await Initialize();
 }

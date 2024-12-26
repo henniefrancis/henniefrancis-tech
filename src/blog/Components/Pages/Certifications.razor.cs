@@ -1,10 +1,6 @@
-﻿namespace blog.Components.Pages
+﻿namespace HennieFrancis.Blog.Components.Pages;
+
+public class CertificationsModel : RazorBase
 {
-    public class CertificationsModel : RazorBase
-    {
-        protected override async Task OnInitializedAsync()
-        {
-            await Initialize();
-        }
-    }
+    protected override async Task OnInitializedAsync() => await Initialize();
 }

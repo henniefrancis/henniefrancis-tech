@@ -1,10 +1,6 @@
-﻿namespace blog.Components.Pages
+﻿namespace HennieFrancis.Blog.Components.Pages;
+
+public class ErrorModel : RazorBase
 {
-    public class ErrorModel : RazorBase
-    {
-        protected override async Task OnInitializedAsync()
-        {
-            await Initialize();
-        }
-    }
+    protected override async Task OnInitializedAsync() => await Initialize();
 }

@@ -1,4 +1,4 @@
-﻿namespace blog.Components.Pages;
+﻿namespace HennieFrancis.Blog.Components.Pages;
 
 public class SeasonOfAI24Model : RazorBase
 {

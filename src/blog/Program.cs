@@ -1,5 +1,5 @@
 using Amazon.SQS;
-using blog.Components;
+using HennieFrancis.Blog.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

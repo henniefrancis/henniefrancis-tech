@@ -1,9 +1,6 @@
-﻿namespace blog.Components.Pages;
+﻿namespace HennieFrancis.Blog.Components.Pages;
 
-public class weAreDevelopers2024Model : RazorBase
+public class WeAreDevelopers2024Model : RazorBase
 {
-    protected override async Task OnInitializedAsync()
-    {
-        await Initialize();
-    }
+    protected override async Task OnInitializedAsync() => await Initialize();
 }

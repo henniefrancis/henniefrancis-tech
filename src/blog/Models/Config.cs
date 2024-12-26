@@ -1,6 +1,4 @@
-﻿ using Microsoft.Extensions.Configuration;
-
-namespace blog.Secrets
+﻿namespace HennieFrancis.Blog.Secrets
 {
     public static class AWS
     {
@@ -10,7 +8,7 @@ namespace blog.Secrets
 
 }
 
-namespace blog.Config
+namespace HennieFrancis.Blog.Config
 {
     public static class About
     {
@@ -53,13 +51,14 @@ namespace blog.Config
         public static string dotcoreSolutions { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["dotcoreSolutions"];
         public static string GoogleDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GoogleDev"];
         public static string Credly { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Credly"];
+        public static string Bluesky { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["BlueSky"];
 
         public static string DotNetConference2023 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("GitHubProjects")["DotNetConference2023"];
         public static string GoogleIOExtended2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("GitHubProjects")["GoogleIOExtend2024"];
     }
 }
 
-namespace blog.Config.Images
+namespace HennieFrancis.Blog.Config.Images
 {
     public static class General
     {
@@ -120,6 +119,8 @@ namespace blog.Config.Images
         public static string GoogleDev { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["GoogleDev"];
         public static string Credly { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["Credly"];
         public static string YouTubeWatch { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["YouTubeWatch"];
+
+        public static string BlueSky { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Socials")["BlueSky"];
     }
 
     public static class SpecialAwards
@@ -280,7 +281,7 @@ namespace blog.Config.Images
     }
 }
 
-namespace blog.Config.Tech.Links
+namespace HennieFrancis.Blog.Config.Tech.Links
 {
     public static class Languages
     {
@@ -504,7 +505,7 @@ namespace blog.Config.Tech.Links
     }
 }
 
-namespace blog.Config.Tech.Rating
+namespace HennieFrancis.Blog.Config.Tech.Rating
 {
     public static class Languages
     {
@@ -727,7 +728,7 @@ namespace blog.Config.Tech.Rating
     }
 }
 
-namespace blog.Config.Images.TechStack
+namespace HennieFrancis.Blog.Config.Images.TechStack
 {
     public static class Languages
     {
