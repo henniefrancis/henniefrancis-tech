@@ -79,6 +79,7 @@ namespace HennieFrancis.Blog.Config.Images
         public static string SpecialAwards { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["SpecialAwards"];
         public static string Capitec { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Capitec"];
         public static string Back { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Back"];
+        public static string Photo { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Images")["Photo"];
 
     }
 
@@ -93,6 +94,18 @@ namespace HennieFrancis.Blog.Config.Images
         public static string awsSummit2024Secret { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:awsSummit")["2024Secret"];
         public static string WeAreDevelopers2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:WeAreDevelopers")["2024"];
         public static string SeasonOfAI2024 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:SeasonOfAI")["2024"];
+    }
+
+    public static class PublicSpeakingEventPhotos
+    {
+        private static string content = "content/eventphotos.json";
+
+        public static string dotnetConf2023_Photo1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf:2023")["Photo1"];
+        public static string dotnetConf2024_Photo1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:dotnetConf:2024")["Photo1"];
+        public static string googleIOExtended2024_Photo1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:googleIOExtended:2024")["Photo1"];
+        public static string awsSummit2024_Photo1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:awsSummit:2024")["Photo1"];
+        public static string WeAreDevelopers2024_Photo1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:WeAreDevelopers:2024")["Photo1"];
+        public static string SeasonOfAI2024_Photo1 { get; set; } = new ConfigurationBuilder().AddJsonFile(content).Build().GetSection("Events:SeasonOfAI:2024")["Photo1"];
     }
 
     public static class Socials
