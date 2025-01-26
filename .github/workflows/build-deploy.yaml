@@ -73,13 +73,13 @@ jobs:
         id: project-path
         run: |
           cd src/**/
-          echo 'project-path=src/'${{ steps.directory.outputs.substring }}'/'${{ steps.directory.outputs.substring }}'.csproj' >> $GITHUB_ENV
+          echo 'project-path=src/'${{ steps.directory.outputs.substring }}'/'${{ steps.directory.outputs.substring.replace('-tech', '') }}'.csproj' >> $GITHUB_ENV
 
       - name: Docker Path
         id: docker-path
         run: |
           cd src/**/
-          echo 'docker-path='${{ steps.directory.outputs.substring }}'/Dockerfile' >> $GITHUB_ENV
+          echo 'docker-path='${{ steps.directory.outputs.substring.replace('-tech', '') }}'/Dockerfile' >> $GITHUB_ENV
 
       - name: Path to Docker
         id: path-to-docker
