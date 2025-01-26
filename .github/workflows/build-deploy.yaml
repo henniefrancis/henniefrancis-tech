@@ -73,7 +73,7 @@ jobs:
         id: project-path
         run: |
           cd src/**/
-          PROJECT_PATH="src/${{ steps.directory.outputs.substring }}/${{ steps.directory.outputs.substring }}.csproj"
+          PROJECT_PATH="src/henniefrancis/henniefrancis.csproj"
           PROJECT_PATH=${PROJECT_PATH/-tech/}
           echo "project-path=$PROJECT_PATH" >> $GITHUB_ENV
 
