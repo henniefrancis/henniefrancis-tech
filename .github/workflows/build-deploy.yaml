@@ -115,7 +115,6 @@ jobs:
       - name: Check GitHub Repo name
         id: files
         run: echo ${{ steps.directory.outputs.substring }}
-
       - uses: actions/checkout@v4
         name: Checkout files
 
@@ -134,7 +133,7 @@ jobs:
         env:
           DOCKERFILE: ${{ needs.build.outputs.docker-path }}
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: dilli-it/${{ steps.directory.outputs.substring }}
+          REPOSITORY: henniefrancis/${{ steps.directory.outputs.substring }}
           IMAGE_TAG: ${{ needs.build.outputs.project-version }}
         run: |
           cd src
