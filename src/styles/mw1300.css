@@ -1,0 +1,184 @@
+.about-card {
+    height: calc(100% - 40px);
+}
+
+.home-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin: 20px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.home-card img {
+    height: 200px;
+    width: auto;
+}
+
+.heading {
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+.portrait {
+    margin-left: 100px;
+    height: 50%;
+    width: auto;
+}
+
+.biography {
+    margin-left: 100px;
+    padding-left: 100px;
+    padding-right: 100px;
+    border-left: 0.5px solid #ccc;
+}
+
+.biography p {
+    font-size: 1.2em;
+}
+
+.capitecbank {
+    height: 150px;
+}
+
+.socials {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin: 20px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+
+.socials img {
+    height: auto;
+    width: 250px;
+}
+
+.certification {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    margin: 0px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0);
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+
+.certification img {
+    height: auto;
+    width: 150px;
+}
+
+.publicspeaking {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.publicspeaking img {
+    height: auto;
+    width: 100%;
+}
+
+.publicspeaking {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.publicspeaking img {
+    height: auto;
+    width: 100%;
+}
+
+.techstack {
+    height: 100px;
+    width: auto;
+}
+
+.award {
+    padding-top: 100px;
+    height: 75%;
+    width: auto;
+}
+
+.blog {
+    width: 350px;
+    height: auto;
+}
+
+.eventheader {
+    height: 250px;
+}
+
+.eventlink {
+    height: 100px;
+}
+
+.carousel {
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-inner {
+    margin-left: 30%;
+}
+
+.carousel-item img {
+    margin-left: 5%;
+    height: 500px;
+    width: auto;
+}
+
+.certificate {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    margin: 0px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.certificate img {
+    height: 600px;
+    width: auto;
+}
