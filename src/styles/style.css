@@ -157,12 +157,12 @@ label {
     font-size: 10px;
     margin-bottom: 10px;
 }
-/* 
- display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    
-    margin: 10px;
-    
-    background-color: transparent;
-    transition: all 0.3s; */
+
+.back {
+    font-size: 50px;
+    text-decoration: none;
+    margin-top: -30px;
+    margin-left: -20px;
+    padding-right: 25px;
+    color: #00FF00;
+}
