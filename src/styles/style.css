@@ -42,7 +42,10 @@ body {
   }
 
 .pageheader {
-    padding: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    margin-bottom: -25px;
 }
 
 .container-fluid {
@@ -53,7 +56,7 @@ body {
 
 .container-fluid-content {
     /* border: solid; */
-    height: calc(100% - 185px);
+    height: calc(100% - 120px);
     overflow-y: auto;
     padding: 15px;
 }

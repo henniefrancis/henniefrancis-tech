@@ -23,13 +23,17 @@
 
 .heading {
     text-align: center;
-    padding-bottom: 50px;
+    margin-top: -50px;
 }
 
 .portrait {
     margin-left: 100px;
     height: 50%;
     width: auto;
+}
+
+.bio {
+    margin-top: 100px;
 }
 
 .biography {
@@ -44,6 +48,8 @@
 }
 
 .capitecbank {
+    margin-top: 100px;
+    margin-bottom: 50px;
     height: 150px;
 }
 
