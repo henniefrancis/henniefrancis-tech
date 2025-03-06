@@ -23,7 +23,7 @@
 
 .heading {
     text-align: center;
-    margin-top: -50px;
+    margin-top: -20px;
 }
 
 .portrait {
@@ -149,10 +149,18 @@
 
 .eventheader {
     height: 250px;
+    margin-top: 80px;
+    margin-bottom: 50px;
 }
 
 .eventlink {
+    margin-top: 80px;
     height: 100px;
+}
+
+.eventheaderlink {
+    margin-bottom: -80px;
+    margin-top: 20px;
 }
 
 .carousel {
@@ -161,11 +169,14 @@
 }
 
 .carousel-inner {
-    margin-left: 30%;
+    margin-left: 10%;
+    width: 1500px;
+    text-align: center;
 }
 
 .carousel-item img {
-    margin-left: 5%;
+    margin-left: auto;
+    margin-right: auto;
     height: 500px;
     width: auto;
 }
