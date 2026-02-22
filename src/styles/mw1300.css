@@ -59,13 +59,25 @@
     }
 
     .biography p {
-        font-size: 1.2em;
+        font-size: 1.5em;
     }
 
-    .capitecbank {
+    .bio {
+        margin-top: 20px;
+    }
+
+    .bio h3 {
+        margin-top: 20px;
+    }
+
+    .bio p {
+        font-size: 0.9em;
+    }
+
+    .siliconoverdrive {
         margin-top: 100px;
         margin-bottom: 50px;
-        height: 150px;
+        height: 250px;
     }
 
     .socials {
