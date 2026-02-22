@@ -13,6 +13,11 @@
     .col-11 {width: 100%;}
     .col-12 {width: 100%;}
     
+    [class*="col-sm-1"] {
+        width: max-content;
+
+    }
+
     .about-card {
         height: calc(100% - 40px);
     }
