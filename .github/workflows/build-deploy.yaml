@@ -1,151 +1,82 @@
-name: Deployment Workflow
+name: Deploy Website
+description: Deploy the community day website to EC2 instance
 
 on:
-  workflow_dispatch:
-  #pull_request_target:
   push:
-    branches:
-      - feature/refactoring
-      - develop
-      - release
-      - main
-    # types:  
-    #   - closed
-    paths:
-     - 'src/**'
-     - 'Dockerfile'
-     - '.github/workflows/*.yaml'
-
-env:
-  
-  AWS_REGION : af-south-1
+    branches: [ main ]
 
 permissions:
-      id-token: write
-      contents: read
-
+  id-token: write
+  contents: read
 
 jobs:
-  build:
-    name: Build Application
-    runs-on: ubuntu-24.04
-    #if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.event.action == 'closed' && (github.base_ref == 'develop' || github.base_ref == 'release') && github.event.pull_request.merged == true)) }}
+  build-and-upload:
+    runs-on: ubuntu-latest
     steps:
-      - uses: bhowell2/github-substring-action@1.0.2
-        id: directory
-        name: Get Directory
-        with:
-            value: ${{ github.repository }}
-            index_of_str: "henniefrancis/"
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          src
 
-      - name: Check GitHub Repo name
-        id: files
-        run: echo ${{ steps.directory.outputs.substring }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::511489843375:role/EC2SSM
+        aws-region: af-south-1
 
-      - uses: actions/checkout@v4
-        name: Setup .NET
+    - name: Create zip file
+      run: |
+        cd src
+        zip -r ../hennie-francis-tech.zip .
 
-      - name: Restore .NET
-        id: restore-dotnet
-        run: |
-          cd src/**/
-          dotnet restore *.csproj
+    - name: Upload to S3
+      run: |
+        aws s3 cp hennie-francis-tech.zip s3://temp-deploy-hennie-francis-tech-bucket/hennie-francis-tech.zip
 
-      - name: Build .NET
-        id: build-dotnet
-        run: |
-          cd src/**/
-          dotnet build --configuration Release
-
-      - name: Test .NET
-        id: test-dotnet
-        run: |
-          cd src/**/
-          dotnet test --no-build --verbosity normal
-
-      - name: Publish .NET
-        id: publish-dotnet
-        run: |
-          cd src/**/
-          dotnet publish
-
-      - name: Path to Project
-        id: project-path
-        run: |
-          cd src/**/
-          PROJECT_PATH="src/henniefrancis/henniefrancis.csproj"
-          PROJECT_PATH=${PROJECT_PATH/-tech/}
-          echo "project-path=$PROJECT_PATH" >> $GITHUB_ENV
-
-      - name: Docker Path
-        id: docker-path
-        run: |
-          cd src/**/
-          DOCKER_PATH="${{ steps.directory.outputs.substring }}/Dockerfile"
-          DOCKER_PATH=${DOCKER_PATH/-tech/}
-          echo "docker-path=$DOCKER_PATH" >> $GITHUB_ENV
-
-      - name: Path to Docker
-        id: path-to-docker
-        run: |
-          echo ${{ env.docker-path }}
-
-      - uses: kzrnm/get-net-sdk-project-versions-action@v2
-        id: get-version
-        with:
-          proj-path: ${{ env.project-path }}
-      - run: echo "${{steps.get-version.outputs.version}}"
-
-    outputs:
-      project-version: ${{ steps.get-version.outputs.version }}
-      docker-path: ${{ env.docker-path }}
-  release:
-    name: Create Release
-    needs:
-      - build
-    runs-on: ubuntu-24.04
+  deploy-to-ec2:
+    needs: build-and-upload
+    runs-on: ubuntu-latest
     steps:
-      - uses: bhowell2/github-substring-action@1.0.2
-        id: directory
-        name: Get Directory
-        with:
-            value: ${{ github.repository }}
-            index_of_str: "henniefrancis/"
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::511489843375:role/EC2SSM
+        aws-region: af-south-1
 
-      - name: Check GitHub Repo name
-        id: files
-        run: echo ${{ steps.directory.outputs.substring }}
-      - uses: actions/checkout@v4
-        name: Checkout files
+    - name: Deploy to EC2
+      run: |
+        aws ssm send-command \
+          --instance-ids "i-02723168e2145a4f2" \
+          --document-name "AWS-RunShellScript" \
+          --parameters '{
+            "commands": [
+              "cd /usr/share/nginx/html",
+              "aws s3 cp s3://temp-deploy-hennie-francis-tech-bucket/hennie-francis-tech.zip .",
+              "unzip -o hennie-francis-tech.zip -d hennie-francis-tech",
+              "rm hennie-francis-tech.zip",
+              "chown -R nginx:nginx hennie-francis-tech"
+            ]
+          }'
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.2
+  restart-nginx:
+      needs: deploy-to-ec2
+      runs-on: ubuntu-latest
+      steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          audience: sts.amazonaws.com
+          role-to-assume: arn:aws:iam::511489843375:role/EC2SSM
           aws-region: af-south-1
-          role-to-assume: arn:aws:iam::710802848577:role/dcs-710802848577-gh-srv-acc-role-prd
 
-      - name: Login to Amazon ECR Private
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push docker image to Amazon ECR
-        env:
-          DOCKERFILE: ${{ needs.build.outputs.docker-path }}
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: henniefrancis/${{ steps.directory.outputs.substring }}
-          IMAGE_TAG: ${{ needs.build.outputs.project-version }}
+      - name: Restart Nginx
         run: |
-          cd src
-          echo "Building Docker image..."
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f $DOCKERFILE .
-          echo "Pushing Docker image..."
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-
-  # publish:
-  #   name: Publish Application
-  #   needs:
-  #     - build
-  #         - release
-  #   runs-on: ubuntu-24.04
-  #   steps:
+          aws ssm send-command \
+            --instance-ids "i-02723168e2145a4f2" \
+            --document-name "AWS-RunShellScript" \
+            --parameters '{
+              "commands": [
+                "systemctl restart nginx",
+                "systemctl status nginx"
+              ]
+            }'
