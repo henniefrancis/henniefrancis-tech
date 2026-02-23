@@ -47,7 +47,7 @@ jobs:
     - name: Deploy to EC2
       run: |
         aws ssm send-command \
-          --instance-ids "i-05bb2c6723c4818e6" \
+          --instance-ids "i-02723168e2145a4f2" \
           --document-name "AWS-RunShellScript" \
           --parameters '{
             "commands": [
@@ -72,7 +72,7 @@ jobs:
       - name: Restart Nginx
         run: |
           aws ssm send-command \
-            --instance-ids "i-05bb2c6723c4818e6" \
+            --instance-ids "i-02723168e2145a4f2" \
             --document-name "AWS-RunShellScript" \
             --parameters '{
               "commands": [
