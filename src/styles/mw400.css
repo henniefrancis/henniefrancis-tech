@@ -1,7 +1,7 @@
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 400px) {
-    .col-1 {width: 50%;}
-    .col-2 {width: 30%;}
+    .col-1 {width: 100%;}
+    .col-2 {width: 100%;}
     .col-3 {width: 100%;}
     .col-4 {width: 100%;}
     .col-5 {width: 100%;}
@@ -14,7 +14,8 @@
     .col-12 {width: 100%;}
 
     .col-sm-1 {
-        width: 50%;
+        width: 33.33%;
+        text-align: center;
     }
 
     .col-sm-2,
@@ -51,20 +52,21 @@
     }
 
     .portrait {
-        margin-left: 100px;
-        height: 50%;
-        width: auto;
+        display: block;
+        margin: 0 auto;
+        width: min(65%, 260px);
+        height: auto;
     }
 
     .bio {
-        margin-top: 100px;
+        margin-top: 24px;
     }
 
     .biography {
-        margin-left: 100px;
-        padding-left: 100px;
-        padding-right: 100px;
-        border-left: 0.5px solid #ccc;
+        margin-left: 0;
+        padding-left: 12px;
+        padding-right: 12px;
+        border-left: none;
     }
 
     .biography p {
@@ -72,9 +74,10 @@
     }
 
     .siliconoverdrive {
-        margin-top: 100px;
-        margin-bottom: 50px;
-        height: 150px;
+        display: block;
+        margin: 24px auto;
+        width: min(100%, 360px);
+        height: auto;
     }
 
     .socials {
@@ -82,19 +85,18 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        padding: 20px;
-        margin: 20px;
-        /* border: 1px solid #ccc; */
+        padding: 8px;
+        margin: 6px;
         border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0);
         background-color: transparent;
         transition: all 0.3s;
     }
 
 
     .socials img {
+        width: 100%;
+        max-width: 150px;
         height: auto;
-        width: 250px;
     }
 
     .certification {
@@ -156,35 +158,39 @@
     }
 
     .techstack {
-        height: 100px;
         width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 80px;
+        margin-bottom: 12px;
     }
 
     .award {
-        padding-top: 100px;
-        height: 75%;
-        width: auto;
+        padding-top: 16px;
+        height: auto;
+        width: min(100%, 320px);
     }
 
     .blog {
-        width: 350px;
+        width: min(100%, 350px);
         height: auto;
     }
 
     .eventheader {
-        height: 250px;
-        margin-top: 80px;
-        margin-bottom: 50px;
+        width: 100%;
+        height: auto;
+        margin-top: 24px;
+        margin-bottom: 12px;
     }
 
     .eventlink {
-        margin-top: 80px;
-        height: 100px;
+        margin-top: 12px;
+        height: 64px;
     }
 
     .eventheaderlink {
-        margin-bottom: -80px;
-        margin-top: 20px;
+        margin-bottom: 0;
+        margin-top: 12px;
     }
 
     .carousel {
@@ -193,16 +199,18 @@
     }
 
     .carousel-inner {
-        margin-left: 10%;
-        width: 1500px;
+        margin-left: 0;
+        width: 100%;
         text-align: center;
     }
 
     .carousel-item img {
+        display: block;
+        width: 100%;
+        max-width: 420px;
+        height: auto;
         margin-left: auto;
         margin-right: auto;
-        height: 500px;
-        width: auto;
     }
 
     .certificate {
@@ -220,7 +228,29 @@
     }
 
     .certificate img {
-        height: 600px;
-        width: auto;
+        width: min(100%, 420px);
+        height: auto;
     }
+
+    /* Mobile: .container-fluid becomes its own scroller — the same
+       pattern index (.content) and public-speaking
+       (.container-fluid-content) already use. The page body is
+       viewport-pinned by design and never scrolls itself. */
+    .container-fluid {
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    .col-1 h5,
+    .col-2 p {
+        text-align: center;
+    }
+
+
+    .socials-grid > .col-2 {
+        width: 50%;
+    }
+
 }

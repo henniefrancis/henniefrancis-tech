@@ -1,5 +1,7 @@
 # AWS IAM Role Setup for GitHub Actions Deployment
 
+> **⚠️ SUPERSEDED (July 2026):** the infrastructure is now fully Terraform-managed — see [`terraform/README.md`](../terraform/README.md). The OIDC deploy role, EC2 instance role, and artifacts bucket described below are created by `terraform/iam.tf` and `terraform/s3.tf` with least-privilege scoping (the manual `EC2SSM` role used `Resource: "*"`). This document is kept only as a reference for how the original setup was built, and for the one prerequisite Terraform still expects to exist: the **GitHub OIDC identity provider** (Step 1), which is already present in the account.
+
 This guide walks you through creating the necessary AWS resources for GitHub Actions to deploy to EC2 instances via SSM and S3.
 
 ## Prerequisites

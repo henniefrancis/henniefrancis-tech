@@ -1,0 +1,35 @@
+# ============================================================
+# terraform.tfvars.example — copy to terraform.tfvars for local
+# planning, or set these as HCP Terraform workspace variables.
+# Every value shown is the default; only set what you change.
+# ============================================================
+
+# aws_region   = "af-south-1"
+# project_name = "henniefrancis-tech"
+# environment  = "prod"
+# team_name    = "henniefrancis"
+
+# ── Domains ──────────────────────────────────────────────────
+# frontend_primary_domain    = "henniefrancis.tech"
+# frontend_alternate_domains = ["www.henniefrancis.tech"]
+# origin_domain_name         = "origin.henniefrancis.tech"
+
+# ── Networking ───────────────────────────────────────────────
+# vpc_cidr          = "10.20.0.0/16"
+# ssh_allowed_cidrs = []            # e.g. ["203.0.113.7/32"] — NEVER 0.0.0.0/0
+
+# ── EC2 ──────────────────────────────────────────────────────
+# instance_type       = "t4g.nano"
+# root_volume_size_gb = 8
+# associate_public_ip = true
+# assign_ipv6_address = true
+
+# ── CloudFront ───────────────────────────────────────────────
+# cloudfront_origin_protocol_policy = "https-only"
+# cloudfront_price_class            = "PriceClass_All"
+
+# ── GitHub ───────────────────────────────────────────────────
+# github_repository           = "henniefrancis/henniefrancis-tech"
+# create_github_oidc_provider = false   # true only for a greenfield account
+
+# artifact_retention_days = 30

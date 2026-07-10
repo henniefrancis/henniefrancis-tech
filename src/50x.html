@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hennie's Server Error</title>
+  <!-- Deliberately self-contained: when the server is unhealthy enough to
+       serve this page, external CSS/JS may not load — everything inline. -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100%; background: #001010; color: #F1F1F1;
+    }
+    .card { text-align: center; padding: 2rem; max-width: 34rem; }
+    .prompt { font-family: Consolas, Menlo, monospace; font-size: 1rem; margin-bottom: 1.5rem; }
+    .prompt .root { color: #00FF00; font-weight: bolder; }
+    .prompt .path { color: #0077ff; }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: .75rem; }
+    p  { color: #94a3b8; font-size: 1rem; margin-bottom: .75rem; }
+    a  { color: #00FF00; font-weight: bolder; text-decoration: none; }
+    a:hover { color: #007413; }
+    hr { border: 0; border-top: 1px solid #1e2a2a; margin: 1.5rem 0 1rem; }
+    footer p { font-size: small; color: #F2F2F2; }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="prompt"><span class="root">root@hennie</span>: &#x27A4; <span class="path">500 - Server Error</span></div>
+    <h1>Something Went Wrong</h1>
+    <p>The server hit an unexpected error while handling your request. It is usually temporary &mdash; give it a moment and try again.</p>
+    <p><a href="/" title="Back to home">Take me home</a></p>
+    <footer>
+      <hr />
+      <p>&copy; 2025, Hennie Francis - All rights reserved</p>
+    </footer>
+  </div>
+</body>
+</html>

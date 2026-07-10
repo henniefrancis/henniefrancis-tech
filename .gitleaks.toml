@@ -1,0 +1,11 @@
+# Gitleaks configuration for henniefrancis.tech.
+#
+# Extends the full default ruleset with nothing disabled. Add
+# tightly-scoped allowlists here ONLY for values that are public by
+# design (see the passembly repo for a documented example) — never for
+# anything that grants access.
+
+title = "henniefrancis-tech Gitleaks configuration"
+
+[extend]
+useDefault = true
