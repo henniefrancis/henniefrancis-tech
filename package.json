@@ -1,0 +1,20 @@
+{
+  "name": "henniefrancis-tech",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal tech site at https://henniefrancis.tech — static HTML/CSS/JS, no runtime dependencies. Dev tooling only.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "serve": "npx --yes serve src -l 8080",
+    "lint:html": "htmlhint \"src/**/*.html\"",
+    "test:e2e": "playwright test",
+    "test:all": "npm run lint:html && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.0",
+    "htmlhint": "^1.1.4"
+  }
+}

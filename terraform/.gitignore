@@ -1,0 +1,25 @@
+# Local Terraform state and caches — state lives in HCP Terraform.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Plan output files
+*.tfplan
+*.out
+
+# Variable files that may hold sensitive/local values.
+# (terraform.tfvars.example IS committed.)
+terraform.tfvars
+*.auto.tfvars
+
+# Local overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config
+.terraformrc
+terraform.rc

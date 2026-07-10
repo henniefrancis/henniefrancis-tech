@@ -1,0 +1,55 @@
+name: Terraform CI — henniefrancis.tech
+
+# Static checks + unit tests for the infrastructure code. Plans and
+# applies run in HCP Terraform (VCS-driven workspace) — this workflow
+# never needs AWS credentials: the tests use mock providers.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'terraform/**'
+  push:
+    branches: [main]
+    paths:
+      - 'terraform/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: fmt / validate / test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: terraform
+    env:
+      TF_IN_AUTOMATION: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '>=1.15.0 <2.0.0'
+          terraform_wrapper: false
+
+      - name: Format check
+        run: terraform fmt -check -recursive -diff
+
+      # -backend=false skips the HCP Terraform cloud block, so init only
+      # installs providers — no TFC token or AWS credentials required.
+      - name: Init (providers only)
+        run: terraform init -backend=false -input=false
+
+      - name: Validate
+        run: terraform validate -no-color
+
+      - name: Unit tests (mock providers)
+        run: terraform test -no-color

@@ -75,8 +75,9 @@
     }
 
     .siliconoverdrive {
-        margin-top: 100px;
-        margin-bottom: 50px;
+        display: inline-block;
+        margin: 100px auto 50px;
+        width: auto;
         height: 150px;
     }
 
@@ -98,6 +99,7 @@
     .socials img {
         height: auto;
         width: 250px;
+        max-width: none;
     }
 
     .certification {
@@ -161,6 +163,8 @@
     .techstack {
         height: 100px;
         width: auto;
+        max-height: none;
+        margin-bottom: 0;
     }
 
     .award {
@@ -175,7 +179,8 @@
     }
 
     .eventheader {
-        height: 250px;
+        width: 100%;
+        height: auto;
         margin-top: 80px;
         margin-bottom: 50px;
     }
@@ -196,8 +201,8 @@
     }
 
     .carousel-inner {
-        margin-left: 10%;
-        width: 1500px;
+        margin-left: 0;
+        width: 100%;
         text-align: center;
     }
 
@@ -206,6 +211,7 @@
         margin-right: auto;
         height: 500px;
         width: auto;
+        max-width: none;
     }
 
     .certificate {
@@ -225,5 +231,30 @@
     .certificate img {
         height: 600px;
         width: auto;
+    }
+
+    /* Desktop restore: original layout — fixed-height container, no inner
+       scroller (mobile files add their own; see mw300-600). */
+    .container-fluid {
+        height: calc(100% - 25px);
+        overflow-y: visible;
+    }
+
+
+    .col-1 h5,
+    .col-2 p {
+        text-align: start;
+    }
+
+
+    .socials-grid > .col-2 {
+        width: 50%;
+    }
+
+
+    /* Footer parity with index on desktop: pageheader (net 130px) + this
+       height puts the footer exactly where index's .content places it. */
+    .container-fluid-content {
+        height: calc(100% - 160px);
     }
 }

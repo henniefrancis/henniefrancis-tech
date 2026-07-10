@@ -1,0 +1,272 @@
+#!/bin/bash
+# ============================================================
+# user_data.sh.tftpl — EC2 bootstrap script
+#
+# Rendered by Terraform's templatefile() function.
+# Available template variables:
+#   project_name  — e.g. henniefrancis-tech
+#   environment   — prod | staging | dev
+#   aws_region    — e.g. af-south-1
+#   domain_name   — the ORIGIN hostname, e.g. origin.henniefrancis.tech
+#
+# Runs once as root on first boot via cloud-init.
+# Full log at: /var/log/user-data.log
+#
+# ESCAPING NOTE FOR MAINTAINERS:
+#   $${var} in this file renders as $var in the bash script
+#   (double-dollar escapes Terraform interpolation).
+#   Terraform template variables use the single-dollar brace form,
+#   e.g. $${project_name} without the extra dollar.
+#   nginx variables ($uri, $remote_addr, etc.) need no escaping
+#   because they don't use the brace form — Terraform ignores them.
+# ============================================================
+set -euo pipefail
+exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
+
+echo "[bootstrap] === ${project_name}-${environment} in ${aws_region} ==="
+
+# ── 1. Update OS ──────────────────────────────────────────────
+# AL2023 uses dnf. SSM agent and AWS CLI are pre-installed.
+dnf update -y
+
+# ── 2. Install packages ───────────────────────────────────────
+# rsync + unzip are required by the GitHub Actions deploy pipeline
+# (unzip artifact, rsync --delete into the web root).
+dnf install -y nginx python3 augeas-libs jq rsync unzip
+
+# ── 3. Install Certbot (Let's Encrypt — free TLS) ─────────────
+# Isolated in a venv so it never conflicts with system Python.
+# The origin cert (for ${domain_name}) lets CloudFront connect
+# with origin_protocol_policy = "https-only".
+python3 -m venv /opt/certbot/
+/opt/certbot/bin/pip install --upgrade pip --quiet
+/opt/certbot/bin/pip install certbot certbot-nginx --quiet
+ln -sf /opt/certbot/bin/certbot /usr/bin/certbot
+
+# Certbot auto-renewal via systemd timer (twice daily, random offset)
+cat > /etc/systemd/system/certbot-renew.service << '__EOF__'
+[Unit]
+Description=Certbot Renewal
+
+[Service]
+Type=oneshot
+ExecStart=/opt/certbot/bin/certbot renew --quiet --no-self-upgrade
+__EOF__
+
+cat > /etc/systemd/system/certbot-renew.timer << '__EOF__'
+[Unit]
+Description=Run certbot twice daily
+
+[Timer]
+OnCalendar=*-*-* 00,12:00:00
+RandomizedDelaySec=3600
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+__EOF__
+
+systemctl daemon-reload
+systemctl enable --now certbot-renew.timer
+
+# ── 4. Create web directory ───────────────────────────────────
+WEB_ROOT="/var/www/${project_name}/html"
+mkdir -p "$WEB_ROOT"
+mkdir -p /var/www/certbot
+
+# nginx owns the web files; the deploy pipeline copies files here via
+# SSM Run Command and re-chowns to nginx.
+chown -R nginx:nginx "/var/www/${project_name}"
+chmod 755 "/var/www/${project_name}"
+chmod 755 "$WEB_ROOT"
+
+# Placeholder page — replaced by the deploy pipeline on first push.
+cat > "$WEB_ROOT/index.html" << '__EOF__'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: #0f172a; color: #e2e8f0;
+    }
+    .card { text-align: center; padding: 2rem; }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: .5rem; }
+    p  { color: #94a3b8; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Deploying&hellip;</h1>
+    <p>This site will be live shortly.</p>
+  </div>
+</body>
+</html>
+__EOF__
+
+# ── 5. nginx main config (production settings) ────────────────
+# Tuned for a t4g.nano (2 vCPU, 512 MB RAM) serving static files.
+cat > /etc/nginx/nginx.conf << '__NGINX_MAIN__'
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log warn;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 512;    # conservative for 512 MB RAM
+    use epoll;
+    multi_accept on;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent"';
+    access_log /var/log/nginx/access.log main;
+
+    # Performance
+    sendfile           on;
+    tcp_nopush         on;
+    tcp_nodelay        on;
+    keepalive_timeout  65;
+    types_hash_max_size 4096;
+
+    # Security — hide nginx version from Server header
+    server_tokens off;
+
+    # Buffer limits (conservative for small instance)
+    client_max_body_size        16m;
+    client_body_buffer_size     128k;
+    client_header_buffer_size   1k;
+    large_client_header_buffers 4 8k;
+
+    # Gzip compression
+    gzip            on;
+    gzip_vary       on;
+    gzip_proxied    any;
+    gzip_comp_level 5;
+    gzip_min_length 256;
+    gzip_types
+        application/javascript
+        application/json
+        application/manifest+json
+        application/xml
+        image/svg+xml
+        text/css
+        text/javascript
+        text/plain
+        text/xml;
+
+    # Rate limiting — 10 req/s per IP, burst bucket of 30
+    limit_req_zone $binary_remote_addr zone=general:10m rate=10r/s;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+__NGINX_MAIN__
+
+# ── 6. Site config ────────────────────────────────────────────
+# HTTP-only initially. After the origin DNS record propagates, run
+# certbot for ${domain_name} and it adds the HTTPS server block here.
+#
+# CACHING STRATEGY (multi-page static site — files are NOT content-
+# hashed, unlike an Angular/React build, so nothing may be "immutable"):
+#   *.html      no-cache  — revalidate every request; deploys land instantly
+#   *.css/*.js  1 hour    — short enough that a deploy + CloudFront
+#                           invalidation always wins
+#   images/fonts 7 days   — heavyweight, rarely change
+# CloudFront honours these via the UseOriginCacheControlHeaders policy,
+# and every deploy issues a /* invalidation as belt-and-braces.
+cat > /etc/nginx/conf.d/${project_name}.conf << '__NGINX_SITE__'
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ${domain_name};
+
+    root /var/www/${project_name}/html;
+    index index.html;
+
+    # Rate limiting
+    limit_req zone=general burst=30 nodelay;
+
+    # Security headers
+    # HSTS is added by certbot after TLS is enabled.
+    add_header X-Frame-Options          "SAMEORIGIN"                       always;
+    add_header X-Content-Type-Options   "nosniff"                          always;
+    add_header Referrer-Policy          "strict-origin-when-cross-origin"  always;
+    add_header Permissions-Policy       "camera=(), microphone=(), geolocation=()" always;
+
+    # Let's Encrypt ACME challenge (webroot validation)
+    location /.well-known/acme-challenge/ {
+        alias /var/www/certbot/.well-known/acme-challenge/;
+    }
+
+    # Custom error pages (shipped with the site in the web root).
+    # NOT marked `internal`: CloudFront's custom_error_response fetches
+    # /50x.html directly from this origin when it needs to serve it.
+    error_page 404 /404.html;
+    location = /404.html {
+        expires -1;
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        expires -1;
+    }
+
+    # HTML never cached — pages reference un-hashed CSS/JS, so a cached
+    # page must never outlive its assets. `expires -1` sends
+    # "Cache-Control: no-cache" (revalidate every request) and, not
+    # being an add_header, keeps the inherited security headers intact.
+    location ~* \.html$ {
+        expires -1;
+        try_files $uri =404;
+    }
+
+    # Multi-page routing with clean URLs:
+    #   /pages/biography  ->  /pages/biography.html
+    # Unknown paths return a real 404 (this is not an SPA).
+    location / {
+        expires -1;
+        try_files $uri $uri/ $uri.html =404;
+    }
+
+    # CSS/JS — short cache; files are NOT content-hashed.
+    location ~* \.(css|js)$ {
+        expires 1h;
+        add_header Cache-Control "public, must-revalidate";
+        access_log off;
+    }
+
+    # Images and fonts — heavier, change rarely.
+    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp|avif)$ {
+        expires 7d;
+        add_header Cache-Control "public";
+        access_log off;
+    }
+
+    # Block hidden files (.git, .DS_Store, etc.)
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+}
+__NGINX_SITE__
+
+# ── 7. Validate config and start nginx ────────────────────────
+nginx -t
+systemctl enable --now nginx
+
+echo "[bootstrap] === Done. nginx is running. ==="
+echo "[bootstrap] Origin domain: ${domain_name}"
+echo "[bootstrap] Web root: /var/www/${project_name}/html"
+echo "[bootstrap] Next: point origin DNS at this box, then:"
+echo "[bootstrap]   certbot --nginx -d ${domain_name} --non-interactive --agree-tos -m you@example.com"

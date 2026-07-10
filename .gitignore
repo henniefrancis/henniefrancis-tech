@@ -398,3 +398,15 @@ FodyWeavers.xsd
 *.sln.iml
 .github/.DS_Store
 .DS_Store
+
+# Terraform (state lives in HCP Terraform; see terraform/.gitignore too)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+.playwright/
