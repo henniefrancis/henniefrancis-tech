@@ -22,11 +22,15 @@ import boto3
 def handler(event, context):
     ec2 = boto3.client("ec2")
     out = ec2.get_console_output(InstanceId=event["instance_id"], Latest=True)
-    data = out.get("Output") or ""
-    try:
-        text = base64.b64decode(data).decode("utf-8", "replace")
-    except Exception:
-        text = data
+    text = out.get("Output") or ""
+    # botocore's decode_console_output handler already base64-decodes
+    # this field. Only decode if it still looks base64 (pure alnum+/=).
+    sample = text[:200]
+    if sample and all(c.isalnum() or c in "+/=\r\n" for c in sample):
+        try:
+            text = base64.b64decode(text).decode("utf-8", "replace")
+        except Exception:
+            pass
     return {"tail": text[-14000:]}
 PY
   }
