@@ -23,6 +23,12 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
+
+    # Packages the temporary console-reader Lambda (debug.tf).
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.4"
+    }
   }
 
   cloud {
