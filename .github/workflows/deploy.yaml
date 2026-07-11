@@ -8,10 +8,13 @@ name: Deploy — henniefrancis.tech
 # file is a reusable template (see terraform/README.md for the list):
 #   vars.AWS_DEPLOY_ROLE_ARN   IAM role assumed via OIDC
 #   vars.AWS_REGION            e.g. af-south-1
-#   vars.EC2_INSTANCE_ID       target instance
 #   vars.ARTIFACTS_BUCKET      deploy artifacts bucket
 #   vars.WEB_ROOT              e.g. /var/www/henniefrancis-tech/html
 # and one secret: CLOUDFRONT_DISTRIBUTION_ID.
+#
+# The TARGET INSTANCE is not a variable: it is discovered at deploy time
+# by its Name tag (*-<project>-ec2, running). Replacing the instance via
+# Terraform therefore never leaves this pipeline aiming at a dead id.
 
 on:
   push:
@@ -90,14 +93,13 @@ jobs:
     environment: production   # deployment protection rules + OIDC sub claim
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
-      INSTANCE_ID: ${{ vars.EC2_INSTANCE_ID }}
       ARTIFACTS_BUCKET: ${{ vars.ARTIFACTS_BUCKET }}
       WEB_ROOT: ${{ vars.WEB_ROOT }}
     steps:
       - name: Preflight — required configuration present
         run: |
           missing=0
-          for v in AWS_REGION INSTANCE_ID ARTIFACTS_BUCKET WEB_ROOT; do
+          for v in AWS_REGION ARTIFACTS_BUCKET WEB_ROOT; do
             if [ -z "${!v}" ]; then
               echo "::error::Repository variable behind '$v' is not set (see terraform/README.md §4)."
               missing=1
@@ -114,6 +116,29 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+
+      # Discover the target instance by its Name tag rather than a pinned
+      # id: after a Terraform -replace the id changes, and a stale
+      # EC2_INSTANCE_ID variable would strand deploys (SSM answers
+      # "Undeliverable" or "InvalidInstanceId"). Needs the deploy role's
+      # DiscoverInstance statement (iam.tf).
+      - name: Resolve target instance
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=*-${PROJECT_NAME}-ec2" \
+                      "Name=instance-state-name,Values=running" \
+            --query "Reservations[].Instances[].InstanceId" \
+            --output text)
+          if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" = "None" ]; then
+            echo "::error::No running instance found with Name tag *-${PROJECT_NAME}-ec2"
+            exit 1
+          fi
+          if [ "$(echo "$INSTANCE_ID" | wc -w)" -ne 1 ]; then
+            echo "::error::Expected exactly one running instance, found: $INSTANCE_ID"
+            exit 1
+          fi
+          echo "Deploying to instance: $INSTANCE_ID"
+          echo "INSTANCE_ID=$INSTANCE_ID" >> "$GITHUB_ENV"
 
       - name: Download artifact
         uses: actions/download-artifact@v8
