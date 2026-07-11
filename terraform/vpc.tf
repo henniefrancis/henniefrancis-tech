@@ -35,11 +35,18 @@ resource "aws_internet_gateway" "main" {
 # ── Public Subnets ───────────────────────────────────────────
 
 resource "aws_subnet" "public_1a" {
-  vpc_id                          = aws_vpc.main.id
-  cidr_block                      = cidrsubnet(var.vpc_cidr, 8, 0)
-  ipv6_cidr_block                 = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, 0)
-  availability_zone               = "${var.aws_region}a"
-  map_public_ip_on_launch         = false # EIP managed explicitly in ec2.tf
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, 0)
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, 0)
+  availability_zone = "${var.aws_region}a"
+
+  # TRUE is required even though the instance gets an EIP: the EIP only
+  # attaches AFTER the instance is created, so with this set to false the
+  # box boots with no public IPv4 at all — user_data (dnf) and the SSM
+  # agent's first registration both fail, leaving a half-provisioned
+  # instance that SSM reports as "Undeliverable". The auto-assigned
+  # ephemeral IP covers the boot window; the EIP replaces it seconds later.
+  map_public_ip_on_launch         = true
   assign_ipv6_address_on_creation = true
 
   tags = {
@@ -48,11 +55,13 @@ resource "aws_subnet" "public_1a" {
 }
 
 resource "aws_subnet" "public_1b" {
-  vpc_id                          = aws_vpc.main.id
-  cidr_block                      = cidrsubnet(var.vpc_cidr, 8, 1)
-  ipv6_cidr_block                 = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, 1)
-  availability_zone               = "${var.aws_region}b"
-  map_public_ip_on_launch         = false
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, 1)
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, 1)
+  availability_zone = "${var.aws_region}b"
+
+  # See public_1a — instances need boot-time IPv4 for user_data + SSM.
+  map_public_ip_on_launch         = true
   assign_ipv6_address_on_creation = true
 
   tags = {
@@ -72,20 +81,4 @@ resource "aws_route_table" "public" {
 
   route {
     ipv6_cidr_block = "::/0"
-    gateway_id      = aws_internet_gateway.main.id
-  }
-
-  tags = {
-    Name = "${local.name_prefix}-rt-public"
-  }
-}
-
-resource "aws_route_table_association" "public_1a" {
-  subnet_id      = aws_subnet.public_1a.id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "public_1b" {
-  subnet_id      = aws_subnet.public_1b.id
-  route_table_id = aws_route_table.public.id
-}
+    gateway_id      = aws_internet_gateway.main
