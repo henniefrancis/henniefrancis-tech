@@ -42,9 +42,30 @@ for attempt in $(seq 1 30); do
   sleep 10
 done
 
-# ── 1. Update OS ──────────────────────────────────────────────
-# AL2023 uses dnf. SSM agent and AWS CLI are pre-installed.
-dnf update -y
+# ── 1. Swap file (t4g.nano survival) ──────────────────────────
+# 512 MB RAM is not enough for dnf + pip: the first boot of this
+# stack OOMed during `dnf update -y`, and the OOM killer took out
+# systemd-resolved and systemd-networkd — killing DNS/outbound, which
+# is why SSM reported Undeliverable and nginx never installed.
+# AL2023's default zram swap only compresses RAM (it maxed out at
+# ~428 MB); a real disk swapfile adds genuine headroom. gp3 swap is
+# slow, but that only matters during provisioning.
+if ! swapon --show --noheadings | grep -q '^/swapfile'; then
+  fallocate -l 2G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=2048
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+echo "[bootstrap] swap: $(free -h | awk '/Swap/ {print $2}') total"
+
+# NOTE: deliberately NO `dnf update -y` here. A full-distro update is
+# the single biggest memory consumer at boot and is exactly what OOMed
+# this instance type. The AMI tracks AL2023 latest, so packages are
+# near-current at launch. Patch post-boot instead (swap makes it safe):
+#   aws ssm send-command --document-name AWS-RunShellScript \
+#     --targets Key=instanceids,Values=<id> \
+#     --parameters 'commands=["dnf update -y"]'
 
 # ── 2. Install packages ───────────────────────────────────────
 # rsync + unzip are required by the GitHub Actions deploy pipeline
