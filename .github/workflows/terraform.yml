@@ -1,8 +1,16 @@
-name: Terraform CI — henniefrancis.tech
+name: Terraform — henniefrancis.tech
 
-# Static checks + unit tests for the infrastructure code. Plans and
-# applies run in HCP Terraform (VCS-driven workspace) — this workflow
-# never needs AWS credentials: the tests use mock providers.
+# Terraform EXECUTES REMOTELY in HCP Terraform (org: henniefrancis,
+# workspace: henniefrancis-tech) via the workspace's VCS connection to
+# this repository:
+#   - pull requests            -> TFC runs an automatic speculative PLAN
+#   - push to main (terraform/**) -> TFC runs PLAN + AUTO-APPLY
+# AWS credentials live in the org's variable sets. GitHub holds NO
+# tokens or cloud credentials for Terraform at all — TFC watches the
+# repo itself (working directory: terraform, trigger: terraform/**/*).
+#
+# This workflow is the static quality gate that runs BEFORE code merges:
+# fmt, validate, and the mock-provider unit tests. No credentials needed.
 
 on:
   pull_request:
@@ -19,7 +27,7 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  checks:
     name: fmt / validate / test
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -43,8 +51,7 @@ jobs:
       - name: Format check
         run: terraform fmt -check -recursive -diff
 
-      # -backend=false skips the HCP Terraform cloud block, so init only
-      # installs providers — no TFC token or AWS credentials required.
+      # -backend=false skips the cloud block: providers only, no token.
       - name: Init (providers only)
         run: terraform init -backend=false -input=false
 

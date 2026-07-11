@@ -29,11 +29,28 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 
 ## First-time rollout
 
-### 1. HCP Terraform workspace
+### 1. HCP Terraform workspace (VCS-driven, remote execution)
 
-1. In the HCP Terraform org (`awscommza` — edit `versions.tf` if this moves to its own org), create workspace **`henniefrancis-tech`**, VCS-driven from `henniefrancis/henniefrancis-tech`, **working directory `terraform`**.
-2. Add AWS credentials for the personal account as workspace variables (env category): `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` (sensitive) — or better, configure [dynamic provider credentials](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/aws-configuration) so TFC also uses OIDC.
-3. The account already has the GitHub OIDC identity provider (created manually per `infra/AWS.md`), so `create_github_oidc_provider` stays `false`. For a greenfield account set it to `true`.
+Terraform **executes remotely in HCP Terraform** — GitHub holds no tokens or cloud credentials for infrastructure work. The workspace is **VCS-connected** to `henniefrancis/henniefrancis-tech`, so HCP Terraform itself kicks off the runs:
+
+- **Pull requests** → automatic speculative plan (visible as a PR check)
+- **Push to `main` touching `terraform/**`** → plan + **auto-apply**
+
+Workspace configuration (already set):
+
+| Setting | Value |
+|---|---|
+| Workspace | `henniefrancis-tech` (org `henniefrancis`) |
+| VCS repository | `henniefrancis/henniefrancis-tech` |
+| Working directory | `terraform` |
+| Trigger pattern | `terraform/**/*` |
+| Auto-apply (API/UI/VCS runs) | enabled |
+| Automatic speculative plans (PRs) | enabled |
+| AWS credentials | org variable set "AWS (henniefrancis)" |
+
+The account already has the GitHub OIDC identity provider (created manually per `infra/AWS.md`), so `create_github_oidc_provider` stays `false`. For a greenfield account set it to `true`.
+
+**Dynamic credentials (no static keys):** `tfc-oidc.tf` creates an OIDC provider for `app.terraform.io` plus the `henniefrancis-tech-tfc-run` role, trust-scoped to this single workspace. Bootstrap order: the first apply runs on the static-key variable set and creates the role; then set workspace env variables `TFC_AWS_PROVIDER_AUTH=true` and `TFC_AWS_RUN_ROLE_ARN=<tfc_run_role_arn output>`, and detach the static-key variable set from this workspace. Every subsequent run gets fresh, short-lived credentials minted per run — nothing stored, nothing to expire.
 
 ### 2. Apply + certificate validation
 
@@ -70,6 +87,8 @@ Repo → Settings → Secrets and variables → Actions:
 
 **Secrets:** `CLOUDFRONT_DISTRIBUTION_ID` (from `cloudfront_distribution_id`). Optional: `GITLEAKS_LICENSE`, `GIST_SECRET` + `DEPLOY_BADGE_GIST_ID` for the deploy badge.
 
+Note the split: GitHub holds **nothing** for Terraform — runs are triggered by the workspace's VCS connection and use the org's variable-set credentials. The `AWS_DEPLOY_ROLE_ARN` variable is for the *site* deploy workflow (S3/SSM/CloudFront invalidation via OIDC), which is separate from infrastructure runs.
+
 Also create a **`production` environment** (Settings → Environments) — the deploy job targets it, and the IAM trust policy expects it.
 
 ### 5. Cut public DNS over + first deploy
@@ -104,7 +123,7 @@ terraform validate
 terraform test          # plan-only, mock providers, no credentials
 ```
 
-CI runs all of the above on every PR touching `terraform/` (`.github/workflows/terraform.yml`). Plans and applies run in HCP Terraform on merge.
+`terraform.yml` runs the static checks (no credentials needed) on every PR and push touching `terraform/`. The plan/apply runs are kicked off by HCP Terraform's own VCS connection: speculative plan on PRs, plan + auto-apply on merge to `main`. Runs execute remotely in the `henniefrancis-tech` workspace with the org's variable-set credentials and are fully visible in the HCP Terraform UI.
 
 ## Costs (steady state)
 

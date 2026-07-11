@@ -26,11 +26,11 @@ terraform {
   }
 
   cloud {
-    # HCP Terraform organization. The awscommza org already runs one
-    # workspace per AWS account (see terraform repo README) — this adds
-    # the personal account as another workspace. Change this line if the
-    # site moves to its own HCP organization.
-    organization = "awscommza"
+    # HCP Terraform organization for the personal account. Runs execute
+    # REMOTELY in HCP Terraform: AWS credentials come from the org's
+    # variable sets — never from GitHub. The GitHub workflow only holds a
+    # TFC API token (TF_API_TOKEN) to kick off runs.
+    organization = "henniefrancis"
 
     workspaces {
       name = "henniefrancis-tech"
