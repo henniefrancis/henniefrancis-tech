@@ -134,6 +134,16 @@ data "aws_iam_policy_document" "github_deploy" {
     resources = ["*"]
   }
 
+  # The deploy workflow resolves the target instance at deploy time by
+  # its Name tag, so an instance replacement never leaves the pipeline
+  # pointing at a dead id. Describe* does not support resource scoping.
+  statement {
+    sid       = "DiscoverInstance"
+    effect    = "Allow"
+    actions   = ["ec2:DescribeInstances"]
+    resources = ["*"]
+  }
+
   # Invalidate the site's distribution after each deploy.
   statement {
     sid    = "CloudFrontInvalidate"
