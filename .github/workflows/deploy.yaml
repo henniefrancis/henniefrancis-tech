@@ -173,14 +173,20 @@ jobs:
               --output text)
             echo "SSM Command ID: $cmd_id ($comment)"
 
-            # Wait (exits non-zero on command failure — status is checked below)
-            aws ssm wait command-executed \
-              --command-id "$cmd_id" --instance-id "$INSTANCE_ID" || true
-
+            # Poll until the command leaves Pending/InProgress (up to 10 min).
+            # `aws ssm wait command-executed` gives up after a fixed ~100 s,
+            # which a first full-site copy (~146 MB) on a t4g.nano exceeds —
+            # deploy #10 died with "Max attempts exceeded ... InProgress".
             local status
-            status=$(aws ssm get-command-invocation \
-              --command-id "$cmd_id" --instance-id "$INSTANCE_ID" \
-              --query "StatusDetails" --output text)
+            for _ in $(seq 1 60); do
+              status=$(aws ssm get-command-invocation \
+                --command-id "$cmd_id" --instance-id "$INSTANCE_ID" \
+                --query "StatusDetails" --output text 2>/dev/null || echo "Pending")
+              case "$status" in
+                Pending|InProgress|Delayed) sleep 10 ;;
+                *) break ;;
+              esac
+            done
             echo "Status: $status"
             if [ "$status" != "Success" ]; then
               echo "::group::Instance stderr"
