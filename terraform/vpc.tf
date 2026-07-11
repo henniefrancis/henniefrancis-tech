@@ -81,4 +81,20 @@ resource "aws_route_table" "public" {
 
   route {
     ipv6_cidr_block = "::/0"
-    gateway_id      = aws_internet_gateway.main
+    gateway_id      = aws_internet_gateway.main.id
+  }
+
+  tags = {
+    Name = "${local.name_prefix}-rt-public"
+  }
+}
+
+resource "aws_route_table_association" "public_1a" {
+  subnet_id      = aws_subnet.public_1a.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_1b" {
+  subnet_id      = aws_subnet.public_1b.id
+  route_table_id = aws_route_table.public.id
+}
