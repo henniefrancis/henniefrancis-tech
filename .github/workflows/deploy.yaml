@@ -173,14 +173,20 @@ jobs:
               --output text)
             echo "SSM Command ID: $cmd_id ($comment)"
 
-            # Wait (exits non-zero on command failure — status is checked below)
-            aws ssm wait command-executed \
-              --command-id "$cmd_id" --instance-id "$INSTANCE_ID" || true
-
+            # Poll until the command leaves Pending/InProgress (up to 10 min).
+            # `aws ssm wait command-executed` gives up after a fixed ~100 s,
+            # which a first full-site copy (~146 MB) on a t4g.nano exceeds —
+            # deploy #10 died with "Max attempts exceeded ... InProgress".
             local status
-            status=$(aws ssm get-command-invocation \
-              --command-id "$cmd_id" --instance-id "$INSTANCE_ID" \
-              --query "StatusDetails" --output text)
+            for _ in $(seq 1 60); do
+              status=$(aws ssm get-command-invocation \
+                --command-id "$cmd_id" --instance-id "$INSTANCE_ID" \
+                --query "StatusDetails" --output text 2>/dev/null || echo "Pending")
+              case "$status" in
+                Pending|InProgress|Delayed) sleep 10 ;;
+                *) break ;;
+              esac
+            done
             echo "Status: $status"
             if [ "$status" != "Success" ]; then
               echo "::group::Instance stderr"
@@ -196,9 +202,20 @@ jobs:
           # /tmp as tmpfs sized to ~half of RAM — ~256 MB on a t4g.nano —
           # and the ~146 MB site zip + its unzipped copy blew straight
           # through that ("write error (disk full?)", unzip exit 50).
+          #
+          # FETCH VIA PRESIGNED URL + curl — NOT `aws s3 cp` — on the box.
+          # aws-cli v2 carries a ~200 MB resident footprint; copying the
+          # ~142 MB artifact with it on a 512 MB t4g.nano swap-thrashed and
+          # hung the SSM command indefinitely (deploy #10 was still InProgress
+          # 15+ min in). The runner has creds + RAM, so it presigns the object;
+          # the box streams it to disk with curl (~a few MB of memory).
+          PRESIGNED_URL=$(aws s3 presign \
+            "s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip" \
+            --expires-in 1800)
+
           run_ssm "deploy ${PROJECT_NAME} ${GITHUB_SHA::7}" \
             "set -euo pipefail" \
-            "aws s3 cp s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip /var/tmp/${PROJECT_NAME}.zip" \
+            "curl -fsS \"${PRESIGNED_URL}\" -o /var/tmp/${PROJECT_NAME}.zip" \
             "rm -rf /var/tmp/${PROJECT_NAME}-deploy" \
             "unzip -o /var/tmp/${PROJECT_NAME}.zip -d /var/tmp/${PROJECT_NAME}-deploy" \
             "rsync -a --delete /var/tmp/${PROJECT_NAME}-deploy/ ${WEB_ROOT}/" \
