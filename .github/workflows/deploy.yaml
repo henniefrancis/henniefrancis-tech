@@ -192,14 +192,18 @@ jobs:
             fi
           }
 
+          # NOTE: workdir is /var/tmp (DISK-backed), not /tmp. AL2023 mounts
+          # /tmp as tmpfs sized to ~half of RAM — ~256 MB on a t4g.nano —
+          # and the ~146 MB site zip + its unzipped copy blew straight
+          # through that ("write error (disk full?)", unzip exit 50).
           run_ssm "deploy ${PROJECT_NAME} ${GITHUB_SHA::7}" \
             "set -euo pipefail" \
-            "aws s3 cp s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip /tmp/${PROJECT_NAME}.zip" \
-            "rm -rf /tmp/${PROJECT_NAME}-deploy" \
-            "unzip -o /tmp/${PROJECT_NAME}.zip -d /tmp/${PROJECT_NAME}-deploy" \
-            "rsync -a --delete /tmp/${PROJECT_NAME}-deploy/ ${WEB_ROOT}/" \
+            "aws s3 cp s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip /var/tmp/${PROJECT_NAME}.zip" \
+            "rm -rf /var/tmp/${PROJECT_NAME}-deploy" \
+            "unzip -o /var/tmp/${PROJECT_NAME}.zip -d /var/tmp/${PROJECT_NAME}-deploy" \
+            "rsync -a --delete /var/tmp/${PROJECT_NAME}-deploy/ ${WEB_ROOT}/" \
             "chown -R nginx:nginx ${WEB_ROOT}" \
-            "rm -rf /tmp/${PROJECT_NAME}.zip /tmp/${PROJECT_NAME}-deploy"
+            "rm -rf /var/tmp/${PROJECT_NAME}.zip /var/tmp/${PROJECT_NAME}-deploy"
 
       - name: Reload Nginx
         run: |
