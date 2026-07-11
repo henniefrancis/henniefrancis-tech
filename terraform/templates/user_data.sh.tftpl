@@ -25,6 +25,23 @@ exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&
 
 echo "[bootstrap] === ${project_name}-${environment} in ${aws_region} ==="
 
+# ── 0. Wait for outbound internet ─────────────────────────────
+# Belt-and-braces: the subnet auto-assigns a public IPv4 at launch
+# (map_public_ip_on_launch = true), but if networking is ever slow or
+# misconfigured, fail loudly here instead of half-provisioning the box.
+# 30 attempts x 10 s = 5 minutes max.
+for attempt in $(seq 1 30); do
+  if curl -sfm 5 https://checkip.amazonaws.com > /dev/null; then
+    echo "[bootstrap] outbound internet OK (attempt $attempt)"
+    break
+  fi
+  if [ "$attempt" -eq 30 ]; then
+    echo "[bootstrap] FATAL: no outbound internet after 5 minutes" >&2
+    exit 1
+  fi
+  sleep 10
+done
+
 # ── 1. Update OS ──────────────────────────────────────────────
 # AL2023 uses dnf. SSM agent and AWS CLI are pre-installed.
 dnf update -y
