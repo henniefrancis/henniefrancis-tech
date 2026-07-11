@@ -29,14 +29,28 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 
 ## First-time rollout
 
-### 1. HCP Terraform workspace (remote execution)
+### 1. HCP Terraform workspace (VCS-driven, remote execution)
 
-Terraform **executes remotely in HCP Terraform** — GitHub never holds AWS credentials for infrastructure work.
+Terraform **executes remotely in HCP Terraform** — GitHub holds no tokens or cloud credentials for infrastructure work. The workspace is **VCS-connected** to `henniefrancis/henniefrancis-tech`, so HCP Terraform itself kicks off the runs:
 
-1. In the `henniefrancis` HCP Terraform org, create a **CLI-driven** workspace **`henniefrancis-tech`** with **Execution Mode: Remote**. (CLI-driven, not VCS-driven — the GitHub workflow kicks off the runs; a VCS connection would double-trigger.)
-2. AWS credentials come from the org's **variable sets** (already configured) — attach the variable set for the personal account to this workspace. Nothing credential-related goes into the repo or GitHub for Terraform.
-3. Create an HCP Terraform **API token** (user or team token with access to the workspace) and store it as the GitHub repo secret **`TF_API_TOKEN`**. That single token is how `terraform.yml` kicks off remote runs: speculative **plan on every PR**, **apply on merge to main** — the run itself, and its logs, live in HCP Terraform.
-4. The account already has the GitHub OIDC identity provider (created manually per `infra/AWS.md`), so `create_github_oidc_provider` stays `false`. For a greenfield account set it to `true`.
+- **Pull requests** → automatic speculative plan (visible as a PR check)
+- **Push to `main` touching `terraform/**`** → plan + **auto-apply**
+
+Workspace configuration (already set):
+
+| Setting | Value |
+|---|---|
+| Workspace | `henniefrancis-tech` (org `henniefrancis`) |
+| VCS repository | `henniefrancis/henniefrancis-tech` |
+| Working directory | `terraform` |
+| Trigger pattern | `terraform/**/*` |
+| Auto-apply (API/UI/VCS runs) | enabled |
+| Automatic speculative plans (PRs) | enabled |
+| AWS credentials | org variable set "AWS (henniefrancis)" |
+
+The account already has the GitHub OIDC identity provider (created manually per `infra/AWS.md`), so `create_github_oidc_provider` stays `false`. For a greenfield account set it to `true`.
+
+**Dynamic credentials (no static keys):** `tfc-oidc.tf` creates an OIDC provider for `app.terraform.io` plus the `henniefrancis-tech-tfc-run` role, trust-scoped to this single workspace. Bootstrap order: the first apply runs on the static-key variable set and creates the role; then set workspace env variables `TFC_AWS_PROVIDER_AUTH=true` and `TFC_AWS_RUN_ROLE_ARN=<tfc_run_role_arn output>`, and detach the static-key variable set from this workspace. Every subsequent run gets fresh, short-lived credentials minted per run — nothing stored, nothing to expire.
 
 ### 2. Apply + certificate validation
 
@@ -71,9 +85,9 @@ Repo → Settings → Secrets and variables → Actions:
 | `ARTIFACTS_BUCKET` | `artifacts_bucket` |
 | `WEB_ROOT` | `/var/www/henniefrancis-tech/html` |
 
-**Secrets:** `TF_API_TOKEN` (HCP Terraform API token — kicks off remote Terraform runs) and `CLOUDFRONT_DISTRIBUTION_ID` (from `cloudfront_distribution_id`). Optional: `GITLEAKS_LICENSE`, `GIST_SECRET` + `DEPLOY_BADGE_GIST_ID` for the deploy badge.
+**Secrets:** `CLOUDFRONT_DISTRIBUTION_ID` (from `cloudfront_distribution_id`). Optional: `GITLEAKS_LICENSE`, `GIST_SECRET` + `DEPLOY_BADGE_GIST_ID` for the deploy badge.
 
-Note the split: `TF_API_TOKEN` is the only Terraform-related secret — AWS credentials for Terraform live exclusively in HCP Terraform variable sets. The `AWS_DEPLOY_ROLE_ARN` variable is for the *site* deploy workflow (S3/SSM/CloudFront invalidation via OIDC), which is separate from infrastructure runs.
+Note the split: GitHub holds **nothing** for Terraform — runs are triggered by the workspace's VCS connection and use the org's variable-set credentials. The `AWS_DEPLOY_ROLE_ARN` variable is for the *site* deploy workflow (S3/SSM/CloudFront invalidation via OIDC), which is separate from infrastructure runs.
 
 Also create a **`production` environment** (Settings → Environments) — the deploy job targets it, and the IAM trust policy expects it.
 
@@ -109,7 +123,7 @@ terraform validate
 terraform test          # plan-only, mock providers, no credentials
 ```
 
-`terraform.yml` runs the static checks (no credentials needed) on every PR touching `terraform/`, then kicks off the **remote** run in HCP Terraform via `TF_API_TOKEN`: a speculative plan on PRs, the apply on merge to `main` (gated by the `production` environment). The runs execute in the `henniefrancis-tech` workspace with the org's variable-set credentials and are fully visible in the HCP Terraform UI.
+`terraform.yml` runs the static checks (no credentials needed) on every PR and push touching `terraform/`. The plan/apply runs are kicked off by HCP Terraform's own VCS connection: speculative plan on PRs, plan + auto-apply on merge to `main`. Runs execute remotely in the `henniefrancis-tech` workspace with the org's variable-set credentials and are fully visible in the HCP Terraform UI.
 
 ## Costs (steady state)
 

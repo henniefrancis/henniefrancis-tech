@@ -1,15 +1,16 @@
 name: Terraform — henniefrancis.tech
 
 # Terraform EXECUTES REMOTELY in HCP Terraform (org: henniefrancis,
-# workspace: henniefrancis-tech). AWS credentials live in the org's
-# variable sets — GitHub never holds cloud credentials for Terraform.
+# workspace: henniefrancis-tech) via the workspace's VCS connection to
+# this repository:
+#   - pull requests            -> TFC runs an automatic speculative PLAN
+#   - push to main (terraform/**) -> TFC runs PLAN + AUTO-APPLY
+# AWS credentials live in the org's variable sets. GitHub holds NO
+# tokens or cloud credentials for Terraform at all — TFC watches the
+# repo itself (working directory: terraform, trigger: terraform/**/*).
 #
-# This workflow only needs ONE secret: TF_API_TOKEN (an HCP Terraform
-# API token). With it, GitHub kicks off the remote run and streams the
-# log back:
-#   - pull requests  -> remote speculative PLAN (no changes applied)
-#   - push to main   -> remote APPLY
-# The static checks job needs no credentials at all.
+# This workflow is the static quality gate that runs BEFORE code merges:
+# fmt, validate, and the mock-provider unit tests. No credentials needed.
 
 on:
   pull_request:
@@ -25,21 +26,14 @@ on:
 permissions:
   contents: read
 
-# Never run two remote applies (or an apply and a plan) concurrently.
-concurrency:
-  group: terraform-${{ github.ref }}
-  cancel-in-progress: false
-
-defaults:
-  run:
-    working-directory: terraform
-
 jobs:
-  # ── Stage 1: static checks — no TFC token, no AWS credentials ──
   checks:
     name: fmt / validate / test
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: terraform
     env:
       TF_IN_AUTOMATION: "true"
     steps:
@@ -66,65 +60,3 @@ jobs:
 
       - name: Unit tests (mock providers)
         run: terraform test -no-color
-
-  # ── Stage 2 (PRs): kick off a remote speculative plan in TFC ──
-  plan:
-    name: Remote plan (HCP Terraform)
-    needs: checks
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      TF_IN_AUTOMATION: "true"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
-      - name: Setup Terraform (with TFC token)
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: '>=1.15.0 <2.0.0'
-          terraform_wrapper: false
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Init (HCP Terraform backend)
-        run: terraform init -input=false
-
-      # Runs remotely in the henniefrancis-tech workspace using its
-      # variable sets; the log streams back here for PR review.
-      - name: Plan (remote)
-        run: terraform plan -no-color -input=false
-
-  # ── Stage 2 (main): kick off the remote apply in TFC ──
-  apply:
-    name: Remote apply (HCP Terraform)
-    needs: checks
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    environment: production   # deployment protection rules apply here too
-    env:
-      TF_IN_AUTOMATION: "true"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
-      - name: Setup Terraform (with TFC token)
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: '>=1.15.0 <2.0.0'
-          terraform_wrapper: false
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Init (HCP Terraform backend)
-        run: terraform init -input=false
-
-      # Executes remotely in HCP Terraform with the org's variable-set
-      # credentials. -auto-approve is safe because merges to main are the
-      # approval, checks have passed, and the run is visible in TFC.
-      - name: Apply (remote)
-        run: terraform apply -no-color -input=false -auto-approve

@@ -62,7 +62,16 @@ mock_provider "aws" {
   }
 }
 
-mock_provider "tls" {}
+mock_provider "tls" {
+  # tfc-oidc.tf reads the app.terraform.io certificate thumbprint.
+  mock_data "tls_certificate" {
+    defaults = {
+      certificates = [{
+        sha1_fingerprint = "0000000000000000000000000000000000000000"
+      }]
+    }
+  }
+}
 
 # ── Security posture ─────────────────────────────────────────
 
