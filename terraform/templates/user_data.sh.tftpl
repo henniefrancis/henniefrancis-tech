@@ -8,6 +8,9 @@
 #   environment   — prod | staging | dev
 #   aws_region    — e.g. af-south-1
 #   domain_name   — the ORIGIN hostname, e.g. origin.henniefrancis.tech
+#   public_domain — the canonical public apex, e.g. henniefrancis.tech
+#   www_domain    — the www host that 301-redirects to the apex,
+#                   e.g. www.henniefrancis.tech
 #
 # Runs once as root on first boot via cloud-init.
 # Full log at: /var/log/user-data.log
@@ -74,8 +77,9 @@ dnf install -y nginx python3 augeas-libs jq rsync unzip
 
 # ── 3. Install Certbot (Let's Encrypt — free TLS) ─────────────
 # Isolated in a venv so it never conflicts with system Python.
-# The origin cert (for ${domain_name}) lets CloudFront connect
-# with origin_protocol_policy = "https-only".
+# certbot (run post-boot — see the command echoed at the end) covers the
+# apex, www and origin hostnames, so the box serves valid TLS for the
+# public site and, if used, the CloudFront origin.
 python3 -m venv /opt/certbot/
 /opt/certbot/bin/pip install --upgrade pip --quiet
 /opt/certbot/bin/pip install certbot certbot-nginx --quiet
@@ -211,8 +215,12 @@ http {
 __NGINX_MAIN__
 
 # ── 6. Site config ────────────────────────────────────────────
-# HTTP-only initially. After the origin DNS record propagates, run
-# certbot for ${domain_name} and it adds the HTTPS server block here.
+# HTTP-only initially. After the public DNS records propagate, run the
+# certbot command echoed at the end and it adds the HTTPS server blocks.
+#
+# CANONICAL HOST: the bare apex (${public_domain}) serves the site;
+# ${www_domain} 301-redirects to it; ${domain_name} (the CloudFront
+# origin hostname) also serves the site so the CDN path still works.
 #
 # CACHING STRATEGY (multi-page static site — files are NOT content-
 # hashed, unlike an Angular/React build, so nothing may be "immutable"):
@@ -223,10 +231,30 @@ __NGINX_MAIN__
 # CloudFront honours these via the UseOriginCacheControlHeaders policy,
 # and every deploy issues a /* invalidation as belt-and-braces.
 cat > /etc/nginx/conf.d/${project_name}.conf << '__NGINX_SITE__'
+# www -> apex canonical redirect. certbot adds the matching HTTPS (443)
+# block to this server on first run, so https://${www_domain} also
+# 301-redirects to the apex.
 server {
     listen 80;
     listen [::]:80;
-    server_name ${domain_name};
+    server_name ${www_domain};
+
+    # Keep ACME validation working even though everything else redirects.
+    location /.well-known/acme-challenge/ {
+        alias /var/www/certbot/.well-known/acme-challenge/;
+    }
+
+    location / {
+        return 301 https://${public_domain}$request_uri;
+    }
+}
+
+# Canonical site — the apex serves content; the origin hostname is kept
+# so the CloudFront path still resolves if the CDN is put back in front.
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name ${public_domain} ${domain_name};
 
     root /var/www/${project_name}/html;
     index index.html;
@@ -304,7 +332,7 @@ nginx -t
 systemctl enable --now nginx
 
 echo "[bootstrap] === Done. nginx is running. ==="
-echo "[bootstrap] Origin domain: ${domain_name}"
+echo "[bootstrap] Canonical site: https://${public_domain} (${www_domain} redirects here)"
 echo "[bootstrap] Web root: /var/www/${project_name}/html"
-echo "[bootstrap] Next: point origin DNS at this box, then:"
-echo "[bootstrap]   certbot --nginx -d ${domain_name} --non-interactive --agree-tos -m you@example.com"
+echo "[bootstrap] Next: point ${public_domain}, ${www_domain} and ${domain_name} DNS at this box, then:"
+echo "[bootstrap]   certbot --nginx -d ${public_domain} -d ${www_domain} -d ${domain_name} --redirect --non-interactive --agree-tos -m you@example.com"
