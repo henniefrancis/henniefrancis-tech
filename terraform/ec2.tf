@@ -55,10 +55,12 @@ resource "aws_instance" "web" {
 
   # Render and base64-encode the bootstrap script.
   user_data_base64 = base64encode(templatefile("${path.module}/templates/user_data.sh.tftpl", {
-    project_name = var.project_name
-    environment  = var.environment
-    aws_region   = var.aws_region
-    domain_name  = var.origin_domain_name
+    project_name  = var.project_name
+    environment   = var.environment
+    aws_region    = var.aws_region
+    domain_name   = var.origin_domain_name
+    public_domain = var.frontend_primary_domain
+    www_domain    = "www.${var.frontend_primary_domain}"
   }))
 
   # Never replace the instance because a newer AMI was published or the
