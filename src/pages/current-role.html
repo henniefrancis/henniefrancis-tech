@@ -44,93 +44,12 @@
           <h1>Current Role</h1>
         </div>
       </div>
-      <div class="row heading">
-        <div class="col">
-          <a href="https://www.overdrive.co.za/" target="_blank" title="Silicon Overdrive"><img src="../img/current-role/silicon-overdrive.png" class="siliconoverdrive" alt="Silicon Overdrive"></a>
-        </div>
-      </div>
-      <!-- Current Employer -->
-      <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Employer:</h5>
-        </div>  
-        <div class="col-2">
-          <p>Silicon Overdrive</p>
-        </div>
-        <div class="col-4"></div>
-      </div>
-      <!-- Current Employment Period -->
-      <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Employment:</h5>
-        </div>  
-        <div class="col-2">
-          <p>01 December 2025 to Present</p>
-        </div>
-        <div class="col-4"></div>
-      </div>
-      <!-- Current Job Title -->
-      <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Current Title:</h5>
-        </div>  
-        <div class="col-2">
-          <p>AWS Technical Account Manager</p>
-        </div>
-        <div class="col-4"></div>
-      </div>
-      <!-- Previous Job Title -->
-      <!-- <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Previous Title(s):</h5>
-        </div>  
-        <div class="col-2">
-          <p>Senior Software Engineer III: Full Stack & Solutions Architect <br /> <sub>[01 May 2024 - 30 April 2024]</sub><sup>  promotion</sup></p>
-          <p>Analyst Developer: Front End <br /> <sub>[01 July 2022 - 30 April 2024]</sub><sup>  promotion</sup></p>
-        </div>
-        <div class="col-4"></div>
-      </div> -->
-      <!-- Current Employment Division -->
-      <!-- <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Division:</h5>
-        </div>  
-        <div class="col-2">
-          <p>Technology and Data</p>
-        </div>
-        <div class="col-4"></div>
-      </div> -->
-      <!-- Current Employment Department -->
-      <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Department:</h5>
-        </div>  
-        <div class="col-2">
-          <p>AWS</p>
-        </div>
-        <div class="col-4"></div>
-      </div>
-      <!-- Current Employment Office -->
-      <!-- <div class="row">
-        <div class="col-5"></div>
-        <div class="col-1">
-          <h5>Office:</h5>
-        </div>  
-        <div class="col-2">
-          <p>Head Office: Stellenbosch Campus</p>
-        </div>
-        <div class="col-4"></div>
-      </div> -->
+      <!-- Logo + role fact rows are injected from config/current-role.json by scripts/site-config.js -->
+      <!-- <div data-config="../config/current-role.json" data-render="current-role" aria-busy="true"></div> -->
     </div>
     <footer>
       <hr />
-    <p>&copy 2025, Hennie Francis - All rights reserved</p>
+    <p>&copy; 2026, Hennie Francis - All rights reserved</p>
     </footer>
   </div>
   <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -140,5 +59,9 @@
   <script src="https://codepen.io/DonKarlssonSan/pen/jBWaad.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script src="../scripts/index.js"></script>
+
+  <!-- Config-driven content loader -->
+  <script src="../scripts/site-config.js" defer></script>
 </body>
+
 </html>
