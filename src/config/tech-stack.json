@@ -1,0 +1,840 @@
+{
+  "version": 1,
+  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/tech-stack/",
+  "categories": [
+    {
+      "name": "Languages",
+      "order": 1,
+      "items": [
+        {
+          "name": "C#",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp",
+          "image": "CSharp.png",
+          "order": 1
+        },
+        {
+          "name": "Java",
+          "url": "https://www.java.com",
+          "image": "java.png",
+          "order": 2
+        },
+        {
+          "name": "Javascript",
+          "url": "https://www.javascript.com",
+          "image": "js.png",
+          "order": 3
+        },
+        {
+          "name": "Python",
+          "url": "https://www.python.org",
+          "image": "python.png",
+          "order": 4
+        },
+        {
+          "name": "Angular",
+          "url": "https://angular.io",
+          "image": "angular.png",
+          "order": 5
+        },
+        {
+          "name": "React",
+          "url": "https://react.dev",
+          "image": "react.png",
+          "order": 6
+        }
+      ]
+    },
+    {
+      "name": "Frameworks",
+      "order": 2,
+      "items": [
+        {
+          "name": ".NET",
+          "url": "https://dotnet.microsoft.com/en-us/download/dotnet-framework",
+          "image": "dotnet-framework.png",
+          "order": 1
+        },
+        {
+          "name": ".NET Core",
+          "url": "https://dotnet.microsoft.com",
+          "image": "dotnet-core.png",
+          "order": 2
+        },
+        {
+          "name": "Spring",
+          "url": "https://spring.io/",
+          "image": "spring.png",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "name": "ORM & Tools",
+      "order": 3,
+      "items": [
+        {
+          "name": "ODBC",
+          "url": "https://learn.microsoft.com/en-us/sql/odbc/microsoft-open-database-connectivity-odbc?view=sql-server-ver16",
+          "image": "odbc.png",
+          "order": 1
+        },
+        {
+          "name": "Entity Framework",
+          "url": "https://learn.microsoft.com/en-us/ef",
+          "image": "ef.png",
+          "order": 2
+        },
+        {
+          "name": "EF Core",
+          "url": "https://learn.microsoft.com/en-us/ef/core",
+          "image": "ef-core.png",
+          "order": 3
+        },
+        {
+          "name": "JDBC",
+          "url": "https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc",
+          "image": "jdbc.png",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "name": "Front-end & Web",
+      "order": 4,
+      "items": [
+        {
+          "name": "Java",
+          "url": "https://www.java.com",
+          "image": "java.png",
+          "order": 1
+        },
+        {
+          "name": "JavaScript",
+          "url": "https://www.javascript.com",
+          "image": "js.png",
+          "order": 2
+        },
+        {
+          "name": "Python",
+          "url": "https://www.python.org",
+          "image": "python.png",
+          "order": 3
+        },
+        {
+          "name": "Angular",
+          "url": "https://angular.io",
+          "image": "angular.png",
+          "order": 4
+        },
+        {
+          "name": "React",
+          "url": "https://react.dev",
+          "image": "react.png",
+          "order": 5
+        },
+        {
+          "name": "HTML 5",
+          "url": "https://www.w3schools.com/html",
+          "image": "html5.png",
+          "order": 6
+        },
+        {
+          "name": "HTML Boilerplate",
+          "url": "https://html5boilerplate.com",
+          "image": "html5-boilerplate.png",
+          "order": 7
+        },
+        {
+          "name": "CSS",
+          "url": "https://www.w3schools.com/css",
+          "image": "css.png",
+          "order": 8
+        },
+        {
+          "name": "jQuery",
+          "url": "https://jquery.com",
+          "image": "jquery.png",
+          "order": 9
+        },
+        {
+          "name": "Bootstrap",
+          "url": "https://getbootstrap.com",
+          "image": "bootstrap5.png",
+          "order": 10
+        },
+        {
+          "name": "ASP.NET",
+          "url": "https://dotnet.microsoft.com/en-us/apps/aspnet",
+          "image": "asp.net.png",
+          "order": 11
+        },
+        {
+          "name": "ASP.NET Core MVC",
+          "url": "https://dotnet.microsoft.com/en-us/apps/aspnet/mvc",
+          "image": "asp.net-core-mvc.png",
+          "order": 12
+        },
+        {
+          "name": "Blazor",
+          "url": "https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor",
+          "image": "blazor.png",
+          "order": 13
+        },
+        {
+          "name": "WPF",
+          "url": "https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-7.0",
+          "image": "wpf.png",
+          "order": 14
+        },
+        {
+          "name": "Windows Forms",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/ide/create-csharp-winform-visual-studio?view=vs-2022",
+          "image": "windows-forms.png",
+          "order": 15
+        },
+        {
+          "name": ".NET MAUI",
+          "url": "https://dotnet.microsoft.com/en-us/apps/maui",
+          "image": "maui.png",
+          "order": 16
+        },
+        {
+          "name": "Xamarin",
+          "url": "https://dotnet.microsoft.com/en-us/apps/xamarin",
+          "image": "xamarin.png",
+          "order": 17
+        },
+        {
+          "name": "SharePoint",
+          "url": "https://www.microsoft.com/en-za/microsoft-365/sharepoint/collaboration",
+          "image": "sharepoint.png",
+          "order": 18
+        }
+      ]
+    },
+    {
+      "name": "Back-end",
+      "order": 5,
+      "items": [
+        {
+          "name": "WCF",
+          "url": "https://learn.microsoft.com/en-us/dotnet/framework/wcf/whats-wcf",
+          "image": "wcf.png",
+          "order": 1
+        },
+        {
+          "name": "ASP.NET Core API",
+          "url": "https://dotnet.microsoft.com/en-us/apps/aspnet/apis",
+          "image": "dotnet-core-restful api.png",
+          "order": 2
+        },
+        {
+          "name": "Microservices",
+          "url": "https://microservices.io",
+          "image": "microservices.png",
+          "order": 3
+        },
+        {
+          "name": "Swagger",
+          "url": "https://swagger.io",
+          "image": "swagger.png",
+          "order": 4
+        },
+        {
+          "name": "Spring Boot",
+          "url": "https://spring.io/projects/spring-boot",
+          "image": "spring-boot.png",
+          "order": 5
+        }
+      ]
+    },
+    {
+      "name": "Cloud",
+      "order": 6,
+      "items": [
+        {
+          "name": "AWS",
+          "url": "https://aws.amazon.com",
+          "image": "aws.png",
+          "order": 1
+        },
+        {
+          "name": "Azure",
+          "url": "https://azure.microsoft.com",
+          "image": "azure.png",
+          "order": 2
+        },
+        {
+          "name": "Google Cloud",
+          "url": "https://cloud.google.com",
+          "image": "google-cloud.png",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "name": "IoT",
+      "order": 7,
+      "items": [
+        {
+          "name": "Arduino",
+          "url": "https://www.arduino.cc",
+          "image": "arduino.png",
+          "order": 1
+        },
+        {
+          "name": "MQTT",
+          "url": "https://mqtt.org",
+          "image": "mqtt.png",
+          "order": 2
+        },
+        {
+          "name": "Raspberry PI",
+          "url": "https://www.raspberrypi.com",
+          "image": "raspberry.png",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "name": "Big Data",
+      "order": 8,
+      "items": [
+        {
+          "name": "Apache Kafka",
+          "url": "https://kafka.apache.org",
+          "image": "kafka.png",
+          "order": 1
+        },
+        {
+          "name": "Amazon MSK",
+          "url": "https://aws.amazon.com/msk",
+          "image": "amazon-msk.png",
+          "order": 2
+        },
+        {
+          "name": "Kafka UI",
+          "url": "https://docs.kafka-ui.provectus.io",
+          "image": "kafka-ui.png",
+          "order": 3
+        },
+        {
+          "name": "Redpanda",
+          "url": "https://redpanda.com",
+          "image": "redpanda.png",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "order": 9,
+      "items": [
+        {
+          "name": "Google Analytics",
+          "url": "https://analytics.google.com/analytics/academy",
+          "image": "google-analytics.png",
+          "order": 1
+        },
+        {
+          "name": "Power BI",
+          "url": "https://www.microsoft.com/en-us/power-platform/products/power-bi",
+          "image": "powerbi.png",
+          "order": 2
+        },
+        {
+          "name": "OLAP Cubes",
+          "url": "https://learn.microsoft.com/en-us/system-center/scsm/olap-cubes-overview?view=sc-sm-2022",
+          "image": "olap.png",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "name": "Web Hosting",
+      "order": 10,
+      "items": [
+        {
+          "name": "Apache HTTPD",
+          "url": "https://httpd.apache.org",
+          "image": "apache-server.png",
+          "order": 1
+        },
+        {
+          "name": "Apache XAMPP",
+          "url": "https://www.apachefriends.org",
+          "image": "xampp.png",
+          "order": 2
+        },
+        {
+          "name": "nginx",
+          "url": "https://www.nginx.com",
+          "image": "nginx.png",
+          "order": 3
+        },
+        {
+          "name": "cPanel",
+          "url": "https://cpanel.net",
+          "image": "cpanel.png",
+          "order": 4
+        },
+        {
+          "name": "Joomla",
+          "url": "https://www.joomla.org",
+          "image": "joomla.png",
+          "order": 5
+        },
+        {
+          "name": "Wordpress",
+          "url": "https://wordpress.com",
+          "image": "wordpress.png",
+          "order": 6
+        },
+        {
+          "name": "Bitnami Stack",
+          "url": "https://bitnami.com",
+          "image": "bitnami.png",
+          "order": 7
+        },
+        {
+          "name": "Microsoft IIS",
+          "url": "https://www.iis.net",
+          "image": "microsoft-iis.png",
+          "order": 8
+        }
+      ]
+    },
+    {
+      "name": "Source Control",
+      "order": 11,
+      "items": [
+        {
+          "name": "Git",
+          "url": "https://git-scm.com",
+          "image": "git.png",
+          "order": 1
+        },
+        {
+          "name": "GitHub",
+          "url": "https://github.com",
+          "image": "github.png",
+          "order": 2
+        },
+        {
+          "name": "GitLab",
+          "url": "https://about.gitlab.com",
+          "image": "gitlab.png",
+          "order": 3
+        },
+        {
+          "name": "AWS Code Commit",
+          "url": "https://aws.amazon.com/codecommit",
+          "image": "aws-codecommit.png",
+          "order": 4
+        },
+        {
+          "name": "TFS Server",
+          "url": "https://azure.microsoft.com/en-us/products/devops/server",
+          "image": "tfs.png",
+          "order": 5
+        },
+        {
+          "name": "Azure DevOps",
+          "url": "https://azure.microsoft.com/en-us/products/devops/server",
+          "image": "azure-devops.png",
+          "order": 6
+        },
+        {
+          "name": "Bitbucket",
+          "url": "https://bitbucket.org",
+          "image": "bitbucket.png",
+          "order": 7
+        },
+        {
+          "name": "Tortoise SVN",
+          "url": "https://tortoisesvn.net",
+          "image": "tortoise-svn.png",
+          "order": 8
+        },
+        {
+          "name": "Visual SVN",
+          "url": "https://www.visualsvn.com",
+          "image": "visual-svn.png",
+          "order": 9
+        }
+      ]
+    },
+    {
+      "name": "Testing & QA",
+      "order": 12,
+      "items": [
+        {
+          "name": "jMeter",
+          "url": "https://jmeter.apache.org",
+          "image": "apache-jmeter.png",
+          "order": 1
+        },
+        {
+          "name": "Insomnia",
+          "url": "https://insomnia.rest",
+          "image": "insomnia.png",
+          "order": 2
+        },
+        {
+          "name": "Postman",
+          "url": "https://www.postman.com",
+          "image": "postman.png",
+          "order": 3
+        },
+        {
+          "name": "Smartbear ReadyAPI",
+          "url": "https://smartbear.com/product/ready-api",
+          "image": "smartbear-readyapi.png",
+          "order": 4
+        },
+        {
+          "name": "Smartbear TestComplete",
+          "url": "https://smartbear.com/product/testcomplete",
+          "image": "smartbear-testcomplete.png",
+          "order": 5
+        }
+      ]
+    },
+    {
+      "name": "DevOps",
+      "order": 13,
+      "items": [
+        {
+          "name": "Rancher by Suse",
+          "url": "https://www.rancher.com",
+          "image": "rancher.png",
+          "order": 1
+        },
+        {
+          "name": "HashiCorp Consul",
+          "url": "https://www.consul.io",
+          "image": "consul.png",
+          "order": 2
+        },
+        {
+          "name": "Mirantis",
+          "url": "https://www.mirantis.com/software/mirantis-kubernetes-engine",
+          "image": "mirantis.png",
+          "order": 3
+        },
+        {
+          "name": "Ansible",
+          "url": "https://www.ansible.com",
+          "image": "ansible.png",
+          "order": 4
+        },
+        {
+          "name": "Jenkins",
+          "url": "https://www.jenkins.io",
+          "image": "jenkins.png",
+          "order": 5
+        },
+        {
+          "name": "Docker",
+          "url": "https://www.docker.com",
+          "image": "docker.png",
+          "order": 6
+        },
+        {
+          "name": "HashiCorp Terraform",
+          "url": "https://www.terraform.io",
+          "image": "terraform.png",
+          "order": 7
+        },
+        {
+          "name": "Kubernetes",
+          "url": "https://kubernetes.io",
+          "image": "kubernetes.png",
+          "order": 8
+        },
+        {
+          "name": "Apache Maven",
+          "url": "https://maven.apache.org",
+          "image": "apache-maven.png",
+          "order": 9
+        },
+        {
+          "name": "ArgoCD",
+          "url": "https://argo-cd.readthedocs.io",
+          "image": "argocd.png",
+          "order": 10
+        },
+        {
+          "name": "Backstage",
+          "url": "https://backstage.io",
+          "image": "backstage.png",
+          "order": 11
+        },
+        {
+          "name": "HELM",
+          "url": "https://helm.sh",
+          "image": "helm.png",
+          "order": 12
+        },
+        {
+          "name": "unleash",
+          "url": "https://www.getunleash.io",
+          "image": "unleash.png",
+          "order": 13
+        }
+      ]
+    },
+    {
+      "name": "Monitoring",
+      "order": 14,
+      "items": [
+        {
+          "name": "Instana",
+          "url": "https://www.ibm.com/products/instana",
+          "image": "instana.png",
+          "order": 1
+        },
+        {
+          "name": "Grafana",
+          "url": "https://grafana.com",
+          "image": "grafana.png",
+          "order": 2
+        },
+        {
+          "name": "Open Search",
+          "url": "https://opensearch.org",
+          "image": "opensearch.png",
+          "order": 3
+        },
+        {
+          "name": "Elastic Search",
+          "url": "https://www.elastic.co/elasticsearch",
+          "image": "elasctic.png",
+          "order": 4
+        },
+        {
+          "name": "PagerDuty",
+          "url": "https://www.pagerduty.com",
+          "image": "pagerduty.png",
+          "order": 5
+        }
+      ]
+    },
+    {
+      "name": "Database",
+      "order": 15,
+      "items": [
+        {
+          "name": "Microsoft SQL Server",
+          "url": "https://www.microsoft.com/en-us/sql-server",
+          "image": "azure-sql.png",
+          "order": 1
+        },
+        {
+          "name": "MySQL",
+          "url": "https://www.mysql.com",
+          "image": "azure-mysql.png",
+          "order": 2
+        },
+        {
+          "name": "PostgreSQL",
+          "url": "https://www.postgresql.org",
+          "image": "postgresql.png",
+          "order": 3
+        },
+        {
+          "name": "Amazon DynamoDB",
+          "url": "https://aws.amazon.com/dynamodb",
+          "image": "amazon-dynamodb.png",
+          "order": 4
+        },
+        {
+          "name": "Amazon RDS",
+          "url": "https://aws.amazon.com/rds",
+          "image": "amazon-rds.png",
+          "order": 5
+        },
+        {
+          "name": "Amazon RDS Aurora",
+          "url": "https://aws.amazon.com/rds/aurora",
+          "image": "amazon-aurora.png",
+          "order": 6
+        },
+        {
+          "name": "Amazon RDS MySQL",
+          "url": "https://aws.amazon.com/rds/mysql",
+          "image": "rds-mysql.png",
+          "order": 7
+        },
+        {
+          "name": "Amazon RDS for PostgreSQL",
+          "url": "https://aws.amazon.com/rds/postgresql",
+          "image": "amazon-rds-postgre.png",
+          "order": 8
+        },
+        {
+          "name": "Amazon RDS for SQL Server",
+          "url": "https://aws.amazon.com/rds/sqlserver",
+          "image": "amazon-rds-sql.png",
+          "order": 9
+        },
+        {
+          "name": "Amazon RDS Custom",
+          "url": "https://aws.amazon.com/rds",
+          "image": "amazon-rds-custom.png",
+          "order": 10
+        },
+        {
+          "name": "Amazon DocumentDB",
+          "url": "https://aws.amazon.com/documentdb",
+          "image": "amazon-documentdb.png",
+          "order": 11
+        },
+        {
+          "name": "Amazon Redshift",
+          "url": "https://aws.amazon.com/redshift",
+          "image": "amazon-redshift.png",
+          "order": 12
+        },
+        {
+          "name": "Azure Cosmos DB",
+          "url": "https://azure.microsoft.com/en-us/products/cosmos-db",
+          "image": "azure-cosmos.png",
+          "order": 13
+        },
+        {
+          "name": "Azure SQL Server",
+          "url": "https://azure.microsoft.com/en-us/products/azure-sql/database",
+          "image": "azure-sql.png",
+          "order": 14
+        },
+        {
+          "name": "Azure PostgreSQL",
+          "url": "https://azure.microsoft.com/en-us/products/postgresql",
+          "image": "azure-postgre-sql.png",
+          "order": 15
+        },
+        {
+          "name": "Azure MySQL",
+          "url": "https://azure.microsoft.com/en-us/products/mysql",
+          "image": "azure-mysql.png",
+          "order": 16
+        },
+        {
+          "name": "Azure Redis",
+          "url": "https://azure.microsoft.com/en-us/products/cache",
+          "image": "azure-redis.png",
+          "order": 17
+        },
+        {
+          "name": "Redis",
+          "url": "https://redis.io",
+          "image": "redis.png",
+          "order": 18
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "order": 16,
+      "items": [
+        {
+          "name": "HashiCorp Vault",
+          "url": "https://www.hashicorp.com/products/vault",
+          "image": "hashicorp-vault.png",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "name": "Software",
+      "order": 17,
+      "items": [
+        {
+          "name": "JIRA",
+          "url": "https://www.atlassian.com/software/jira",
+          "image": "jira.png",
+          "order": 1
+        },
+        {
+          "name": "Confluence",
+          "url": "https://www.atlassian.com/software/confluence",
+          "image": "confluence.png",
+          "order": 2
+        },
+        {
+          "name": "JIRA Service Management",
+          "url": "https://www.atlassian.com/software/jira/service-management",
+          "image": "jira-services-management.png",
+          "order": 3
+        },
+        {
+          "name": "Slack",
+          "url": "https://slack.com",
+          "image": "slack.png",
+          "order": 4
+        },
+        {
+          "name": "Trello",
+          "url": "https://trello.com",
+          "image": "trello.png",
+          "order": 5
+        },
+        {
+          "name": "Terraform Enterprise",
+          "url": "https://developer.hashicorp.com/terraform/enterprise",
+          "image": "terraform.png",
+          "order": 6
+        },
+        {
+          "name": "Terraform Cloud",
+          "url": "https://developer.hashicorp.com/terraform/cloud-docs",
+          "image": "terraform.png",
+          "order": 7
+        },
+        {
+          "name": "Lucidchart",
+          "url": "https://www.lucidchart.com",
+          "image": "lucidchart.png",
+          "order": 8
+        },
+        {
+          "name": "Lucidspark",
+          "url": "https://lucidspark.com",
+          "image": "lucidspark.png",
+          "order": 9
+        },
+        {
+          "name": "Lucidscale",
+          "url": "https://lucidscale.com",
+          "image": "lucidscale.png",
+          "order": 10
+        },
+        {
+          "name": "draw.io",
+          "url": "https://draw.io",
+          "image": "draw.io.png",
+          "order": 11
+        },
+        {
+          "name": "Enterprise Architect",
+          "url": "https://sparxsystems.com/products/ea",
+          "image": "enterprise-architect.png",
+          "order": 12
+        },
+        {
+          "name": "C4 Models",
+          "url": "https://c4model.com",
+          "image": "c4-model.png",
+          "order": 13
+        },
+        {
+          "name": "Miro",
+          "url": "https://miro.com",
+          "image": "miro.png",
+          "order": 14
+        }
+      ]
+    }
+  ]
+}

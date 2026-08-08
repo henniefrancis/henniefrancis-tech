@@ -32,97 +32,23 @@
         <div class="col">
           <nav class="divider-color" style="--bs-breadcrumb-divider: '&#x27A4;';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <a href="../2025.html" title="Go Back" class="back">&#10531;</a>
+              <a href="../2026.html" title="Go Back" class="back">&#10531;</a>
               <li class="breadcrumb-item root"><a href="../../../../index.html">root@hennie</a><b>: </b></li>
-              <li class="breadcrumb-item"><a href="../../../public-speaking.html">Public Speaking</a></li>
+              <li class="breadcrumb-item"><a href="../../public-speaking.html">Public Speaking</a></li>
               <li class="breadcrumb-item"><a href="../2026.html">AWS re:Invent 2025 re:Cap 2026</a></li>
               <li class="breadcrumb-item current" aria-current="page">Event Photo's: AWS re:Invent 2025 re:Cap 2026</li>
             </ol>
           </nav>
         </div>
       </div>
-      <div class="row heading">
-        <div class="col">
-            <h1>
-                Event Photos
-                <br />
-                AWS re:Invent 2025 re:Cap
-                <br />
-                2026
-            </h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div id="carouselExample" class="carousel slide">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="../../../../img/event-photos/aws-recap/2026/P1.png" class="d-block w-1" alt="Photo 1">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P2.png" class="d-block w-45" alt="Photo 2">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P3.png" class="d-block w-45" alt="Photo 3">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P4.png" class="d-block w-45" alt="Photo 4">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P5.png" class="d-block w-45" alt="Photo 5">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P6.png" class="d-block w-45" alt="Photo 6">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P7.png" class="d-block w-45" alt="Photo 7">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P8.png" class="d-block w-45" alt="Photo 8">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P9.png" class="d-block w-45" alt="Photo 9">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P10.png" class="d-block w-45" alt="Photo 10">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P11.png" class="d-block w-45" alt="Photo 11">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P12.png" class="d-block w-45" alt="Photo 12">
-              </div>
-              <div class="carousel-item">
-                <img src="../../../../img/event-photos/aws-recap/2026/P13.png" class="d-block w-45" alt="Photo 13">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <!-- Photo gallery is injected from 2026.json by scripts/site-config.js -->
+      <div data-config="2026.json" data-render="gallery" aria-busy="true"></div>
     </div>
-
     <footer>
       <hr />
-    <p>&copy 2025, Hennie Francis - All rights reserved</p>
+    <p>&copy; 2026, Hennie Francis - All rights reserved</p>
     </footer>
   </div>
-
-  <script>
-    const myCarouselElement = document.querySelector('#carouselExample')
-
-    const carousel = new bootstrap.Carousel(myCarouselElement, {
-      interval: 2000,
-      touch: false
-    })
-  </script>
   <!-- Option 1: Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
@@ -130,5 +56,9 @@
   <script src="https://codepen.io/DonKarlssonSan/pen/jBWaad.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script src="../../../../scripts/index.js"></script>
+
+  <!-- Config-driven content loader -->
+  <script src="../../../../scripts/site-config.js" defer></script>
 </body>
+
 </html>
