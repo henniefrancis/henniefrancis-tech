@@ -23,7 +23,8 @@
     cards: renderCards,                  // image tiles that link out (the dashboard)
     list: renderList,                    // title + description rows
     biography: renderBiography,          // portrait + ordered paragraphs (biography page)
-    "current-role": renderCurrentRole    // logo + label/value fact rows (current-role page)
+    "current-role": renderCurrentRole,   // logo + label/value fact rows (current-role page)
+    socials: renderSocials               // grid of external icon tiles (social-media page)
   };
 
   document.addEventListener("DOMContentLoaded", init);
@@ -210,6 +211,43 @@
       row.appendChild(el("div", "col-4"));
       mount.appendChild(row);
     });
+  }
+
+  // Grid of external social icons: col-2 > .socials.zoom > a[_blank] > img.
+  // Same shape as the dashboard cards, different classes + links open in a new tab.
+  function renderSocials(mount, items, data) {
+    var base = data.imageBaseUrl || "";
+    var frag = document.createDocumentFragment();
+
+    items.forEach(function (item) {
+      var col = el("div", "col-2");
+      var card = el("div", "socials zoom");
+
+      var link = document.createElement("a");
+      link.href = isSafeUrl(item.url) ? item.url : "#";
+      link.title = item.name;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      var src = joinUrl(base, item.image);
+      if (src) {
+        var img = document.createElement("img");
+        img.src = src;
+        img.alt = item.name;
+        img.loading = "lazy";
+        link.appendChild(img);
+      } else {
+        var label = el("span", "socials-label");
+        label.textContent = item.name; // text, never HTML -> no XSS
+        link.appendChild(label);
+      }
+
+      card.appendChild(link);
+      col.appendChild(card);
+      frag.appendChild(col);
+    });
+
+    mount.appendChild(frag);
   }
 
   // ---- Shared helpers ----
