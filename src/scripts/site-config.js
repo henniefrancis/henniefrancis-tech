@@ -184,19 +184,26 @@
       }
     }
 
-    items.forEach(function (item) {
+    // Fact rows are the top-level key/value pairs, in file order.
+    // Reserved keys are skipped, and empty values are omitted (no blank rows).
+    var reserved = { version: 1, imageBaseUrl: 1, images: 1, items: 1 };
+    Object.keys(data).forEach(function (key) {
+      if (reserved[key]) return;
+      var value = data[key];
+      if (value == null || String(value).trim() === "") return;
+
       var row = el("div", "row");
       row.appendChild(el("div", "col-5"));
 
       var labelCol = el("div", "col-1");
       var h5 = document.createElement("h5");
-      h5.textContent = item.label || "";
+      h5.textContent = key + ":";
       labelCol.appendChild(h5);
       row.appendChild(labelCol);
 
       var valueCol = el("div", "col-2");
       var p = document.createElement("p");
-      p.textContent = item.value || ""; // text, never HTML -> no XSS
+      p.textContent = String(value); // text, never HTML -> no XSS
       valueCol.appendChild(p);
       row.appendChild(valueCol);
 

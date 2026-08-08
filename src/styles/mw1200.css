@@ -66,11 +66,11 @@
         font-size: 1.2em;
     }
 
-    .siliconoverdrive {
+    .current-role {
         display: inline-block;
         margin: 100px auto 50px;
         width: auto;
-        height: 150px;
+        height: 100px;
     }
 
     .socials {
