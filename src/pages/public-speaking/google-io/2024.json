@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "Google I/O Extended",
+  "year": "2024",
+  "header": {
+    "url": "https://gdg.community.dev/events/details/google-gdg-cape-town-presents-google-io-extended-2024-cape-town",
+    "image": "public-speaking/google_io.png",
+    "alt": "Google I/O Extended 2024"
+  },
+  "heading": "Infrastructure as Code: The Developer's Secret Weapon",
+  "body": [
+    "In today's fast-paced world of software development, agility and efficiency are paramount. Developers are constantly seeking tools and practices that can help them deliver high-quality software quickly and reliably. Introducing Infrastructure as Code: The Developer's Secret Weapon. In this engaging presentation, we'll delve into the world of IaC and explore how it empowers developers to supercharge their productivity, streamline workflows, and elevate their impact on the development process."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/infrastructure-as-code-the-developers-secret-weapo/98255",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    }
+  ]
+}

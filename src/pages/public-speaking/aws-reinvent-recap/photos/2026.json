@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS re:Invent 2025 re:Cap",
+  "year": "2026",
+  "photoBase": "event-photos/aws-recap/2026/",
+  "photos": [
+    {
+      "image": "p1.png",
+      "alt": "Photo 1"
+    },
+    {
+      "image": "p2.png",
+      "alt": "Photo 2"
+    },
+    {
+      "image": "p3.png",
+      "alt": "Photo 3"
+    },
+    {
+      "image": "p4.png",
+      "alt": "Photo 4"
+    },
+    {
+      "image": "p5.png",
+      "alt": "Photo 5"
+    },
+    {
+      "image": "p6.png",
+      "alt": "Photo 6"
+    },
+    {
+      "image": "p7.png",
+      "alt": "Photo 7"
+    },
+    {
+      "image": "p8.png",
+      "alt": "Photo 8"
+    },
+    {
+      "image": "p9.png",
+      "alt": "Photo 9"
+    },
+    {
+      "image": "p10.png",
+      "alt": "Photo 10"
+    },
+    {
+      "image": "p11.png",
+      "alt": "Photo 11"
+    },
+    {
+      "image": "p12.png",
+      "alt": "Photo 12"
+    },
+    {
+      "image": "p13.png",
+      "alt": "Photo 13"
+    }
+  ]
+}
