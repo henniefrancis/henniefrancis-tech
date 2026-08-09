@@ -9,19 +9,19 @@ on:
     branches: [main]
     paths:
       - 'src/**'
-      - '.htmlhintrc'
 
 permissions:
   contents: read
 
 jobs:
-  # ── HTMLHint ─────────────────────────────────────────────────
-  # Static site — lints all HTML against .htmlhintrc. Fails on any
-  # error (unclosed tags, duplicate ids, missing alt/doctype, etc.).
-  html:
-    name: HTMLHint
+  # ── Angular compile check ────────────────────────────────────
+  # The site is an Angular app; the meaningful "lint" is that it
+  # compiles — AOT template checking + TypeScript type-checking catch
+  # bad bindings, unknown elements, and type errors before deploy.
+  compile:
+    name: Angular compile check
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -33,9 +33,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: src/package-lock.json
 
       - name: Install dependencies
+        working-directory: src
         run: npm ci
 
-      - name: Run HTMLHint
-        run: npm run lint:html
+      - name: Compile (dev build — AOT templates + type check)
+        working-directory: src
+        run: npx ng build --configuration development

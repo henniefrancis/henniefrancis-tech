@@ -1,0 +1,34 @@
+<div class="pageheader px-4">
+  <div class="row">
+    <div class="col">
+      <nav class="divider-color" style="--bs-breadcrumb-divider: '&#x27A4;';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <a routerLink="/" title="Go Back" class="back">&#10531;</a>
+          <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
+          <li class="breadcrumb-item current" aria-current="page">Tech Stack</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row heading">
+    <div class="col"><h1>Tech Stack</h1></div>
+  </div>
+  <hr />
+</div>
+<div class="container-fluid-content px-4">
+  @for (group of groups; track $index; let last = $last) {
+    <div class="row">
+      <div class="col"><h4>{{ group.name }}</h4></div>
+    </div>
+    <div class="row">
+      @for (tool of group.tools; track $index) {
+        <div class="col-sm-1">
+          <a [href]="tool.url" [title]="tool.name" target="_blank" rel="noopener noreferrer">
+            <img [src]="tool.src" [alt]="tool.name" class="techstack" loading="lazy">
+          </a>
+        </div>
+      }
+    </div>
+    @if (!last) { <hr /> }
+  }
+</div>

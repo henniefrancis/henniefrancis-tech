@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/social-media/",
+  "items": [
+    { "id": "linkedin", "name": "LinkedIn", "url": "https://www.linkedin.com/in/henniefrancis", "image": "linkedin.png", "order": 1 },
+    { "id": "facebook", "name": "Facebook", "url": "https://www.facebook.com/hennie.dorki.francis", "image": "facebook2.png", "order": 2 },
+    { "id": "x", "name": "X", "url": "https://www.x.com/henniefrancis", "image": "x.png", "order": 3 },
+    { "id": "bluesky", "name": "BlueSky", "url": "https://bsky.app/profile/henniefrancis.bsky.social", "image": "bluesky.png", "order": 4 },
+    { "id": "instagram", "name": "Instagram", "url": "https://www.instagram.com/henniefrancis", "image": "instagram.png", "order": 5 },
+    { "id": "github", "name": "GitHub", "url": "https://github.com/henniefrancis", "image": "github.png", "order": 6 },
+    { "id": "medium", "name": "Medium", "url": "http://www.medium.com/@henniefrancis", "image": "medium.png", "order": 7 },
+    { "id": "dev", "name": "DEV", "url": "https://www.dev.to/henniefrancis", "image": "dev.png", "order": 8 },
+    { "id": "stackoverflow", "name": "StackOverflow", "url": "https://www.stackoverflow.com/users/2230088/hennie-francis", "image": "stackoverflow.png", "order": 9 },
+    { "id": "google-developer", "name": "Google Developer", "url": "https://developers.google.com/profile/u/henniefrancis", "image": "google developers.png", "order": 10 },
+    { "id": "credly", "name": "Credly", "url": "https://www.credly.com/users/hennie-francis/badges", "image": "credly.png", "order": 11 },
+    { "id": "sessionize", "name": "Sessionize", "url": "https://sessionize.com/henniefrancis", "image": "sessionize.png", "order": 12 },
+    { "id": "discord", "name": "Discord", "url": "https://discord.com/users/dorki_rsa", "image": "discord.png", "order": 13 },
+    { "id": "youtube", "name": "YouTube", "url": "https://www.youtube.com/@HennieFrancis", "image": "youtube.png", "order": 14 },
+    { "id": "twitch", "name": "Twitch", "url": "https://www.twitch.tv/dorki_rsa", "image": "twitch.png", "order": 15 },
+    { "id": "tiktok", "name": "TikTok", "url": "https://www.tiktok.com/@dorkirsa", "image": "tiktok2.png", "order": 16 },
+    { "id": "bmac", "name": "BMAC", "url": "https://www.buymeacoffee.com/henniefrancis", "image": "coffee.png", "order": 17 },
+    { "id": "kofi", "name": "KoFi", "url": "https://ko-fi.com/henniefrancis", "image": "ko-fi.png", "order": 18 },
+    { "id": "dotcore-solutions", "name": "dotcore Solutions", "url": "https://www.dotcoresolutions.io", "image": "dotcoreSolutions.png", "order": 19 }
+  ]
+}

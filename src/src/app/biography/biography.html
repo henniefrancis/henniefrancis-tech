@@ -1,0 +1,30 @@
+<div class="container-fluid px-4">
+  <div class="row">
+    <div class="col">
+      <nav class="divider-color" style="--bs-breadcrumb-divider: '&#x27A4;';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <a routerLink="/" title="Go Back" class="back">&#10531;</a>
+          <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
+          <li class="breadcrumb-item current" aria-current="page">Biography</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row heading">
+    <div class="col">
+      <h1>Biography</h1>
+    </div>
+  </div>
+  <div class="row bio">
+    <div class="col-3">
+      <img [src]="portrait" class="portrait" alt="Portrait">
+    </div>
+    <div class="col-9">
+      <div class="biography">
+        @for (paragraph of paragraphs; track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

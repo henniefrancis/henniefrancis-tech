@@ -1,0 +1,34 @@
+<div class="container-fluid px-4">
+  <div class="row">
+    <div class="col">
+      <nav class="divider-color" style="--bs-breadcrumb-divider: '&#x27A4;';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <a routerLink="/" title="Go Back" class="back">&#10531;</a>
+          <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
+          <li class="breadcrumb-item current" aria-current="page">Blog</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row heading">
+    <div class="col"><h1>Tech Blog</h1></div>
+  </div>
+  <br /><br />
+  <div class="row text-center">
+    <div class="col">
+      <p>Coming soon! Watch this space... For now, check my content out here</p>
+    </div>
+  </div>
+  <br />
+  <div class="row text-center">
+    <div class="col-sm-4"></div>
+    @for (link of links; track $index) {
+      <div class="col-sm-2">
+        <a [href]="link.url" [title]="link.name" target="_blank" rel="noopener noreferrer">
+          <img [src]="link.src" class="blog" [alt]="link.name">
+        </a>
+      </div>
+    }
+    <div class="col-sm-4"></div>
+  </div>
+</div>

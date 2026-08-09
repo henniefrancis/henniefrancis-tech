@@ -1,0 +1,64 @@
+@if (data(); as d) {
+  <div class="container-fluid px-4">
+    <div class="row">
+      <div class="col">
+        <nav class="divider-color" style="--bs-breadcrumb-divider: '&#x27A4;';" aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <a routerLink="/" title="Go Back" class="back">&#10531;</a>
+            <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
+            <li class="breadcrumb-item"><a routerLink="/public-speaking">Public Speaking</a></li>
+            <li class="breadcrumb-item current" aria-current="page">{{ d.title }} {{ d.year }}</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row heading">
+      <div class="col">
+        <h1>{{ d.title }}<br />{{ d.year }}</h1>
+      </div>
+    </div>
+
+    @if (d.header) {
+      <div class="row heading">
+        <div class="col">
+          <a [href]="d.header.url" target="_blank" rel="noopener noreferrer" [title]="d.header.alt || d.title">
+            <img [src]="d.assetBaseUrl + d.header.image" class="eventheader" [alt]="d.header.alt || d.title">
+          </a>
+        </div>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        @if (d.heading) { <h1>{{ d.heading }}</h1> }
+        @for (para of d.body; track $index) { <p>{{ para }}</p> }
+      </div>
+      <div class="col-2"></div>
+    </div>
+
+    @if (links().length) {
+      <div class="row heading">
+        @for (link of links(); track $index) {
+          <div class="col">
+            @if (link.label) { <h2 class="eventheaderlink">{{ link.label }}</h2> }
+            @if (link.external) {
+              <a [href]="link.href" [title]="link.title" target="_blank" rel="noopener noreferrer">
+                <img [src]="link.src" class="eventlink" [alt]="link.alt">
+              </a>
+            } @else {
+              <a [routerLink]="link.route" [title]="link.title">
+                <img [src]="link.src" class="eventlink" [alt]="link.alt">
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <div class="container-fluid px-4">
+    <div class="row heading"><div class="col"><h1>Event not found</h1></div></div>
+  </div>
+}

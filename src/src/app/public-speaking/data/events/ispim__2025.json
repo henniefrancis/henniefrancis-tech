@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "ISPIM Connects Cape Town",
+  "year": "2025",
+  "header": {
+    "url": "https://www.ispim-connects-global.com",
+    "image": "public-speaking/ispim_2025.png",
+    "alt": "ISPIM Connects Cape Town 2025"
+  },
+  "heading": "Innovating at Scale: How Cloud is Redefining Business Success",
+  "body": [
+    "Explore with me how cloud technologies are revolutionizing business innovation, enabling organizations to scale, adapt, and lead. This session will uncover how AWS tools like AI, machine learning, and serverless computing are transforming industries, offering practical insights into how to leverage cloud for continuous innovation and competitive advantage."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/innovating-at-scale-how-cloud-is-redefining-busine/134399",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    }
+  ]
+}
