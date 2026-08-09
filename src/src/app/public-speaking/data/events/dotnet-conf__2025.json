@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": ".NET Conference",
+  "year": "2025",
+  "header": {
+    "url": "https://cptmsdug.dev/dotnet-conf-2025.html",
+    "image": "public-speaking/dotnet_conf_2025.png",
+    "alt": ".NET Conference 2025"
+  },
+  "heading": "Docs? I Hardly Know Her!",
+  "body": [
+    "Developers hate writing documentation. So I made .NET 10 do it for me. In this session, I’ll show how a few lines of C# and some AI magic can make your README update itself every time you touch your code. No guilt, no outdated docs — just a lazy developer’s dream come true."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/docs-i-hardly-know-her/162368",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    }
+  ]
+}

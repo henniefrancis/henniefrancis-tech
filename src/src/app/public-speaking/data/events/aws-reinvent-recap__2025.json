@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS re:Invent 2024 re:Cap",
+  "year": "2025",
+  "header": {
+    "url": "https://www.awscommunity.co.za/events/recap/2024",
+    "image": "public-speaking/recap_2025.png",
+    "alt": "AWS re:Invent 2024 re:Cap 2025"
+  },
+  "heading": "Cloud Innovation at Its Best: S3 Tables, DSQL, and EKS Auto Mode",
+  "body": [],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/cloud-innovation-at-its-best-s3-tables-dsql-and-ek/130844",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "photos/2025.html",
+      "image": "public-speaking/camera.jpeg",
+      "title": "Event Photos",
+      "alt": "Event Photos"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=os12ev7neTg",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube"
+    }
+  ]
+}

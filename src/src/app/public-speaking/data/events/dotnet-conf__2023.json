@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "Microsoft .NET Conference",
+  "year": "2023",
+  "header": {
+    "url": "https://cptmsdug.dev/netconf2023",
+    "image": "public-speaking/dotnet_conf_2023.png",
+    "alt": ".NET Conference 2023"
+  },
+  "heading": "Infrastructure as Code: The Developer's Secret Weapon",
+  "body": [
+    "In today's fast-paced world of software development, agility and efficiency are paramount. Developers are constantly seeking tools and practices that can help them deliver high-quality software quickly and reliably. Introducing Infrastructure as Code: The Developer's Secret Weapon. In this engaging presentation, we'll delve into the world of IaC and explore how it empowers developers to supercharge their productivity, streamline workflows, and elevate their impact on the development process."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/infrastructure-as-code-the-developers-secret-weapo/98255",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    }
+  ]
+}

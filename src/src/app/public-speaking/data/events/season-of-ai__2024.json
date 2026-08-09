@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "Microsoft Season of AI",
+  "year": "2024",
+  "header": {
+    "url": "https://cptmsdug.dev/seasonofai2024/",
+    "image": "public-speaking/season_of_ai.png",
+    "alt": "Microsoft Season of AI 2024"
+  },
+  "heading": "Navigating GitHub CoPilot: Piloting Your Code Safely",
+  "body": [
+    "In today's day and age where GitHub CoPilot's new home is in your IDE, Engineers and Developers run the risk to hand over the controls over to GitHub CoPilot and just expect to run awesome code... well... that might not work out as expected. Come hear why we never should trust the output of GitHub CoPilot, and always be in full control of your code's flight path! AI is here to help, not to take over!"
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/navigating-github-copilot-piloting-your-code-safel/98259",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=tL7au0hSOBY",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube",
+      "label": "Cape Town"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=hlunhsEWPgE&t",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube",
+      "label": "Johannesburg"
+    }
+  ]
+}

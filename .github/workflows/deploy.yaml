@@ -65,13 +65,29 @@ jobs:
         with:
           fetch-depth: 1
 
-      # Static site — no compile step. Zip from inside src/ so the
-      # archive root is the site root.
-      - name: Package artifact
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      # The Angular workspace lives in src/. `npm run build` prerenders
+      # every route to static HTML in src/dist/<project>/browser — that
+      # folder is the web root (no Node server needed; nginx serves it).
+      - name: Install & build (Angular, prerendered SSG)
         run: |
           cd src
-          zip -r "../${PROJECT_NAME}.zip" . -x "*.DS_Store"
-          cd ..
+          npm ci
+          npm run build
+
+      # Zip from inside the prerendered browser output so the archive
+      # root is the site root (same shape the deploy step expects).
+      - name: Package artifact
+        run: |
+          cd "src/dist/${PROJECT_NAME}/browser"
+          zip -r "${GITHUB_WORKSPACE}/${PROJECT_NAME}.zip" . -x "*.DS_Store"
+          cd "${GITHUB_WORKSPACE}"
           unzip -l "${PROJECT_NAME}.zip" | tail -n 3
 
       - name: Upload artifact
