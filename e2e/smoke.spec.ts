@@ -1,19 +1,22 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Smoke tests — fast sanity checks that the site is up, every page
- * renders, and the nginx/CloudFront layer behaves as configured
- * (clean URLs, security headers, real 404s).
+ * Smoke tests — fast sanity checks that every route renders, prerendered
+ * HTML is served (not just an SPA shell), and the nginx/CloudFront layer
+ * behaves (security headers, no-cache HTML).
  */
 
 const PAGES: ReadonlyArray<{ path: string; title: RegExp }> = [
   { path: '/', title: /Hennie Francis/i },
-  { path: '/pages/biography.html', title: /Biography/i },
-  { path: '/pages/current-role.html', title: /Current Role/i },
-  { path: '/pages/certifications.html', title: /Certifications/i },
-  { path: '/pages/portfolio.html', title: /Portfolio/i },
-  { path: '/pages/public-speaking.html', title: /Public Speaking/i },
-  { path: '/pages/blog.html', title: /Blog/i },
+  { path: '/biography', title: /Biography/i },
+  { path: '/current-role', title: /Current Role/i },
+  { path: '/portfolio', title: /Portfolio/i },
+  { path: '/social-media', title: /Social Media/i },
+  { path: '/public-speaking', title: /Public Speaking/i },
+  { path: '/blog', title: /Blog/i },
+  { path: '/tech-stack', title: /Tech Stack/i },
+  { path: '/certifications', title: /Certifications/i },
+  { path: '/special-awards', title: /Special Awards/i },
 ];
 
 test.describe('Smoke tests', () => {
@@ -52,27 +55,18 @@ test.describe('Mobile rendering', () => {
   }
 });
 
-// These assertions test the nginx/CloudFront layer (security headers,
-// cache policy, clean URLs), which a plain local static server doesn't
+// These assertions test the nginx/CloudFront layer (security headers, cache
+// policy) and prerendering, which a plain local static server doesn't fully
 // implement — they only run against a deployed environment.
 const IS_LOCAL = (process.env['BASE_URL'] ?? 'http://localhost:8080').includes('localhost');
 
 test.describe('Edge/nginx behaviour', () => {
   test.skip(IS_LOCAL, 'nginx/CloudFront behaviour — deployed environments only');
 
-  test('clean URLs resolve via try_files ($uri.html fallback)', async ({ request }) => {
-    const response = await request.get('/pages/biography');
+  test('a deep route is prerendered (real HTML, not just an SPA shell)', async ({ request }) => {
+    const response = await request.get('/biography');
     expect(response.status()).toBe(200);
     expect(await response.text()).toContain('Biography');
-  });
-
-  test('unknown paths return the styled 404 page (real 404 status)', async ({ request }) => {
-    const response = await request.get('/definitely-not-a-page-12345');
-    expect(response.status()).toBe(404);
-    // nginx error_page must serve OUR page, not the stock nginx one
-    const body = await response.text();
-    expect(body).toContain('Page Not Found');
-    expect(body).toContain('root@hennie');
   });
 
   test('security headers are present', async ({ request }) => {

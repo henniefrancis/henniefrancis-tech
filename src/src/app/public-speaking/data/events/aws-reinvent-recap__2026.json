@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS re:Invent 2025 re:Cap",
+  "year": "2026",
+  "header": {
+    "url": "https://www.awscommunity.co.za/events/recap/2024",
+    "image": "public-speaking/recap_2026.png",
+    "alt": "AWS re:Invent 2025 re:Cap 2026"
+  },
+  "heading": "AWS re:Invent 2025 re:Cap 2026 Community Edition",
+  "body": [
+    "This community re:Cap of AWS re:Invent 2025 focuses on the updates that actually matter to builders, developers, and partners. We cover the new AWS Builder Center, key partner updates like Partner Central in the console and IAM delegation, and technical improvements across edge, analytics, and serverless, including JWT support in ALB, MSK console enhancements, and Lambda Rust GA. We also touch on CodeCommit’s return, billing updates, Kiro GA, and AWS login improvements. A short, no-fluff session focused on what’s worth your attention."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/aws-reinvent-2025-recap-2026-community-edition/168913",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "photos/2026.html",
+      "image": "public-speaking/camera.jpeg",
+      "title": "Event Photos",
+      "alt": "Event Photos"
+    }
+  ]
+}

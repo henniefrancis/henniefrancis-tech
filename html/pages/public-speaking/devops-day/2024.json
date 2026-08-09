@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "WeAreDevelopers Live - Season 8",
+  "year": "2024",
+  "header": {
+    "url": "https://joind.in/event/wearedevelopers-live---season-8/details",
+    "image": "public-speaking/dev_ops_day.png",
+    "alt": "WeAreDevelopers Live - Season 8 (2024)"
+  },
+  "heading": "Infrastructure as Code: The Developer's Secret Weapon",
+  "body": [
+    "In today's fast-paced world of software development, agility and efficiency are paramount. Developers are constantly seeking tools and practices that can help them deliver high-quality software quickly and reliably. Introducing Infrastructure as Code: The Developer's Secret Weapon. In this engaging presentation, we'll delve into the world of IaC and explore how it empowers developers to supercharge their productivity, streamline workflows, and elevate their impact on the development process."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/infrastructure-as-code-the-developers-secret-weapo/98255",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=r13i0J8-omc&t=7244s",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube"
+    }
+  ]
+}

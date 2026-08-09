@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS Summit Johannesburg",
+  "year": "2025 - Community Lounge",
+  "header": {
+    "url": "https://aws.amazon.com/events/summits/emea/johannesburg/agenda",
+    "image": "public-speaking/aws_summit_2025.png",
+    "alt": "AWS Summit Johannesburg 2025"
+  },
+  "heading": "MAYDAY! Monkeys on the loose in Production!",
+  "body": [
+    "Imagine a cheeky monkey running wild through your production environment, stirring up trouble just to see how your system holds up. Its mission? To throw everything at your app—unexpected crashes, random server shutdowns, network hiccups—just to see if it can stay standing when the chaos hits.",
+    "Unleash chaos, embrace the madness, and strengthen your system. Join me to see how intentional disruption can make your app more resilient. We’ll guide you through testing your system under pressure and using the results to build a more reliable, battle-hardened app ready for anything. 🐒💥"
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/mayday-monkeys-on-the-loose-in-production/100109",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "photos/2025.html",
+      "image": "public-speaking/camera.jpeg",
+      "title": "Event Photos",
+      "alt": "Event Photos"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=svAKSwuzClM",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube"
+    }
+  ]
+}

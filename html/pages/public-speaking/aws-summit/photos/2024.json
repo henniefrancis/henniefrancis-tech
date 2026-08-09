@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS Summit Johannesburg",
+  "year": "2024",
+  "photoBase": "event-photos/aws-summit/2024/",
+  "photos": [
+    {
+      "image": "p1.jpg",
+      "alt": "Photo 1"
+    },
+    {
+      "image": "p1.jpg",
+      "alt": "Photo 2"
+    },
+    {
+      "image": "p1.jpg",
+      "alt": "Photo 3"
+    }
+  ]
+}

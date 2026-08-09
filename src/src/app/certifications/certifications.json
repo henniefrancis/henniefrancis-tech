@@ -1,0 +1,589 @@
+{
+  "version": 1,
+  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/certifications/",
+  "categories": [
+    {
+      "name": "AWS Certified",
+      "order": 1,
+      "items": [
+        {
+          "name": "AWS Certified Solutions Architect – Associate",
+          "url": "https://www.credly.com/badges/d09ec7ed-9a44-42ce-92fb-b2e2787910f0",
+          "image": "aws/certified/aws-certified-solutions-architect-associate.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "AWS Certified Cloud Practitioner",
+          "url": "https://www.credly.com/badges/991075f7-c23f-4bd6-a225-91249bf051c6",
+          "image": "aws/certified/aws-certified-cloud-practitioner.png",
+          "status": "active",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "name": "AWS Partner",
+      "order": 2,
+      "items": [
+        {
+          "name": "AWS Partner: Agentic AI Technical Learning Plan Assessment - Training Badge",
+          "url": "https://www.credly.com/badges/17771aa9-ddb0-4d50-ae64-98668e49b528",
+          "image": "aws/partner/aws-partner-agentic-ai-technical.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "AWS Partner: Agentic AI Essentials - Training Badge",
+          "url": "https://www.credly.com/badges/176142f2-af44-4c1a-94b4-edf624c567d2",
+          "image": "aws/partner/aws-partner-agentic-ai-essentials.png",
+          "status": "active",
+          "order": 2
+        },
+        {
+          "name": "AWS Partner: Generative AI Technical - Training Badge",
+          "url": "https://www.credly.com/badges/d1032953-c07f-4ee1-97d0-6bfb295699d2",
+          "image": "aws/partner/aws-partner-generative-ai-technical.png",
+          "status": "active",
+          "order": 3
+        },
+        {
+          "name": "AWS Partner: Generative AI Essentials - Training Badge",
+          "url": "https://www.credly.com/badges/6d4de97a-fcc8-459c-8de8-0cc8b11f6423",
+          "image": "aws/partner/aws-partner-generative-ai-essentials.png",
+          "status": "active",
+          "order": 4
+        },
+        {
+          "name": "AWS Partner: Migration Acceleration Program Authorized - Training Badge",
+          "url": "https://www.credly.com/badges/8913cace-503d-4abf-8a4e-e9953391c715",
+          "image": "aws/partner/aws-partner-migration-acceleration-program.png",
+          "status": "active",
+          "order": 5
+        },
+        {
+          "name": "AWS Partner: Technical Accredited - Training Badge",
+          "url": "https://www.credly.com/badges/14a64708-b99f-40e8-a6c8-893b969e0ea1",
+          "image": "aws/partner/aws-partner-technical.png",
+          "status": "active",
+          "order": 6
+        }
+      ]
+    },
+    {
+      "name": "AWS Cloud Quest",
+      "order": 3,
+      "items": [
+        {
+          "name": "AWS Cloud Quest: Solutions Architect",
+          "url": "https://www.credly.com/badges/00cf5451-6ea7-4774-afb2-d0342929a174",
+          "image": "aws/cloud-quest/solutions-architect.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "AWS Cloud Quest: Cloud Practitioner",
+          "url": "https://www.credly.com/badges/1cf7622c-7524-42ed-ae20-5a2d17e37561",
+          "image": "aws/cloud-quest/cloud-practitioner.png",
+          "status": "active",
+          "order": 2
+        },
+        {
+          "name": "AWS Cloud Quest: Security",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-cloud-quest-security",
+          "image": "aws/cloud-quest/security.png",
+          "status": "inprogress",
+          "order": 3
+        },
+        {
+          "name": "AWS Cloud Quest: Networking",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-cloud-quest-networking",
+          "image": "aws/cloud-quest/networking.png",
+          "status": "inprogress",
+          "order": 4
+        },
+        {
+          "name": "AWS Cloud Quest: Serverless Developer",
+          "url": "https://www.credly.com/badges/2988fddc-6e2a-4aa6-9736-5829105e650c",
+          "image": "aws/cloud-quest/serverless.png",
+          "status": "active",
+          "order": 5
+        },
+        {
+          "name": "AWS Cloud Quest: Data Analytics",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-cloud-quest-data-analytics",
+          "image": "aws/cloud-quest/data.png",
+          "status": "todo",
+          "order": 6
+        },
+        {
+          "name": "AWS Cloud Quest: Machine Learning",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-cloud-quest-machine-learning",
+          "image": "aws/cloud-quest/machine.png",
+          "status": "todo",
+          "order": 7
+        },
+        {
+          "name": "AWS Cloud Quest: Generative AI",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-cloud-quest-generative-ai",
+          "image": "aws/cloud-quest/ai.png",
+          "status": "todo",
+          "order": 8
+        }
+      ]
+    },
+    {
+      "name": "AWS Industry Quest",
+      "order": 4,
+      "items": [
+        {
+          "name": "AWS Industry Quest: Financial Services",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-industry-quest-financial-services",
+          "image": "aws/industry-quest/financial.png",
+          "status": "inprogress",
+          "order": 1
+        },
+        {
+          "name": "Manufacturing and Auto",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-industry-quest-manufacturing-and-auto",
+          "image": "aws/industry-quest/manufacturing.png",
+          "status": "todo",
+          "order": 2
+        },
+        {
+          "name": "AWS Industry Quest: Healthcare",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-industry-quest-healthcare",
+          "image": "aws/industry-quest/healthcare.png",
+          "status": "todo",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "name": "AWS Educate",
+      "order": 5,
+      "items": [
+        {
+          "name": "AWS Educate Introduction to Cloud 101",
+          "url": "https://www.credly.com/badges/454f0e19-6f16-41e3-941b-124966f43dc7",
+          "image": "aws/educate/cloud.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "AWS Educate Getting Started with Compute",
+          "url": "https://www.credly.com/badges/d1068218-e7ec-4b28-8fba-e272852360f2",
+          "image": "aws/educate/compute.png",
+          "status": "active",
+          "order": 2
+        },
+        {
+          "name": "AWS Educate Getting Started with Serverless",
+          "url": "https://www.credly.com/badges/08073576-7423-48a0-a855-9a522676dd64",
+          "image": "aws/educate/serverless.png",
+          "status": "active",
+          "order": 3
+        },
+        {
+          "name": "AWS Educate Getting Started with Storage",
+          "url": "https://www.credly.com/badges/f94c2e3c-050e-47c6-b4f8-205586a803fa",
+          "image": "aws/educate/storage.png",
+          "status": "active",
+          "order": 4
+        },
+        {
+          "name": "AWS Educate Machine Learning - DeepRacer",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-educate-machine-learning-deepracer",
+          "image": "aws/educate/deepracer.png",
+          "status": "inprogress",
+          "order": 5
+        },
+        {
+          "name": "AWS Educate Getting Started with Databases",
+          "url": "https://www.credly.com/badges/50641910-9922-47a6-8b70-040f48db87c1",
+          "image": "aws/educate/databases.png",
+          "status": "active",
+          "order": 6
+        },
+        {
+          "name": "AWS Educate Getting Started with Networking",
+          "url": "https://www.credly.com/badges/dfdd6ed2-9b36-423d-846a-32fa960b6341",
+          "image": "aws/educate/networking.png",
+          "status": "active",
+          "order": 7
+        },
+        {
+          "name": "AWS Educate Getting Started with Security",
+          "url": "https://www.credly.com/badges/aef519ea-3992-4d2b-aa16-5210ec002bee",
+          "image": "aws/educate/security.png",
+          "status": "active",
+          "order": 8
+        },
+        {
+          "name": "AWS Educate Web Builder",
+          "url": "https://www.credly.com/badges/daf89d15-1d4b-43a4-940f-3fc6a679cbca",
+          "image": "aws/educate/webbuilder.png",
+          "status": "active",
+          "order": 9
+        },
+        {
+          "name": "AWS Educate Getting Started with Cloud Ops",
+          "url": "https://www.credly.com/badges/35fbda8f-f35e-4857-8d2f-0cec900b7eac",
+          "image": "aws/educate/cloudops.png",
+          "status": "active",
+          "order": 10
+        },
+        {
+          "name": "Well-Architected Proficient",
+          "url": "https://www.credly.com/badges/2a579f6d-b209-437c-9460-db0ae9e500c4",
+          "image": "aws/educate/wellarchitected.png",
+          "status": "active",
+          "order": 11
+        }
+      ]
+    },
+    {
+      "name": "AWS Technology",
+      "order": 6,
+      "items": [
+        {
+          "name": "AWS Knowledge: Architecting",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-architecting",
+          "image": "aws/technology/architecting.png",
+          "status": "todo",
+          "order": 1
+        },
+        {
+          "name": "AWS Knowledge: Serverless",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-serverless",
+          "image": "aws/technology/serverless.png",
+          "status": "todo",
+          "order": 2
+        },
+        {
+          "name": "AWS Knowledge: Compute",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-compute",
+          "image": "aws/technology/compute.png",
+          "status": "todo",
+          "order": 3
+        },
+        {
+          "name": "AWS Knowledge: Amazon Braket",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-amazon-braket",
+          "image": "aws/technology/braket.png",
+          "status": "todo",
+          "order": 4
+        },
+        {
+          "name": "AWS Knowledge: Amazon EKS",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-amazon-eks",
+          "image": "aws/technology/eks.png",
+          "status": "todo",
+          "order": 5
+        },
+        {
+          "name": "AWS Knowledge: Cloud Essentials",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-cloud-essentials",
+          "image": "aws/technology/cloud.png",
+          "status": "todo",
+          "order": 6
+        },
+        {
+          "name": "AWS Knowledge: Networking Core",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-networking-core",
+          "image": "aws/technology/networking.png",
+          "status": "todo",
+          "order": 7
+        },
+        {
+          "name": "AWS Knowledge: Migration Foundations",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-migration-foundations",
+          "image": "aws/technology/migration.png",
+          "status": "todo",
+          "order": 8
+        },
+        {
+          "name": "AWS Knowledge: Events and Workflows",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-events-and-workflows",
+          "image": "aws/technology/workflows.png",
+          "status": "todo",
+          "order": 9
+        },
+        {
+          "name": "AWS Knowledge: AWS for Games: Cloud Game Development",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-aws-for-games-cloud-game-development",
+          "image": "aws/technology/games.png",
+          "status": "todo",
+          "order": 10
+        },
+        {
+          "name": "AWS Knowledge: Media & Entertainment: Direct-to-Consumer and Broadcast Foundations",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-media-entertainment-direct-to-consume",
+          "image": "aws/technology/media.png",
+          "status": "todo",
+          "order": 11
+        },
+        {
+          "name": "AWS Knowledge: Storage Technologist",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-storage-technologist",
+          "image": "aws/technology/storage.png",
+          "status": "todo",
+          "order": 12
+        },
+        {
+          "name": "AWS Knowledge: Storage Core",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-storage-core",
+          "image": "aws/technology/core.png",
+          "status": "todo",
+          "order": 13
+        },
+        {
+          "name": "AWS Knowledge: Data Protection & Disaster Recovery",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-data-protection-disaster-recovery",
+          "image": "aws/technology/disaster.png",
+          "status": "todo",
+          "order": 14
+        },
+        {
+          "name": "AWS Knowledge: File Storage",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-file-storage",
+          "image": "aws/technology/file.png",
+          "status": "todo",
+          "order": 15
+        },
+        {
+          "name": "AWS Knowledge: Data Migration",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-data-migration",
+          "image": "aws/technology/data.png",
+          "status": "todo",
+          "order": 16
+        }
+      ]
+    },
+    {
+      "name": "AWS .NET Workloads",
+      "order": 7,
+      "items": [
+        {
+          "name": "Amazon Rekognition and .NET Workloads",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/amazon-rekognition-and-net-workloads",
+          "image": "aws/workload/rekognition.png",
+          "status": "todo",
+          "order": 1
+        },
+        {
+          "name": "Amazon Textract and .NET Workloads",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/amazon-textract-and-net-workloads",
+          "image": "aws/workload/textract.png",
+          "status": "todo",
+          "order": 2
+        },
+        {
+          "name": "AWS App2Container and .NET Workloads",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/aws-app2container-and-net-workloads",
+          "image": "aws/workload/app2container.png",
+          "status": "todo",
+          "order": 3
+        },
+        {
+          "name": ".NET Workloads on AWS Lambda",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/net-workloads-on-aws-lambda",
+          "image": "aws/workload/lambda.png",
+          "status": "todo",
+          "order": 4
+        },
+        {
+          "name": ".NET Workloads on AWS App Runner",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/net-workloads-on-aws-app-runner",
+          "image": "aws/workload/apprunner.png",
+          "status": "todo",
+          "order": 5
+        },
+        {
+          "name": ".NET Workloads on Amazon ECS on AWS Fargate",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/net-workloads-on-amazon-ecs-on-aws-fargate",
+          "image": "aws/workload/ecs.png",
+          "status": "todo",
+          "order": 6
+        },
+        {
+          "name": "Migration Hub Strategy Recommendations and .NET Workloads",
+          "url": "https://www.credly.com/org/dotnetonaws/badge/migration-hub-strategy-recommendations-and-net-work",
+          "image": "aws/workload/migrationhub.png",
+          "status": "todo",
+          "order": 7
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Certifications: Azure",
+      "order": 8,
+      "items": [
+        {
+          "name": "Microsoft Certified: Power Platform Fundamentals",
+          "url": "https://learn.microsoft.com/en-us/users/henniefrancis/credentials/e437527442acc445",
+          "image": "microsoft/badges/power-platform-fundamentals.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "Microsoft Certified: Azure Data Fundamentals",
+          "url": "https://www.credly.com/badges/a8a44482-d51c-42b7-9011-5b4c5f468178",
+          "image": "microsoft/badges/azure-data-fundamentals.png",
+          "status": "active",
+          "order": 2
+        },
+        {
+          "name": "Microsoft Certified: Azure AI Fundamentals",
+          "url": "https://www.credly.com/badges/9f3e84cc-d6a1-43cd-8ec1-a00b68242f44",
+          "image": "microsoft/badges/azure-ai-fundamentals.png",
+          "status": "active",
+          "order": 3
+        },
+        {
+          "name": "Microsoft Certified: Security, Compliance, and Identity Fundamentals",
+          "url": "https://www.credly.com/badges/1d569f98-6bfc-41bf-b5f9-c1c7e2023ab6",
+          "image": "microsoft/badges/security-compliance-identity.png",
+          "status": "active",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Certification: Professional Developer",
+      "order": 9,
+      "items": [
+        {
+          "name": "Microsoft Certified Professional",
+          "url": "/pages/certifications/microsoft/mcpd/8267E9A1-89A3-48AA-8312-B6E39511645F.html",
+          "image": "microsoft/badges/professional-developer/mcpd.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "Microsoft Certified Professional Developer: Web Developer 4",
+          "url": "/pages/certifications/microsoft/mcpd/43A08CE1-BBF7-44B0-802D-B5956D51A09F.html",
+          "image": "microsoft/badges/professional-developer/web-developer-4.png",
+          "status": "active",
+          "order": 2
+        },
+        {
+          "name": "Microsoft Certified Professional Developer: Enterprise Application Developer 3.5",
+          "url": "/pages/certifications/microsoft/mcpd/82E5A74B-407F-4527-96C9-AD21468C6A92.html",
+          "image": "microsoft/badges/professional-developer/enterprise-application-developer-3.5.png",
+          "status": "active",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Certification: Technology Specialist",
+      "order": 10,
+      "items": [
+        {
+          "name": "Microsoft Certified Technology Specialist: SQL Server 2008, Business Intelligence Development and Maintenance",
+          "url": "/pages/certifications/microsoft/mcts/F5204D28-844A-4A50-A051-DD51634D71CB.html",
+          "image": "microsoft/badges/technology-specialist/sql-server-2008-bi-development.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: SharePoint 2010, Application Development",
+          "url": "/pages/certifications/microsoft/mcts/4950D53D-5AF2-4D71-B816-3209CD8B5944.html",
+          "image": "microsoft/badges/technology-specialist/sharepoint-2010-appplication-development.png",
+          "status": "active",
+          "order": 2
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 4, Data Access",
+          "url": "/pages/certifications/microsoft/mcts/0EFBBF5F-4DF4-4C58-8018-904EA49CC4D1.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framwork-4-data-access.png",
+          "status": "active",
+          "order": 3
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 3.5, Windows Communication Foundation Applications",
+          "url": "/pages/certifications/microsoft/mcts/3615C129-C243-48CA-B69D-623D332CEF55.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framwork-3_5-windows-communication-foundation-applications.png",
+          "status": "active",
+          "order": 4
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 3.5, ADO.NET Applications",
+          "url": "/pages/certifications/microsoft/mcts/BE57E329-B099-4AA5-9EBA-1352D83E71C1.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framwork-3_5-ado-net-applications.png",
+          "status": "active",
+          "order": 5
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 3.5, ASP.NET Applications",
+          "url": "/pages/certifications/microsoft/mcts/755F01DE-3149-4D5C-B282-F0F1FF413E82.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framwork-3_5-aspnet-applications.png",
+          "status": "active",
+          "order": 6
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 3.5, Windows Forms Applications",
+          "url": "/pages/certifications/microsoft/mcts/C786A5C7-26E8-4739-A660-5F8FBFD617EE.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framwork-3_5-windows-forms-applications.png",
+          "status": "active",
+          "order": 7
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 4, Web Applications",
+          "url": "/pages/certifications/microsoft/mcts/72760D46-5CA7-4FAB-8C40-E226407361BC.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framework-4-web-applications.png",
+          "status": "active",
+          "order": 8
+        },
+        {
+          "name": "Microsoft Certified Technology Specialist: .NET Framework 4, Service Communication Applications",
+          "url": "/pages/certifications/microsoft/mcts/475CD13A-3FEA-4579-B478-0A29F2A012F8.html",
+          "image": "microsoft/badges/technology-specialist/dotnet-framwork-4-service-communication-applications.png",
+          "status": "active",
+          "order": 9
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Certification: IT Professional",
+      "order": 11,
+      "items": [
+        {
+          "name": "",
+          "url": "/pages/certifications/microsoft/mcitp/E8543828-EEB2-4CF6-BDDB-7758444577B2.html",
+          "image": "microsoft/badges/it-professional/bi-developer-2008.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "",
+          "url": "/pages/certifications/microsoft/mcitp/022356C3-0CDC-4D12-A343-27EECA3C5BBC.html",
+          "image": "microsoft/badges/it-professional/database-developer-2008.png",
+          "status": "active",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Certified Trainer",
+      "order": 12,
+      "items": [
+        {
+          "name": "Microsoft Certified Trainer 2018-2019",
+          "url": "https://www.credly.com/badges/dcbd5185-33ae-4267-b319-740705afdbeb",
+          "image": "microsoft/mct/2018_2019.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "Microsoft Certified Trainer 2022 - 2023",
+          "url": "/pages/certifications/microsoft/mct/72EFF479-0A84-4FCB-B4C0-30F1F53C0027.html",
+          "image": "microsoft/mct/2022_2023-b.png",
+          "status": "active",
+          "order": 2
+        }
+      ]
+    }
+  ]
+}
