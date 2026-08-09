@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/index/",
+  "items": [
+    {
+      "id": "biography",
+      "name": "Biography",
+      "description": "View my professional biography",
+      "url": "/pages/biography.html",
+      "image": "biography.png",
+      "order": 1
+    },
+    {
+      "id": "current-role",
+      "name": "Current Role",
+      "description": "View my current role",
+      "url": "/pages/current-role.html",
+      "image": "current-role.png",
+      "order": 2
+    },
+    {
+      "id": "portfolio",
+      "name": "Portfolio of Evidence",
+      "description": "View my portfolio of Evidence",
+      "url": "/pages/portfolio.html",
+      "image": "portfolio.png",
+      "order": 3
+    },
+    {
+      "id": "social-media",
+      "name": "Social Media",
+      "description": "View my social media profiles",
+      "url": "/pages/social-media.html",
+      "image": "social-media.png",
+      "order": 4
+    },
+    {
+      "id": "public-speaking",
+      "name": "Public Speaking",
+      "description": "View my public speaking engagements",
+      "url": "/pages/public-speaking.html",
+      "image": "public-speaking.png",
+      "order": 5
+    },
+    {
+      "id": "blog",
+      "name": "Blog",
+      "description": "View my blog posts",
+      "url": "/pages/blog.html",
+      "image": "blog.png",
+      "order": 6
+    },
+    {
+      "id": "tech-stack",
+      "name": "Tech Stack",
+      "description": "View my technical skills and tools",
+      "url": "/pages/tech-stack.html",
+      "image": "tech-stack.png",
+      "order": 7
+    },
+    {
+      "id": "certifications",
+      "name": "Certifications",
+      "description": "View my certifications",
+      "url": "/pages/certifications.html",
+      "image": "certifications.png",
+      "order": 8
+    },
+    {
+      "id": "special-awards",
+      "name": "Special Awards",
+      "description": "View my awards and recognition",
+      "url": "/pages/special-awards.html",
+      "image": "special-awards.png",
+      "order": 9
+    }
+  ]
+}

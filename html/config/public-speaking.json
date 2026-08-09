@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/public-speaking/",
+  "categories": [
+    {
+      "name": "2026",
+      "order": 1,
+      "items": [
+        { "name": "AWS re:Invent 2026 re:Cap", "url": "../pages/public-speaking/aws-reinvent-recap/2026.html", "image": "recap_2026.png", "order": 1 },
+        { "name": "AWS EKS Masterclass Cape Town 2026", "url": "../pages/public-speaking/eks-masterclass-cape-town/2026.html", "image": "aws_eks_masterclass.png", "order": 2 }
+      ]
+    },
+    {
+      "name": "2025",
+      "order": 2,
+      "items": [
+        { "name": "AWS re:Invent 2025 re:Cap", "url": "../pages/public-speaking/aws-reinvent-recap/2025.html", "image": "recap_2025.png", "order": 1 },
+        { "name": "ISPIM Connects Cape Town 2025", "url": "../pages/public-speaking/ispim/2025.html", "image": "ispim_2025.png", "order": 2 },
+        { "name": "AWS Summit Johannesburg 2025", "url": "../pages/public-speaking/aws-summit/2025.html", "image": "aws_summit_2025.png", "order": 3 },
+        { "name": "AWS Summit Johannesburg 2025", "url": "../pages/public-speaking/aws-summit/2025-cl.html", "image": "aws_summit_2025_cl.png", "order": 4 },
+        { "name": ".NET Conference 2025", "url": "../pages/public-speaking/dotnet-conf/2025.html", "image": "dotnet_conf_2025.png", "order": 5 }
+      ]
+    },
+    {
+      "name": "2024",
+      "order": 3,
+      "items": [
+        { "name": "Google I/O Extended", "url": "../pages/public-speaking/google-io/2024.html", "image": "google_io.png", "order": 1 },
+        { "name": "AWS Summit Johannesburg 2024", "url": "../pages/public-speaking/aws-summit/2024.html", "image": "aws_summit_2024.png", "order": 2 },
+        { "name": "Season of AI 2024", "url": "../pages/public-speaking/season-of-ai/2024.html", "image": "season_of_ai.png", "order": 3 },
+        { "name": "DevOps Day 2024", "url": "../pages/public-speaking/devops-day/2024.html", "image": "dev_ops_day.png", "order": 4 },
+        { "name": ".NET Conference 2024", "url": "../pages/public-speaking/dotnet-conf/2024.html", "image": "dotnet_conf_2024.png", "order": 5 }
+      ]
+    },
+    {
+      "name": "2023",
+      "order": 4,
+      "items": [
+        { "name": ".NET Conference 2023", "url": "../pages/public-speaking/dotnet-conf/2023.html", "image": "dotnet_conf_2023.png", "order": 1 }
+      ]
+    }
+  ]
+}

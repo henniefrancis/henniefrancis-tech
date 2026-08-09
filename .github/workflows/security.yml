@@ -32,8 +32,8 @@ jobs:
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
   # ── Dependency Vulnerability Check ───────────────────────────
-  # The site ships zero runtime npm dependencies; this guards the day
-  # someone adds one, and fails on high/critical CVEs.
+  # Audits the Angular app's runtime dependencies (src/) for
+  # high/critical CVEs. --omit=dev skips build-only tooling.
   dependencies:
     name: Dependency Audit (npm)
     runs-on: ubuntu-latest
@@ -49,11 +49,14 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: src/package-lock.json
 
       - name: Install dependencies
+        working-directory: src
         run: npm ci
 
       - name: Audit for high/critical CVEs
+        working-directory: src
         run: npm audit --audit-level=high --omit=dev
 
   # ── Filesystem Vulnerability Scan ────────────────────────────

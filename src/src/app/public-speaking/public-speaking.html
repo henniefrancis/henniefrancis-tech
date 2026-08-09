@@ -1,0 +1,36 @@
+<div class="pageheader px-4">
+  <div class="row">
+    <div class="col">
+      <nav class="divider-color" style="--bs-breadcrumb-divider: '&#x27A4;';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <a routerLink="/" title="Go Back" class="back">&#10531;</a>
+          <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
+          <li class="breadcrumb-item current" aria-current="page">Public Speaking</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row heading">
+    <div class="col"><h1>Public Speaking</h1></div>
+  </div>
+  <hr />
+</div>
+<div class="container-fluid-content px-4">
+  @for (year of years; track $index; let last = $last) {
+    <div class="row">
+      <div class="col"><h4>{{ year.name }}</h4></div>
+    </div>
+    <div class="row">
+      @for (talk of year.talks; track $index) {
+        <div class="col-4">
+          <div class="publicspeaking zoom">
+            <a [routerLink]="talk.route" [title]="talk.name">
+              <img [src]="talk.src" [alt]="talk.name" loading="lazy">
+            </a>
+          </div>
+        </div>
+      }
+    </div>
+    @if (!last) { <hr /> }
+  }
+</div>

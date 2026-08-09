@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/current-role/",
+  "images": [
+    {
+      "id": "accenture",
+      "name": "Accenture",
+      "image": "accenture.svg",
+      "className": "current-role",
+      "url": "https://www.accenture.com/za-en",
+      "order": 1
+    }
+  ],
+  "Employer": "Accenture",
+  "Employment": "17 August 2026 to Present",
+  "Current Title": "Senior Tech Architecture Manager",
+  "Division": "",
+  "Department": "",
+  "Office": ""
+}

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS Summit Johannesburg",
+  "year": "2024",
+  "header": {
+    "url": "https://aws.amazon.com/events/summits/emea/johannesburg/agenda",
+    "image": "public-speaking/aws_summit_2024.png",
+    "alt": "AWS Summit Johannesburg 2024"
+  },
+  "heading": "AWS Secrets: How to read your cloud resources bedtime stories",
+  "body": [
+    "Want to save big on your AWS bill? We found the secret: teach your resources to take naps! By using AWS scheduler to shut down and start resources in our non-production account, we cut our operational costs by over 50%. Come hear the inside scoop from morning wake-up calls to start the day to night-night lullabies. This recipe will repeat and save you every day! Let your resources get their beauty sleep!"
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/aws-secrets-how-to-read-your-cloud-resources-bedti/100110",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "photos/2024.html",
+      "image": "public-speaking/camera.jpeg",
+      "title": "Event Photos",
+      "alt": "Event Photos"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=DoDxU1U2jzc&t",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube"
+    }
+  ]
+}

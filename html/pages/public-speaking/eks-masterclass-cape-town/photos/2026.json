@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS EKS Masterclass Cape Town",
+  "year": "2026",
+  "photoBase": "event-photos/aws-eks-masterclass-cape-town/2026/",
+  "photos": [
+    {
+      "image": "p1.png",
+      "alt": "Photo 1"
+    },
+    {
+      "image": "p1.png",
+      "alt": "Photo 2"
+    },
+    {
+      "image": "p1.png",
+      "alt": "Photo 3"
+    }
+  ]
+}

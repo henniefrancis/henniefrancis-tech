@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS Summit Johannesburg",
+  "year": "2025 - Customer Lounge",
+  "header": {
+    "url": "https://aws.amazon.com/events/summits/emea/johannesburg/agenda",
+    "image": "public-speaking/aws_summit_2025_cl.png",
+    "alt": "AWS Summit Johannesburg 2025"
+  },
+  "heading": "All Aboard the MCP Train!",
+  "body": [
+    "Ever wondered how some teams are building AI systems that are faster, cheaper, and more resilient?",
+    "Join me and I’ll walk you through the power of Model Context Platforms (MCP) and share why they’re becoming a game-changer. You’ll get insights on how MCP can boost your system’s efficiency, streamline workflows, and cut costs—plus, the challenges you need to watch out for.",
+    "Don’t miss out the chance to get on the MCP train! It could be the key in your AI strategy."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/all-aboard-on-the-mcp-train/134715",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "photos/2025-cl.html",
+      "image": "public-speaking/camera.jpeg",
+      "title": "Event Photos",
+      "alt": "Event Photos"
+    }
+  ]
+}

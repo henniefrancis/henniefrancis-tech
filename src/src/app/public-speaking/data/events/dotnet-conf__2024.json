@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "Microsoft .NET Conference",
+  "year": "2024",
+  "header": {
+    "url": "https://cptmsdug.dev/netconf2024",
+    "image": "public-speaking/dotnet_conf_2024.png",
+    "alt": ".NET Conference 2024"
+  },
+  "heading": "Is .NET Aspire really that inspiring?",
+  "body": [
+    "Join me as we dive into the world of .NET Aspire and explore whether it lives up to its inspiring reputation. As a software engineer navigating the ever-evolving tech landscape, I’ll share my insights on the event's impact on professional growth, networking, and skill enhancement. From real-world experiences to key takeaways, we’ll uncover how .NET Aspire can empower developers to embrace innovation and elevate their careers. Whether you're a seasoned pro or just starting out, let’s discover together if this platform is the spark that ignites your passion for .NET development!"
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/is-.net-aspire-really-that-inspiring/98260",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    }
+  ]
+}
