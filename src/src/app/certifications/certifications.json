@@ -7,11 +7,18 @@
       "order": 1,
       "items": [
         {
+          "name": "AWS Certified AI Practitioner",
+          "url": "https://www.credly.com/badges/4b9ac609-5a7f-414e-ad34-f5e70bfe1aba",
+          "image": "aws/certified/aws-certified-ai-practitioner.png",
+          "status": "active",
+          "order": 1
+        },
+        {
           "name": "AWS Certified Solutions Architect – Associate",
           "url": "https://www.credly.com/badges/d09ec7ed-9a44-42ce-92fb-b2e2787910f0",
           "image": "aws/certified/aws-certified-solutions-architect-associate.png",
           "status": "active",
-          "order": 1
+          "order": 2
         },
         {
           "name": "AWS Certified Cloud Practitioner",
@@ -67,12 +74,46 @@
           "image": "aws/partner/aws-partner-technical.png",
           "status": "active",
           "order": 6
+        },
+        {
+          "name": "AWS Partner: Migration Essentials - Training Badge",
+          "url": "https://www.credly.com/badges/ede00304-4e7f-4faa-9f46-09f338e06df4",
+          "image": "aws/partner/aws-partner-migration-essentials.png",
+          "status": "active",
+          "order": 7
+        },
+        {
+          "name": "AWS Partner: Cloud Economics Essentials - Training Badge",
+          "url": "https://www.credly.com/badges/6cce03eb-a3db-4519-95fa-65c0f903fb9c",
+          "image": "aws/partner/aws-partner-cloud-economics-essentials.png",
+          "status": "active",
+          "order": 8
+        },
+        {
+          "name": "AWS Partner: Cloud Operations Essentials",
+          "url": "https://www.credly.com/badges/e9cd6c6c-1bb9-48dd-8b9a-e1dfc5690a8f",
+          "image": "aws/partner/aws-partner-cloud-operations-essentials.png",
+          "status": "active",
+          "order": 9
+        }
+      ]
+    },
+    {
+      "name": "AWS Microcredentials",
+      "order": 3,
+      "items": [
+        {
+          "name": "AWS Serverless Demonstrated",
+          "url": "https://www.credly.com/badges/a05e2219-5459-449a-8ffe-4c03b992a379",
+          "image": "aws/microcredentials/aws-serverless-demonstrated.png",
+          "status": "active",
+          "order": 1
         }
       ]
     },
     {
       "name": "AWS Cloud Quest",
-      "order": 3,
+      "order": 4,
       "items": [
         {
           "name": "AWS Cloud Quest: Solutions Architect",
@@ -132,9 +173,10 @@
         }
       ]
     },
+    
     {
       "name": "AWS Industry Quest",
-      "order": 4,
+      "order": 5,
       "items": [
         {
           "name": "AWS Industry Quest: Financial Services",
@@ -161,7 +203,7 @@
     },
     {
       "name": "AWS Educate",
-      "order": 5,
+      "order": 6,
       "items": [
         {
           "name": "AWS Educate Introduction to Cloud 101",
@@ -244,7 +286,7 @@
     },
     {
       "name": "AWS Technology",
-      "order": 6,
+      "order": 7,
       "items": [
         {
           "name": "AWS Knowledge: Architecting",
@@ -362,7 +404,7 @@
     },
     {
       "name": "AWS .NET Workloads",
-      "order": 7,
+      "order": 8,
       "items": [
         {
           "name": "Amazon Rekognition and .NET Workloads",
@@ -417,7 +459,7 @@
     },
     {
       "name": "Microsoft Certifications: Azure",
-      "order": 8,
+      "order": 9,
       "items": [
         {
           "name": "Microsoft Certified: Power Platform Fundamentals",
@@ -451,7 +493,7 @@
     },
     {
       "name": "Microsoft Certification: Professional Developer",
-      "order": 9,
+      "order": 10,
       "items": [
         {
           "name": "Microsoft Certified Professional",
@@ -478,7 +520,7 @@
     },
     {
       "name": "Microsoft Certification: Technology Specialist",
-      "order": 10,
+      "order": 11,
       "items": [
         {
           "name": "Microsoft Certified Technology Specialist: SQL Server 2008, Business Intelligence Development and Maintenance",
@@ -547,7 +589,7 @@
     },
     {
       "name": "Microsoft Certification: IT Professional",
-      "order": 11,
+      "order": 12,
       "items": [
         {
           "name": "",
@@ -567,7 +609,7 @@
     },
     {
       "name": "Microsoft Certified Trainer",
-      "order": 12,
+      "order": 13,
       "items": [
         {
           "name": "Microsoft Certified Trainer 2018-2019",
