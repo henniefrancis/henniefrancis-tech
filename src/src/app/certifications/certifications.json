@@ -95,6 +95,41 @@
           "image": "aws/partner/aws-partner-cloud-operations-essentials.png",
           "status": "active",
           "order": 9
+        },
+        {
+          "name": "AWS Partner: Enterprise Modernization Learning Plan Assessment - Training Badge",
+          "url": "https://www.credly.com/badges/d8bc9549-d894-410a-8508-39be9705d870",
+          "image": "aws/partner/aws-partner-enterprise-modernization-learning-plan-assessment.png",
+          "status": "active",
+          "order": 10
+        },
+        {
+          "name": "AWS Partner: Business Value Realization (BVR) Essentials",
+          "url": "https://www.credly.com/badges/d8bc9549-d894-410a-8508-39be9705d870",
+          "image": "aws/partner/aws-partner-business-value-realization-bvr-essentials.png",
+          "status": "active",
+          "order": 11
+        },
+        {
+          "name": "AWS Partner: Security Essentials - Training Badge",
+          "url": "https://www.credly.com/earner/earned/badge/a2ab2af9-96c0-42ab-8e17-04e78da1cc2d",
+          "image": "aws/partner/aws-partner-security-essentials.png",
+          "status": "active",
+          "order": 12
+        },
+        {
+          "name": "AWS Partner: Data and Analytics Essentials - Training Badge",
+          "url": "https://www.credly.com/badges/98b11dee-6416-4eff-9427-086d88294acc",
+          "image": "aws/partner/aws-partner-data-and-analytics-essentials.png",
+          "status": "active",
+          "order": 13
+        },
+        {
+          "name": "AWS Partner: DevOps Essentials",
+          "url": "https://www.credly.com/badges/71d3bd5c-6e45-4b38-bb8f-0b157fb40acf",
+          "image": "aws/partner/aws-partner-devops-essentials.png",
+          "status": "active",
+          "order": 14
         }
       ]
     },
