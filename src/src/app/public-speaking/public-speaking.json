@@ -7,7 +7,8 @@
       "order": 1,
       "items": [
         { "name": "AWS re:Invent 2026 re:Cap", "url": "../pages/public-speaking/aws-reinvent-recap/2026.html", "image": "recap_2026.png", "order": 1 },
-        { "name": "AWS EKS Masterclass Cape Town 2026", "url": "../pages/public-speaking/eks-masterclass-cape-town/2026.html", "image": "aws_eks_masterclass.png", "order": 2 }
+        { "name": "AWS EKS Masterclass Cape Town 2026", "url": "../pages/public-speaking/eks-masterclass-cape-town/2026.html", "image": "aws_eks_masterclass.png", "order": 2 },
+        { "name": "AWS Summit Johannesburg 2026", "url": "../pages/public-speaking/aws-summit/2026.html", "image": "aws_summit_2026.png", "order": 3 }
       ]
     },
     {
