@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
+  "title": "AWS Summit Johannesburg",
+  "year": "2026",
+  "header": {
+    "url": "https://aws.amazon.com/events/summits/emea/johannesburg/agenda",
+    "image": "public-speaking/aws_summit_2026.png",
+    "alt": "AWS Summit Johannesburg 2026"
+  },
+  "heading": "Kiro: The AI Teammate That Doesn’t Break Prod",
+  "body": [
+    "We’ve all seen the shiny AI demos on brand-new repos using Perfect prompts. Everything works first time with no edge cases, no legacy code and definitely no Friday deployments. In reality, that’s not how most of us live.",
+    "Most of us are dealing with systems that have long history. Code written three decades ago with functions nobody wants to touch. Tests that exist mostly in spirit and production environments that really don’t appreciate experimentation."
+  ],
+  "links": [
+    {
+      "url": "https://sessionize.com/s/henniefrancis/kiro-the-ai-teammate-that-doesnt-break-prod/165171",
+      "image": "social-media/sessionize.png",
+      "title": "Sessionize",
+      "alt": "Sessionize"
+    },
+    {
+      "url": "photos/2026.html",
+      "image": "public-speaking/camera.jpeg",
+      "title": "Event Photos",
+      "alt": "Event Photos"
+    },
+    {
+      "url": "#",
+      "image": "public-speaking/youtube.png",
+      "title": "Full Video on YouTube",
+      "alt": "Full Video on YouTube"
+    }
+  ]
+}
