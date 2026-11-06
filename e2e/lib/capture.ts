@@ -5,6 +5,12 @@ import { collectSnapshot } from './collect';
 import type { Snapshot } from './collect';
 import { installStabiliser, waitForSettled } from './stabilise';
 
+/** Value-free label for a bad response: status or "failed", then the path (same origin) or the last two path parts (other hosts). */
+export function badLabel(what: string, url: string, siteOrigin: string): string {
+  const u = new URL(url);
+  return `${what} ${u.origin === siteOrigin ? u.pathname : 'external:' + u.pathname.split('/').slice(-2).join('/')}`;
+}
+
 export interface PageMeta {
   route: string;
   status: number;
@@ -47,10 +53,7 @@ export async function capturePage(page: Page, route: string): Promise<Captured> 
   const status = response?.status() ?? 0;
   await waitForSettled(page);
   const siteOrigin = new URL(page.url()).origin;
-  const badResponses = bad.map(({ what, url }) => {
-    const u = new URL(url);
-    return `${what} ${u.origin === siteOrigin ? u.pathname : 'external:' + u.pathname.split('/').slice(-2).join('/')}`;
-  });
+  const badResponses = bad.map(({ what, url }) => badLabel(what, url, siteOrigin));
   const broken = await page.evaluate(() =>
     Array.from(document.images)
       .filter((i) => i.complete && i.naturalWidth === 0)

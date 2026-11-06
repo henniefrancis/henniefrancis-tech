@@ -1,0 +1,8 @@
+{
+  "_comment": "Known, owner-aware resource problems that the functional route check tolerates. Remove an entry when it is fixed. Certificate detail images that already fail on the live site are read from the baseline instead.",
+  "missingResources": [
+    { "route": "/certifications", "contains": "aws-certified-ai-business-strategist.png", "reason": "badge image not uploaded yet" },
+    { "route": "/certifications", "contains": "aws-certified-ai-business-strategist-early-adopter.png", "reason": "badge image not uploaded yet" },
+    { "route": "/certifications", "contains": "aws-partner-containers-essentials.png", "reason": "badge image not uploaded yet" }
+  ]
+}
