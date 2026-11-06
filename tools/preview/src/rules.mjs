@@ -22,7 +22,7 @@ export const EDGE_HEADERS = {
   'x-content-type-options': 'nosniff',
   'x-frame-options': 'SAMEORIGIN',
   'referrer-policy': 'strict-origin-when-cross-origin',
-  'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()',
 };
 
 export const IMMUTABLE = 'public, max-age=31536000, immutable';

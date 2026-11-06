@@ -6,9 +6,10 @@ import { PROJECTS } from './e2e/lib/devices';
  *
  * - BASE_URL: test an already running site (for example production). When it
  *   is unset, the local preview server (tools/preview) is started on
- *   E2E_PORT and serves the production build in src/dist.
+ *   E2E_PORT and serves the production build in dist.
  * - E2E_PORT: preview port. Defaults to 4280. Ports 4200 and 4210 are used by
  *   other tools and must not be chosen.
+ * - EXPECT_EDGE=1: with BASE_URL set, also run the edge header checks (production after cutover).
  * - E2E_DIST: directory the preview serves (default: the Angular browser output).
  * - Suites are selected with tags: `--grep @visual`, `--grep @capture`, and
  *   `--grep-invert "@visual|@capture"` for the functional suite.
@@ -22,7 +23,8 @@ if (!Number.isInteger(port) || port < 1024 || port > 65535 || FORBIDDEN_PORTS.ha
 
 const externalBase = process.env['BASE_URL'];
 const baseURL = externalBase ?? `http://127.0.0.1:${port}`;
-const dist = process.env['E2E_DIST'] ?? 'src/dist/henniefrancis-tech/browser';
+// Angular workspace at the repo root, so the build lands in dist/.
+const dist = process.env['E2E_DIST'] ?? 'dist/henniefrancis-tech/browser';
 
 export default defineConfig({
   testDir: './e2e',
@@ -37,7 +39,7 @@ export default defineConfig({
   webServer: externalBase
     ? undefined
     : {
-        command: `node tools/preview/src/cli.mjs --dir "${dist}" --port ${port} --host 127.0.0.1`,
+        command: `node tools/preview/src/cli.mjs --dir "${dist}" --port ${port} --host 127.0.0.1 --edge-headers`,
         url: `http://127.0.0.1:${port}/`,
         reuseExistingServer: false,
         timeout: 30_000,

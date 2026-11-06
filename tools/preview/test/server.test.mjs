@@ -181,7 +181,7 @@ describe('headers', () => {
     expect(res.headers.get('x-content-type-options')).toBe('nosniff');
     expect(res.headers.get('x-frame-options')).toBe('SAMEORIGIN');
     expect(res.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
-    expect(res.headers.get('permissions-policy')).toBeTruthy();
+    expect(res.headers.get('permissions-policy')).toBe('camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()');
     expect((await (await start()).get('/')).headers.get('x-frame-options')).toBeNull();
   });
 

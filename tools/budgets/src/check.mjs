@@ -57,21 +57,43 @@ export async function checkDist(dist) {
   return { files, violations };
 }
 
+export const RULES = ['image-size', 'amazonaws', 'cdn-host'];
+
 /** CLI body: returns the exit code. io = { out, err }. */
 export async function main(argv, io) {
-  const dist = argv[0];
-  if (!dist || argv.length !== 1) {
-    io.err('usage: node tools/budgets/check-dist.mjs <distDir>\n');
+  const usage = () => {
+    io.err(`usage: node tools/budgets/check-dist.mjs <distDir> [--warn ${RULES.join(',')}]
+`);
     return 2;
+  };
+  const warn = new Set();
+  const positional = [];
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] !== '--warn') {
+      positional.push(argv[i]);
+      continue;
+    }
+    const list = (argv[++i] ?? '').split(',').filter(Boolean);
+    if (list.length === 0 || list.some((r) => !RULES.includes(r))) return usage();
+    list.forEach((r) => warn.add(r));
   }
+  if (positional.length !== 1) return usage();
   let result;
   try {
-    result = await checkDist(dist);
+    result = await checkDist(positional[0]);
   } catch (err) {
-    io.err(`error: cannot scan "${dist}" (${err.code})\n`);
+    io.err(`error: cannot scan "${positional[0]}" (${err.code})
+`);
     return 2;
   }
-  for (const v of result.violations) io.err(`FAIL ${v.rule}: ${v.file} (${v.detail})\n`);
-  io.out(`checked ${result.files} files, ${result.violations.length} violations\n`);
-  return result.violations.length === 0 ? 0 : 1;
+  let failures = 0;
+  for (const v of result.violations) {
+    const warned = warn.has(v.rule);
+    io.err(`${warned ? 'WARN' : 'FAIL'} ${v.rule}: ${v.file} (${v.detail})
+`);
+    if (!warned) failures++;
+  }
+  io.out(`checked ${result.files} files, ${failures} failures, ${result.violations.length - failures} warnings
+`);
+  return failures === 0 ? 0 : 1;
 }

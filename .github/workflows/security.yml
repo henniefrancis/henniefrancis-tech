@@ -30,7 +30,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: |
-            src/package-lock.json
+            package-lock.json
             tools/*/package-lock.json
 
       - name: Install gitleaks (pinned release, checksum verified)
@@ -51,7 +51,8 @@ jobs:
       - name: Dependency audit (runtime dependencies)
         run: |
           set -euo pipefail
-          (cd src && npm ci && npm audit --omit=dev --audit-level=high)
+          npm ci
+          npm audit --omit=dev --audit-level=high
           shopt -s nullglob
           for f in tools/*/package.json; do
             dir="$(dirname "$f")"

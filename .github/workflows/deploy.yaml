@@ -87,14 +87,13 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-          cache-dependency-path: src/package-lock.json
+          cache-dependency-path: package-lock.json
 
       # TODO(content pipeline): when config_sha is set, check out the content
       # repository at that commit into src/content and generate the data
       # modules before the build. Never print the content in logs.
 
       - name: Install and build (Angular, prerendered)
-        working-directory: src
         run: |
           npm ci
           npm run build
@@ -105,7 +104,7 @@ jobs:
       - name: Write version.json
         run: |
           set -euo pipefail
-          site_dir="src/dist/${PROJECT_NAME}/browser"
+          site_dir="dist/${PROJECT_NAME}/browser"
           jq -n \
             --arg siteSha "$GITHUB_SHA" \
             --arg builtAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
@@ -118,7 +117,7 @@ jobs:
           stage="${RUNNER_TEMP}/stage"
           rm -rf "$stage"
           mkdir -p "${stage}/site" "${stage}/nginx"
-          cp -a "src/dist/${PROJECT_NAME}/browser/." "${stage}/site/"
+          cp -a "dist/${PROJECT_NAME}/browser/." "${stage}/site/"
           shopt -s nullglob
           confs=(deploy/nginx/*.conf)
           if [ "${#confs[@]}" -gt 0 ]; then

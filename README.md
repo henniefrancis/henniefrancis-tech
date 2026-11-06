@@ -26,7 +26,9 @@ Personal site of Hennie Francis: Cloud and Technology Strategist, AWS Community 
 ## Repository layout
 
 ```
-src/                  Angular application (the workspace root for ng commands)
+src/                  Angular application source
+public/               Static assets copied as is into the build
+angular.json          Angular workspace configuration (the repo root is the workspace root)
 e2e/                  Playwright tests
 tools/                Standalone Node tooling packages (each has its own package.json)
 terraform/            Infrastructure as code
@@ -37,17 +39,16 @@ deploy/               Web server configuration shipped with each deploy
 ## Local development
 
 ```bash
-cd src
 npm ci
 npm start          # development server on http://localhost:4200
 npm run build      # production build, prerendered to dist/henniefrancis-tech/browser
-npm test           # unit tests
+npm test           # unit tests (watch mode)
+npm run test:ci    # unit tests once, with the 100 percent coverage threshold
 ```
 
-Repository tooling (end-to-end tests and the local preview) lives in the root package:
+End-to-end tests and the local preview use the same root package:
 
 ```bash
-npm ci
 npx playwright install --with-deps chromium webkit   # first run only
 npm run preview        # serve the production build locally
 npm run test:e2e       # Playwright suite

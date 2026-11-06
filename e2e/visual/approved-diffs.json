@@ -3,13 +3,54 @@
   "approved": [
     {
       "route": "/social-media",
-      "kinds": ["geometry", "style", "pixels"],
+      "kinds": [
+        "geometry",
+        "style",
+        "pixels"
+      ],
       "reason": "The dotcoresolutions.io link becomes plain text."
     },
     {
       "route": "/404.html",
-      "kinds": ["page", "text", "geometry", "style", "pixels"],
+      "kinds": [
+        "page",
+        "text",
+        "geometry",
+        "style",
+        "pixels"
+      ],
       "reason": "New styled 404 page. It has no baseline; the live site served the default nginx page."
+    },
+    {
+      "route": "/",
+      "kinds": [
+        "text",
+        "geometry",
+        "style",
+        "pixels"
+      ],
+      "reason": "Owner content update: home tagline now reads 4x AWS Certified."
+    },
+    {
+      "route": "/biography",
+      "kinds": [
+        "text",
+        "geometry",
+        "style",
+        "pixels"
+      ],
+      "reason": "Owner content update: biography paragraph now reads 4 AWS Certifications."
+    },
+    {
+      "route": "/certifications",
+      "kinds": [
+        "text",
+        "geometry",
+        "style",
+        "pixels",
+        "page"
+      ],
+      "reason": "Owner content update: three new certification and badge entries (AI Business Strategist, its Early Adopter badge, AWS Partner Containers Essentials). Their badge images are not uploaded yet, so broken-image and bad-response entries are expected until upload."
     }
   ]
 }

@@ -5,7 +5,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # ── Angular build output & cache ──────────────────────────────
-dist/
+/dist/
 tmp/
 out-tsc/
 bazel-out/
@@ -44,8 +44,7 @@ playwright-report/
 test-results/
 blob-report/
 .playwright/
-/coverage
-**/coverage/
+/coverage/
 
 # Generated test and image outputs (never committed)
 e2e/visual/baseline/

@@ -2,12 +2,13 @@
 // Run: node e2e/visual/gen-routes.mjs  (from the repo root)
 // Static routes are listed here; event, gallery and certificate routes are
 // read from the keys of EVENTS, GALLERIES and CERT_DETAILS.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const app = join(root, 'src', 'src', 'app');
+const app = join(root, 'src', 'app');
+if (!existsSync(join(app, 'app.routes.ts'))) throw new Error('Angular app directory not found');
 
 const STATIC = [
   '/',

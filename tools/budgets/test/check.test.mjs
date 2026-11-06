@@ -56,7 +56,7 @@ describe('main', () => {
     put('index.html', 'ok');
     const t = io();
     expect(await main([dist], t.io)).toBe(0);
-    expect(t.out.join('')).toContain('1 files, 0 violations');
+    expect(t.out.join('')).toContain('1 files, 0 failures, 0 warnings');
   });
 
   it('exits 1 and lists violations', async () => {
@@ -64,6 +64,22 @@ describe('main', () => {
     const t = io();
     expect(await main([dist], t.io)).toBe(1);
     expect(t.err.join('')).toContain('FAIL cdn-host: index.html (unpkg.com)');
+  });
+
+  it('turns warned rules into warnings that do not fail the run', async () => {
+    put('index.html', 'https://unpkg.com/x https://b.amazonaws.com/y');
+    const t = io();
+    expect(await main([dist, '--warn', 'cdn-host,amazonaws'], t.io)).toBe(0);
+    expect(t.err.join('')).toContain('WARN cdn-host');
+    expect(t.out.join('')).toContain('0 failures, 2 warnings');
+    expect(await main(['--warn', 'cdn-host', dist], io().io)).toBe(1);
+    expect(await main([dist, '--warn', 'amazonaws'], io().io)).toBe(1);
+  });
+
+  it('rejects a bad --warn list', async () => {
+    expect(await main([dist, '--warn'], io().io)).toBe(2);
+    expect(await main([dist, '--warn', 'nope'], io().io)).toBe(2);
+    expect(await main([dist, '--warn', ','], io().io)).toBe(2);
   });
 
   it('exits 2 on bad usage or an unreadable directory', async () => {
