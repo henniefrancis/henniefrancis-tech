@@ -1,29 +1,40 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { byOrder } from '../shared/by-order';
 import raw from './certifications.json';
 
-const data = raw as any;
-const base: string = data.imageBaseUrl ?? '';
 const STATUS_TEXT: Record<string, string> = { active: 'active', inprogress: 'in progress', todo: 'to do' };
 
-function isExternal(u: string): boolean {
+export interface CertBadge {
+  name: string;
+  status: string;
+  statusText: string;
+  src: string;
+  external: boolean;
+  href: string | null;
+  route: string | null;
+}
+
+export interface CertGroup {
+  name: string;
+  badges: CertBadge[];
+}
+
+export function isExternal(u: string): boolean {
   return /^https?:\/\//i.test(u || '');
 }
 
-@Component({
-  selector: 'app-certifications',
-  imports: [RouterLink],
-  templateUrl: './certifications.html',
-})
-export class Certifications {
-  protected readonly groups = (data.categories ?? [])
+/** Sorted certification categories and badges, with the link target resolved (external href or internal route). */
+export function buildCertGroups(data: any): CertGroup[] {
+  const base: string = data.imageBaseUrl ?? '';
+  return (data.categories ?? [])
     .slice()
-    .sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999))
+    .sort(byOrder)
     .map((c: any) => ({
       name: c.name as string,
       badges: (c.items ?? [])
         .slice()
-        .sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999))
+        .sort(byOrder)
         .map((i: any) => {
           const ext = isExternal(i.url as string);
           return {
@@ -37,4 +48,13 @@ export class Certifications {
           };
         }),
     }));
+}
+
+@Component({
+  selector: 'app-certifications',
+  imports: [RouterLink],
+  templateUrl: './certifications.html',
+})
+export class Certifications {
+  protected readonly groups = buildCertGroups(raw);
 }

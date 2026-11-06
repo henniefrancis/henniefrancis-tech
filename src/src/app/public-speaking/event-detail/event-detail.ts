@@ -2,6 +2,37 @@ import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EVENTS } from '../data/events.data';
 
+export interface EventLink {
+  title: string;
+  alt: string;
+  label: string | null;
+  external: boolean;
+  href: string | null;
+  route: string | null;
+  src: string;
+}
+
+/** Visible links of an event record: external links keep their href, photos links become gallery routes. */
+export function buildEventLinks(d: any, event: string): EventLink[] {
+  if (!d) return [];
+  return (d.links ?? [])
+    .filter((l: any) => l && l.enabled !== false && l.url)
+    .map((l: any) => {
+      const external = /^https?:\/\//i.test(l.url);
+      const isPhotos = /^photos\//.test(l.url);
+      const photoYear = isPhotos ? l.url.replace('photos/', '').replace(/\.html$/, '') : '';
+      return {
+        title: l.title,
+        alt: l.alt || l.title,
+        label: l.label ?? null,
+        external,
+        href: external ? l.url : null,
+        route: isPhotos ? `/public-speaking/${event}/photos/${photoYear}` : null,
+        src: d.assetBaseUrl + l.image,
+      };
+    });
+}
+
 @Component({
   selector: 'app-event-detail',
   imports: [RouterLink],
@@ -14,24 +45,5 @@ export class EventDetail {
 
   protected readonly data = computed<any>(() => EVENTS[`${this.event()}/${this.year()}`] ?? null);
 
-  protected readonly links = computed(() => {
-    const d = this.data();
-    if (!d) return [];
-    return (d.links ?? [])
-      .filter((l: any) => l && l.enabled !== false && l.url)
-      .map((l: any) => {
-        const external = /^https?:\/\//i.test(l.url);
-        const isPhotos = /^photos\//.test(l.url);
-        const photoYear = isPhotos ? l.url.replace('photos/', '').replace(/\.html$/, '') : '';
-        return {
-          title: l.title,
-          alt: l.alt || l.title,
-          label: l.label ?? null,
-          external,
-          href: external ? l.url : null,
-          route: isPhotos ? `/public-speaking/${this.event()}/photos/${photoYear}` : null,
-          src: d.assetBaseUrl + l.image,
-        };
-      });
-  });
+  protected readonly links = computed(() => buildEventLinks(this.data(), this.event()));
 }
