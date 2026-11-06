@@ -1,0 +1,15 @@
+{
+  "_comment": "Diffs the owner has approved against the live-site baseline (build plan section 11). Add an entry only with the owner's approval.",
+  "approved": [
+    {
+      "route": "/social-media",
+      "kinds": ["geometry", "style", "pixels"],
+      "reason": "The dotcoresolutions.io link becomes plain text."
+    },
+    {
+      "route": "/404.html",
+      "kinds": ["page", "text", "geometry", "style", "pixels"],
+      "reason": "New styled 404 page. It has no baseline; the live site served the default nginx page."
+    }
+  ]
+}

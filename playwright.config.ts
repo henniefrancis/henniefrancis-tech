@@ -1,50 +1,53 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
+import { PROJECTS } from './e2e/lib/devices';
 
 /**
- * Playwright E2E configuration for henniefrancis.tech.
+ * Playwright configuration for henniefrancis.tech (device matrix).
  *
- * - In CI: tests run against production (BASE_URL is set by the workflow)
- * - Locally: just `npm run test:e2e` — a static server for src/ is
- *   started automatically (webServer below) on http://localhost:8080
+ * - BASE_URL: test an already running site (for example production). When it
+ *   is unset, the local preview server (tools/preview) is started on
+ *   E2E_PORT and serves the production build in src/dist.
+ * - E2E_PORT: preview port. Defaults to 4280. Ports 4200 and 4210 are used by
+ *   other tools and must not be chosen.
+ * - E2E_DIST: directory the preview serves (default: the Angular browser output).
+ * - Suites are selected with tags: `--grep @visual`, `--grep @capture`, and
+ *   `--grep-invert "@visual|@capture"` for the functional suite.
+ * - Retries are 0 on purpose: a flaky test is fixed, never retried.
  */
-const BASE_URL = process.env['BASE_URL'] ?? 'http://localhost:8080';
-const IS_LOCAL = BASE_URL.includes('localhost');
+const FORBIDDEN_PORTS = new Set([4200, 4210]);
+const port = Number(process.env['E2E_PORT'] ?? '4280');
+if (!Number.isInteger(port) || port < 1024 || port > 65535 || FORBIDDEN_PORTS.has(port)) {
+  throw new Error(`E2E_PORT must be an integer in 1024-65535 and not 4200 or 4210 (got "${process.env['E2E_PORT']}")`);
+}
+
+const externalBase = process.env['BASE_URL'];
+const baseURL = externalBase ?? `http://127.0.0.1:${port}`;
+const dist = process.env['E2E_DIST'] ?? 'src/dist/henniefrancis-tech/browser';
 
 export default defineConfig({
-  // Auto-start a local static server when testing locally. CI sets
-  // BASE_URL to the production URL, so no server is started there.
-  webServer: IS_LOCAL
-    ? {
-        command: 'npx --yes serve src -l 8080',
-        url: 'http://localhost:8080',
-        reuseExistingServer: true,
-        timeout: 60_000,
-      }
-    : undefined,
   testDir: './e2e',
+  testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env['CI'],
-  retries: process.env['CI'] ? 2 : 0,
-  workers: process.env['CI'] ? 1 : undefined,
-  reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-  ],
+  retries: 0,
+  workers: process.env['E2E_WORKERS'] ? Number(process.env['E2E_WORKERS']) : undefined,
+  timeout: 120_000,
+  reporter: [['list'], ['html', { open: 'never', outputFolder: 'e2e/report' }]],
+  outputDir: 'e2e/test-results',
+  webServer: externalBase
+    ? undefined
+    : {
+        command: `node tools/preview/src/cli.mjs --dir "${dist}" --port ${port} --host 127.0.0.1`,
+        url: `http://127.0.0.1:${port}/`,
+        reuseExistingServer: false,
+        timeout: 30_000,
+        stdout: 'ignore',
+        stderr: 'pipe',
+      },
   use: {
-    baseURL: BASE_URL,
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    baseURL,
+    trace: 'off',
+    screenshot: 'off',
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      // Mobile pass — catches viewport regressions (horizontal scroll,
-      // broken stacking) on every deploy and nightly run.
-      name: 'mobile-chrome',
-      use: { ...devices['Pixel 7'] },
-    },
-  ],
+  projects: PROJECTS,
 });
