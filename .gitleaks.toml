@@ -1,9 +1,11 @@
 # Gitleaks configuration for henniefrancis.tech.
 #
-# Extends the full default ruleset with nothing disabled. Add
-# tightly-scoped allowlists here ONLY for values that are public by
-# design (see the passembly repo for a documented example) — never for
-# anything that grants access.
+# Extends the full default ruleset with nothing disabled. CI scans only the
+# commits in each pull request (and the last 8 days in the weekly run), so no
+# allowlist entries are needed for older history. Add tightly scoped
+# allowlists here ONLY for values that are public by design, never for
+# anything that grants access, and never an entry that would itself describe
+# a past finding in this public repo.
 
 title = "henniefrancis-tech Gitleaks configuration"
 

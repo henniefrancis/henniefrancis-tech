@@ -1,0 +1,38 @@
+# Dependency updates: monthly and grouped so there is at most one PR per
+# ecosystem. Version updates are currently paused with
+# `open-pull-requests-limit: 0`; set it back to 5 to resume. Security
+# updates are separate and unaffected by this limit.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - "/src"
+      - "/"
+      - "/tools/*"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 0
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 0
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: terraform
+    directory: "/terraform"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 0
+    groups:
+      terraform:
+        patterns:
+          - "*"

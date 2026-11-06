@@ -1,55 +1,96 @@
-name: E2E Tests — henniefrancis.tech
+name: playwright
+
+# Manual only. No nightly run and no run after every deploy. Runs the
+# functional suite against a URL you choose, one worker at a time because the
+# live web server throttles at roughly 8 parallel page loads.
+#
+# The visual suite compares against a baseline that is gitignored and lives
+# outside the repository, so it is opt-in (default off) and only useful once the
+# baseline has been restored onto the runner. Without a baseline it is skipped.
 
 on:
   workflow_dispatch:
-  # Run after a successful production deploy so E2E exercises the
-  # freshly deployed site rather than the previous build.
-  workflow_run:
-    workflows: ["Deploy — henniefrancis.tech"]
-    types: [completed]
-    branches: [main]
-  schedule:
-    # Nightly safety net at 02:30 UTC against production
-    - cron: '30 2 * * *'
+    inputs:
+      base_url:
+        description: 'Site to test, for example https://henniefrancis.tech'
+        required: true
+        default: 'https://henniefrancis.tech'
+        type: string
+      run_visual:
+        description: 'Also run the visual suite (needs the baseline restored on the runner; default off)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
 jobs:
   e2e:
-    name: Playwright (Production)
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    # On a workflow_run trigger only run if the deploy succeeded; always
-    # run for manual dispatch and the nightly schedule.
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    name: e2e
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      BASE_URL: ${{ inputs.base_url }}
+      E2E_WORKERS: '1'
+      RUN_VISUAL: ${{ inputs.run_visual }}
     steps:
+      - name: Validate base_url
+        run: |
+          if ! [[ "$BASE_URL" =~ ^https://[A-Za-z0-9.-]+(:[0-9]{1,5})?/?$ ]]; then
+            echo "::error::base_url must be an https URL with a host and no path."
+            exit 1
+          fi
+
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
+          persist-credentials: false
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
 
-      - name: Run E2E tests against production
-        run: npx playwright test
-        env:
-          BASE_URL: https://henniefrancis.tech
+      - name: Functional suite
+        run: npm run test:e2e
+
+      - name: Visual suite
+        if: ${{ inputs.run_visual }}
+        run: |
+          if [ ! -d e2e/visual/baseline ] || [ -z "$(ls -A e2e/visual/baseline 2>/dev/null)" ]; then
+            echo "::error::run_visual was set but no baseline is present on the runner (e2e/visual/baseline is gitignored)."
+            exit 1
+          fi
+          npm run test:visual
+
+      - name: Run summary
+        if: always()
+        run: |
+          {
+            echo "### Playwright run"
+            echo "- Functional suite: ran (1 worker)"
+            if [ "$RUN_VISUAL" = "true" ]; then
+              echo "- Visual suite: requested"
+            else
+              echo "- Visual suite: skipped (opt-in, needs a baseline restored on the runner)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload test report
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+          if-no-files-found: ignore

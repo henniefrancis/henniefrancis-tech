@@ -1,0 +1,238 @@
+name: ci
+
+# The one required pull request check. Everything that used to live in the
+# separate lint and terraform workflows runs here, once per PR.
+#
+# Security rules for this file:
+#   - trigger is pull_request only (never pull_request_target)
+#   - read-only token, no secrets, no cloud credentials
+#   - every action is pinned to a full commit SHA
+#   - PR-controlled values (SHAs, branch names) are passed through env, never
+#     interpolated into scripts
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+# A newer push to the same PR supersedes the older, still-running check.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  # Output folder of the production build (Angular workspace lives in src/).
+  DIST_DIR: src/dist/henniefrancis-tech/browser
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      # Full depth so base..head ranges resolve for gitleaks and the diff.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            src/package-lock.json
+            tools/*/package-lock.json
+
+      - name: Install dependencies (src, root, tools)
+        run: |
+          set -euo pipefail
+          (cd src && npm ci)
+          npm ci
+          shopt -s nullglob
+          for f in tools/*/package.json; do
+            (cd "$(dirname "$f")" && npm ci)
+          done
+
+      - name: Production build
+        working-directory: src
+        run: npm run build
+
+      - name: Unit tests with coverage (src)
+        working-directory: src
+        run: npm test -- --no-watch --coverage
+
+      # Interface I-6: each tools/<name>/ is a standalone package whose
+      # `npm test` enforces its own 100 percent coverage threshold.
+      - name: Unit tests with coverage (tools)
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for f in tools/*/package.json; do
+            dir="$(dirname "$f")"
+            echo "::group::npm test in ${dir}"
+            (cd "$dir" && npm test)
+            echo "::endgroup::"
+          done
+
+      # Interface I-5 (delivered by the test harness workstream): fails on any
+      # image over 250 kB, any amazonaws.com string or any CDN host.
+      - name: Budget check on the build output
+        run: |
+          set -euo pipefail
+          if [ ! -f tools/budgets/check-dist.mjs ]; then
+            echo "::error::tools/budgets/check-dist.mjs is missing (interface I-5)."
+            exit 1
+          fi
+          node tools/budgets/check-dist.mjs "$DIST_DIR"
+
+      - name: Dependency audit (runtime dependencies)
+        run: |
+          set -euo pipefail
+          (cd src && npm audit --omit=dev --audit-level=high)
+          shopt -s nullglob
+          for f in tools/*/package.json; do
+            dir="$(dirname "$f")"
+            echo "::group::npm audit in ${dir}"
+            (cd "$dir" && npm audit --omit=dev --audit-level=high)
+            echo "::endgroup::"
+          done
+
+      - name: Install gitleaks (pinned release, checksum verified)
+        run: .github/scripts/install-tool.sh gitleaks
+
+      # Scans only the commits in this PR. Output is redacted because the
+      # repository is public and logs are public too.
+      - name: Secret scan (gitleaks, PR commits only)
+        run: |
+          gitleaks git \
+            --config .gitleaks.toml \
+            --log-opts "${BASE_SHA}..${HEAD_SHA}" \
+            --redact \
+            --no-banner \
+            --exit-code 1 \
+            .
+
+      - name: Install trivy (pinned release, checksum verified)
+        run: .github/scripts/install-tool.sh trivy
+
+      - name: Vulnerability scan (trivy fs)
+        run: |
+          trivy fs \
+            --scanners vuln \
+            --severity CRITICAL,HIGH \
+            --ignore-unfixed \
+            --skip-dirs node_modules \
+            --skip-dirs .angular \
+            --exit-code 1 \
+            .
+
+      - name: Install shellcheck (pinned release, checksum verified)
+        run: .github/scripts/install-tool.sh shellcheck
+
+      - name: Install actionlint (pinned release, checksum verified)
+        run: .github/scripts/install-tool.sh actionlint
+
+      # actionlint also runs shellcheck over inline scripts when it is on PATH.
+      - name: Lint workflows (actionlint)
+        run: actionlint -color
+
+      # Terraform checks run only when the PR touches terraform/.
+      - name: Detect Terraform and deploy changes
+        id: tf
+        run: |
+          set -euo pipefail
+          changed="$(git diff --name-only "${BASE_SHA}...${HEAD_SHA}")"
+          if grep -q '^terraform/' <<< "$changed"; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+          if grep -q '^deploy/' <<< "$changed"; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Terraform
+        if: steps.tf.outputs.changed == 'true'
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: '>=1.15.0 <2.0.0'
+          terraform_wrapper: false
+
+      - name: Terraform fmt
+        if: steps.tf.outputs.changed == 'true'
+        working-directory: terraform
+        run: terraform fmt -check -recursive -diff
+
+      # -backend=false skips the cloud block: providers only, no token.
+      - name: Terraform init (providers only)
+        if: steps.tf.outputs.changed == 'true'
+        working-directory: terraform
+        env:
+          TF_IN_AUTOMATION: "true"
+        run: terraform init -backend=false -input=false
+
+      - name: Terraform validate
+        if: steps.tf.outputs.changed == 'true'
+        working-directory: terraform
+        run: terraform validate -no-color
+
+      - name: Terraform test (mock providers)
+        if: steps.tf.outputs.changed == 'true'
+        working-directory: terraform
+        run: terraform test -no-color
+
+      - name: Install tflint (pinned release, checksum verified)
+        if: steps.tf.outputs.changed == 'true'
+        run: .github/scripts/install-tool.sh tflint
+
+      # Uses terraform/.tflint.hcl, which pins the AWS ruleset version.
+      - name: Terraform lint (tflint)
+        if: steps.tf.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tflint --chdir terraform --init
+          tflint --chdir terraform --recursive --format compact
+
+      # MEDIUM and above. Accepted findings live in terraform/.trivyignore.yaml
+      # when that file exists; the step works with or without it.
+      - name: Terraform security scan (trivy config)
+        if: steps.tf.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          args=(--severity MEDIUM,HIGH,CRITICAL --exit-code 1)
+          if [ -f terraform/.trivyignore.yaml ]; then
+            args+=(--ignorefile terraform/.trivyignore.yaml)
+          fi
+          trivy config "${args[@]}" terraform
+
+      - name: CloudFront function tests
+        if: steps.tf.outputs.changed == 'true'
+        run: node --test terraform/functions
+
+      - name: Retained resources check
+        if: steps.tf.outputs.changed == 'true'
+        run: bash terraform/tests/retained-resources.sh
+
+      - name: Shellcheck (deploy scripts)
+        if: steps.tf.outputs.deploy == 'true'
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          shellcheck -x deploy/nginx/*.sh
+
+      - name: Origin verify render test
+        if: steps.tf.outputs.deploy == 'true'
+        run: bash deploy/nginx/render-origin-verify.test.sh
