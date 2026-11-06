@@ -7,25 +7,39 @@
       "order": 1,
       "items": [
         {
+          "name": "AWS Certified AI Business Strategist",
+          "url": "https://www.credly.com/badges/aebe5ce2-e2f4-42dd-b3bd-b0fea91b5c1b",
+          "image": "aws/certified/aws-certified-ai-business-strategist.png",
+          "status": "active",
+          "order": 1
+        },
+        {
+          "name": "AWS Certified AI Business Strategist Early Adopter",
+          "url": "https://www.credly.com/badges/907c1e34-42df-4667-8644-33a822a09eb3",
+          "image": "aws/certified/aws-certified-ai-business-strategist-early-adopter.png",
+          "status": "active",
+          "order": 2
+        },
+        {
           "name": "AWS Certified AI Practitioner",
           "url": "https://www.credly.com/badges/4b9ac609-5a7f-414e-ad34-f5e70bfe1aba",
           "image": "aws/certified/aws-certified-ai-practitioner.png",
           "status": "active",
-          "order": 1
+          "order": 3
         },
         {
           "name": "AWS Certified Solutions Architect – Associate",
           "url": "https://www.credly.com/badges/d09ec7ed-9a44-42ce-92fb-b2e2787910f0",
           "image": "aws/certified/aws-certified-solutions-architect-associate.png",
           "status": "active",
-          "order": 2
+          "order": 4
         },
         {
           "name": "AWS Certified Cloud Practitioner",
           "url": "https://www.credly.com/badges/991075f7-c23f-4bd6-a225-91249bf051c6",
           "image": "aws/certified/aws-certified-cloud-practitioner.png",
           "status": "active",
-          "order": 2
+          "order": 5
         }
       ]
     },
@@ -34,102 +48,109 @@
       "order": 2,
       "items": [
         {
+          "name": "AWS Partner: Containers Essentials",
+          "url": "https://www.credly.com/badges/a4f8103a-02b5-403e-8108-e8c6536f61ab",
+          "image": "aws/partner/aws-partner-containers-essentials.png",
+          "status": "active",
+          "order": 1
+        },
+        {
           "name": "AWS Partner: Agentic AI Technical Learning Plan Assessment - Training Badge",
           "url": "https://www.credly.com/badges/17771aa9-ddb0-4d50-ae64-98668e49b528",
           "image": "aws/partner/aws-partner-agentic-ai-technical.png",
           "status": "active",
-          "order": 1
+          "order": 2
         },
         {
           "name": "AWS Partner: Agentic AI Essentials - Training Badge",
           "url": "https://www.credly.com/badges/176142f2-af44-4c1a-94b4-edf624c567d2",
           "image": "aws/partner/aws-partner-agentic-ai-essentials.png",
           "status": "active",
-          "order": 2
+          "order": 3
         },
         {
           "name": "AWS Partner: Generative AI Technical - Training Badge",
           "url": "https://www.credly.com/badges/d1032953-c07f-4ee1-97d0-6bfb295699d2",
           "image": "aws/partner/aws-partner-generative-ai-technical.png",
           "status": "active",
-          "order": 3
+          "order": 4
         },
         {
           "name": "AWS Partner: Generative AI Essentials - Training Badge",
           "url": "https://www.credly.com/badges/6d4de97a-fcc8-459c-8de8-0cc8b11f6423",
           "image": "aws/partner/aws-partner-generative-ai-essentials.png",
           "status": "active",
-          "order": 4
+          "order": 5
         },
         {
           "name": "AWS Partner: Migration Acceleration Program Authorized - Training Badge",
           "url": "https://www.credly.com/badges/8913cace-503d-4abf-8a4e-e9953391c715",
           "image": "aws/partner/aws-partner-migration-acceleration-program.png",
           "status": "active",
-          "order": 5
+          "order": 6
         },
         {
           "name": "AWS Partner: Technical Accredited - Training Badge",
           "url": "https://www.credly.com/badges/14a64708-b99f-40e8-a6c8-893b969e0ea1",
           "image": "aws/partner/aws-partner-technical.png",
           "status": "active",
-          "order": 6
+          "order": 7
         },
         {
           "name": "AWS Partner: Migration Essentials - Training Badge",
           "url": "https://www.credly.com/badges/ede00304-4e7f-4faa-9f46-09f338e06df4",
           "image": "aws/partner/aws-partner-migration-essentials.png",
           "status": "active",
-          "order": 7
+          "order": 8
         },
         {
           "name": "AWS Partner: Cloud Economics Essentials - Training Badge",
           "url": "https://www.credly.com/badges/6cce03eb-a3db-4519-95fa-65c0f903fb9c",
           "image": "aws/partner/aws-partner-cloud-economics-essentials.png",
           "status": "active",
-          "order": 8
+          "order": 9
         },
         {
           "name": "AWS Partner: Cloud Operations Essentials",
           "url": "https://www.credly.com/badges/e9cd6c6c-1bb9-48dd-8b9a-e1dfc5690a8f",
           "image": "aws/partner/aws-partner-cloud-operations-essentials.png",
           "status": "active",
-          "order": 9
+          "order": 10
         },
         {
           "name": "AWS Partner: Enterprise Modernization Learning Plan Assessment - Training Badge",
           "url": "https://www.credly.com/badges/d8bc9549-d894-410a-8508-39be9705d870",
           "image": "aws/partner/aws-partner-enterprise-modernization-learning-plan-assessment.png",
           "status": "active",
-          "order": 10
+          "order": 11
         },
         {
           "name": "AWS Partner: Business Value Realization (BVR) Essentials",
           "url": "https://www.credly.com/badges/d8bc9549-d894-410a-8508-39be9705d870",
           "image": "aws/partner/aws-partner-business-value-realization-bvr-essentials.png",
           "status": "active",
-          "order": 11
+          "order": 12
         },
         {
           "name": "AWS Partner: Security Essentials - Training Badge",
           "url": "https://www.credly.com/earner/earned/badge/a2ab2af9-96c0-42ab-8e17-04e78da1cc2d",
           "image": "aws/partner/aws-partner-security-essentials.png",
           "status": "active",
-          "order": 12
+          "order": 13
         },
         {
           "name": "AWS Partner: Data and Analytics Essentials - Training Badge",
           "url": "https://www.credly.com/badges/98b11dee-6416-4eff-9427-086d88294acc",
           "image": "aws/partner/aws-partner-data-and-analytics-essentials.png",
           "status": "active",
-          "order": 13
+          "order": 14
         },
         {
           "name": "AWS Partner: DevOps Essentials",
           "url": "https://www.credly.com/badges/71d3bd5c-6e45-4b38-bb8f-0b157fb40acf",
           "image": "aws/partner/aws-partner-devops-essentials.png",
           "status": "active",
-          "order": 14
+          "order": 15
         }
       ]
     },
