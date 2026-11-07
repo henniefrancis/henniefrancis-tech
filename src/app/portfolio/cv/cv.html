@@ -5,14 +5,14 @@
         <ol class="breadcrumb">
           <a routerLink="/portfolio" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item"><a routerLink="/portfolio">Portfolio of Evidence</a></li>
-          <li class="breadcrumb-item current" aria-current="page">Curriculum Vitae</li>
+          <li class="breadcrumb-item"><a routerLink="/portfolio">{{ pages.portfolio.breadcrumb }}</a></li>
+          <li class="breadcrumb-item current" aria-current="page">{{ pages['cv'].breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Curriculum Vitae</h1></div>
+    <div class="col"><h1>{{ pages['cv'].heading }}</h1></div>
   </div>
   <hr />
 </div>

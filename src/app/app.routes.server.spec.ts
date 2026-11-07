@@ -1,8 +1,6 @@
 import { RenderMode } from '@angular/ssr';
 import { serverRoutes } from './app.routes.server';
-import { EVENTS } from './public-speaking/data/events.data';
-import { GALLERIES } from './public-speaking/data/galleries.data';
-import { CERT_DETAILS } from './certifications/cert-detail/cert-details.data';
+import { PRERENDER_PARAMS } from './content/generated/prerender';
 
 describe('serverRoutes', () => {
   const route = (path: string) => serverRoutes.find((r) => r.path === path)!;
@@ -25,21 +23,19 @@ describe('serverRoutes', () => {
 
   it('prerenders one gallery page per gallery record', async () => {
     const p = await params('public-speaking/:event/photos/:year');
-    expect(p.length).toBe(Object.keys(GALLERIES).length);
-    expect(p).toContainEqual({ event: 'aws-summit', year: '2025-cl' });
+    expect(p).toEqual(PRERENDER_PARAMS.galleries);
+    expect(p).toContainEqual({ event: 'conf-one', year: '2025' });
   });
 
   it('prerenders one event page per event record', async () => {
     const p = await params('public-speaking/:event/:year');
-    expect(p.length).toBe(Object.keys(EVENTS).length);
-    expect(p).toContainEqual({ event: 'aws-summit', year: '2024' });
+    expect(p).toEqual(PRERENDER_PARAMS.events);
+    expect(p).toContainEqual({ event: 'conf-one', year: '2025-lounge' });
   });
 
-  it('prerenders one certificate page per certificate record, splitting on the first slash', async () => {
+  it('prerenders one certificate page per certificate record', async () => {
     const p = await params('certifications/microsoft/:type/:id');
-    expect(p.length).toBe(Object.keys(CERT_DETAILS).length);
-    for (const item of p) {
-      expect(`${item['type']}/${item['id']}` in CERT_DETAILS).toBe(true);
-    }
+    expect(p).toEqual(PRERENDER_PARAMS.certDetails);
+    expect(p).toContainEqual({ type: 'mcts', id: 'AAAAAAAA-0000-0000-0000-000000000001' });
   });
 });

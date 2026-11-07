@@ -11,7 +11,8 @@ export const SITE_NAME = SITE.name;
 
 /** Meta descriptions come from the page content (config); the home page text is the fallback. */
 const PAGE_DESCRIPTIONS: Record<string, string | undefined> = Object.fromEntries(Object.values(PAGES).map((p) => [p.route, p.description]));
-export const DEFAULT_DESCRIPTION = PAGES.home.description ?? '';
+// The home page must have a description (the schema requires it), so it is the fallback for every page.
+export const DEFAULT_DESCRIPTION = PAGES.home.description!;
 /** Share image on our own origin until the optimised profile image is wired in. */
 export const SHARE_IMAGE = `${SITE_URL}/apple-touch-icon.png`;
 
@@ -31,12 +32,12 @@ export function descriptionFor(path: string): string {
   const fixed = PAGE_DESCRIPTIONS[path];
   if (fixed) return fixed;
   const record = RECORDS[path];
-  if (record?.kind === 'gallery') return `Photos of Hennie Francis at ${record.title} ${record.year}.`;
+  if (record?.kind === 'gallery') return `Photos of ${SITE_NAME} at ${record.title} ${record.year}.`;
   if (record?.kind === 'event') {
     const where = `${record.title} ${record.year}`;
-    return record.heading ? `${record.heading}: Hennie Francis at ${where}.` : `Hennie Francis at ${where}.`;
+    return record.heading ? `${record.heading}: ${SITE_NAME} at ${where}.` : `${SITE_NAME} at ${where}.`;
   }
-  if (record?.kind === 'certificate') return `${record.title}, earned by Hennie Francis.`;
+  if (record?.kind === 'certificate') return `${record.title}, earned by ${SITE_NAME}.`;
   return DEFAULT_DESCRIPTION;
 }
 
