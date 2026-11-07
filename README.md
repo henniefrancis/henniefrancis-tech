@@ -30,7 +30,7 @@ src/                  Angular application source
 public/               Static assets copied as is into the build
 angular.json          Angular workspace configuration (the repo root is the workspace root)
 e2e/                  Playwright tests
-tools/                Standalone Node tooling packages (each has its own package.json)
+tools/                Standalone Node tooling packages (each has its own package.json), including tools/content
 terraform/            Infrastructure as code
 deploy/               Web server configuration shipped with each deploy
 .github/workflows/    CI/CD workflows
@@ -54,6 +54,19 @@ npm run preview        # serve the production build locally
 npm run test:e2e       # Playwright suite
 npm run test:visual    # visual comparison suite
 ```
+
+## Content
+
+The text, links and images the site shows are not in this repository. They are YAML files in a separate content repository. This repository holds the layout, the styles and the content contract in `tools/content/`: JSON Schemas, a loader, a validator and a generator that turns the content into typed modules in `src/app/content/generated/` (generated, not committed).
+
+```bash
+npm run content:generate   # reads CONTENT_SRC (default: content-src/), validates, writes the modules; fails on any error
+npm run content:fixtures   # same, from the synthetic sample content in tools/content/fixtures/tree
+npm run content:validate -- <folder>
+npm run content:test       # unit tests of the content tools, 100 percent coverage threshold
+```
+
+`npm run build` generates from `CONTENT_SRC` first. `npm test` and `npm run test:ci` generate from the sample content, so they need no access to the content repository.
 
 ## Continuous integration
 
