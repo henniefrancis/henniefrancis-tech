@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/page-social-media.schema.json",
+  "title": "social-media.yaml",
+  "allOf": [
+    {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PageHead"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "categories"
+  ],
+  "properties": {
+    "title": true,
+    "description": true,
+    "heading": true,
+    "breadcrumb": true,
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/SocialLink"
+            }
+          }
+        }
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -6,7 +6,7 @@
           <ol class="breadcrumb">
             <a [routerLink]="['/public-speaking', event(), year()]" title="Go Back" class="back">&#10531;</a>
             <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-            <li class="breadcrumb-item"><a routerLink="/public-speaking">Public Speaking</a></li>
+            <li class="breadcrumb-item"><a routerLink="/public-speaking">{{ pages['public-speaking'].breadcrumb }}</a></li>
             <li class="breadcrumb-item"><a [routerLink]="['/public-speaking', event(), year()]">{{ d.title }} {{ d.year }}</a></li>
             <li class="breadcrumb-item current" aria-current="page">Event Photo's: {{ d.title }} {{ d.year }}</li>
           </ol>
@@ -24,7 +24,7 @@
       <div class="col">
         <div id="carouselExample" class="carousel slide">
           <div class="carousel-inner">
-            @for (photo of photos(); track $index) {
+            @for (photo of d.photos; track $index) {
               <div class="carousel-item" [class.active]="$first">
                 <img [ngSrc]="photo.image.ngSrc" [ngSrcset]="photo.image.ngSrcset" [sizes]="photo.image.sizes" [width]="photo.image.width" [height]="photo.image.height" [loaderParams]="photo.image.loaderParams" class="d-block w-45" [alt]="photo.alt" [priority]="$first">
               </div>

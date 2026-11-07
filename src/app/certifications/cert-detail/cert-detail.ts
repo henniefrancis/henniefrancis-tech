@@ -1,29 +1,19 @@
-import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ImageRef, imageView } from '../../content/image';
-import { CERT_DETAILS } from './cert-details.data';
-
-const TYPE_NAME: Record<string, string> = {
-  mcts: 'Microsoft Certified Technology Specialist',
-  mcpd: 'Microsoft Certified Professional Developer',
-  mcitp: 'Microsoft Certified IT Professional',
-  mct: 'Microsoft Certified Trainer',
-};
+import type { CertDetail as CertDetailContent } from '../../content/content.types';
+import { CERT_DETAILS, CERT_DETAIL_TYPES } from '../../content/generated/certifications';
+import { PAGES } from '../../content/generated/pages';
 
 @Component({
   selector: 'app-cert-detail',
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink],
   templateUrl: './cert-detail.html',
 })
 export class CertDetail {
-  protected readonly imageView = imageView;
-
   readonly type = input.required<string>();
   readonly id = input.required<string>();
 
-  protected readonly data = computed<{ title: string; image: ImageRef } | null>(
-    () => CERT_DETAILS[`${this.type()}/${this.id()}`] ?? null,
-  );
-  protected readonly typeName = computed(() => TYPE_NAME[this.type()] ?? 'Microsoft');
+  protected readonly pages = PAGES;
+  protected readonly data = computed<CertDetailContent | null>(() => CERT_DETAILS[`${this.type()}/${this.id()}`] ?? null);
+  protected readonly typeName = computed(() => CERT_DETAIL_TYPES[this.type()] ?? 'Microsoft');
 }

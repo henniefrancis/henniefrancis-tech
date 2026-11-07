@@ -1,0 +1,133 @@
+// DOM equivalence between two prerendered builds.
+// Parses every HTML file, drops comments, Angular generated attributes and hashed asset names, normalises
+// whitespace, then compares the element tree, attributes and text.
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { parse } from 'parse5';
+
+const GENERATED_ATTRS = [/^_ngcontent-/, /^_nghost-/, /^ng-reflect-/, /^ng-version$/, /^ng-server-context$/, /^ngh$/, /^ng-app-id$/];
+const HASHED = /-[A-Z0-9]{8}(?=\.[a-z0-9]+)/g;
+const NG_SCOPE = /ng-c\d+/g;
+const isNgState = (node) => node.nodeName === 'script' && (node.attrs ?? []).some((a) => a.name === 'id' && a.value === 'ng-state');
+
+const normaliseValue = (value) => value.replace(HASHED, '-HASH').replace(NG_SCOPE, 'ng-c');
+const squash = (text) => text.replace(/\s+/g, ' ').trim();
+
+/** Convert a parse5 node into a plain comparable tree. Text nodes become strings. */
+export function normaliseNode(node) {
+  const children = [];
+  for (const child of node.childNodes ?? []) {
+    if (child.nodeName === '#comment') continue;
+    if (child.nodeName === '#text') {
+      // The Angular transfer state holds template ids that change whenever a template changes.
+      const text = isNgState(node) ? '[ng-state]' : normaliseValue(squash(child.value));
+      if (text === '') continue;
+      if (typeof children.at(-1) === 'string') children[children.length - 1] = `${children.at(-1)} ${text}`;
+      else children.push(text);
+    } else {
+      children.push(normaliseNode(child));
+    }
+  }
+  const attrs = {};
+  for (const { name, value } of (node.attrs ?? []).slice().sort((a, b) => a.name.localeCompare(b.name))) {
+    if (!GENERATED_ATTRS.some((re) => re.test(name))) attrs[name] = normaliseValue(name === 'class' ? squash(value) : value);
+  }
+  // <template> content lives outside childNodes in parse5.
+  const content = node.content ? normaliseNode(node.content).c : [];
+  return { t: node.nodeName, a: attrs, c: [...children, ...content] };
+}
+
+export const normaliseHtml = (html) => normaliseNode(parse(html));
+
+const describe = (n) => (typeof n === 'string' ? `text "${n.slice(0, 80)}"` : `<${n.t}>`);
+
+/** Differences between two normalised trees. Each is { path, what, before, after }. */
+export function diffTrees(a, b, path = '', out = [], limit = 25) {
+  if (out.length >= limit) return out;
+  if (typeof a === 'string' || typeof b === 'string') {
+    if (a !== b) out.push({ path, what: 'node', before: describe(a), after: describe(b) });
+    return out;
+  }
+  if (a.t !== b.t) {
+    out.push({ path, what: 'tag', before: describe(a), after: describe(b) });
+    return out;
+  }
+  const here = `${path}/${a.t}`;
+  for (const name of new Set([...Object.keys(a.a), ...Object.keys(b.a)])) {
+    if (a.a[name] !== b.a[name]) {
+      out.push({ path: here, what: `attribute ${name}`, before: String(a.a[name]).slice(0, 120), after: String(b.a[name]).slice(0, 120) });
+    }
+  }
+  if (a.c.length !== b.c.length) out.push({ path: here, what: 'child-count', before: String(a.c.length), after: String(b.c.length) });
+  const shared = Math.min(a.c.length, b.c.length);
+  for (let i = 0; i < shared; i++) diffTrees(a.c[i], b.c[i], `${here}[${i}]`, out, limit);
+  return out;
+}
+
+/** All .html files below a directory, as posix paths relative to it. */
+export function htmlFiles(dir, rel = '') {
+  const found = [];
+  for (const entry of readdirSync(join(dir, rel)).sort()) {
+    const relPath = rel ? `${rel}/${entry}` : entry;
+    if (statSync(join(dir, relPath)).isDirectory()) found.push(...htmlFiles(dir, relPath));
+    else if (entry.endsWith('.html')) found.push(relPath);
+  }
+  return found;
+}
+
+/**
+ * Compare two build output directories file by file.
+ * @returns {{ files: number, differing: {file: string, diffs: object[]}[], missing: string[], added: string[] }}
+ */
+export function compareDirs(beforeDir, afterDir, read = (p) => readFileSync(p, 'utf8')) {
+  const before = htmlFiles(beforeDir);
+  const after = new Set(htmlFiles(afterDir));
+  const differing = [];
+  const missing = [];
+  for (const file of before) {
+    if (!after.has(file)) {
+      missing.push(file);
+      continue;
+    }
+    after.delete(file);
+    const diffs = diffTrees(normaliseHtml(read(join(beforeDir, file))), normaliseHtml(read(join(afterDir, file))));
+    if (diffs.length > 0) differing.push({ file, diffs });
+  }
+  return { files: before.length, differing, missing, added: [...after] };
+}
+
+/** A difference is known when file, what, before and after all match an entry of the known list. */
+export function isKnown(file, diff, known) {
+  return known.some((k) => k.file === file && k.what === diff.what && k.before === diff.before && k.after === diff.after);
+}
+
+/**
+ * Print a report and return the exit code.
+ * --known <file.json>: list of { file, what, before, after, reason } differences that are reported but do not fail
+ * (they wait for the owner's approval).
+ */
+export function compareMain({ argv, out = console.log, compare = compareDirs, readJson = (p) => JSON.parse(readFileSync(p, 'utf8')) }) {
+  const [beforeDir, afterDir, ...rest] = argv;
+  if (!beforeDir || !afterDir) {
+    out('usage: compare-dom.mjs <before-dir> <after-dir> [--known known-diffs.json]');
+    return 2;
+  }
+  const knownIndex = rest.indexOf('--known');
+  const known = knownIndex >= 0 ? readJson(rest[knownIndex + 1]) : [];
+  const result = compare(beforeDir, afterDir);
+  let unexpected = 0;
+  let knownCount = 0;
+  for (const { file, diffs } of result.differing) {
+    out(`DIFF ${file}`);
+    for (const d of diffs) {
+      const isKnownDiff = isKnown(file, d, known);
+      if (isKnownDiff) knownCount++;
+      else unexpected++;
+      out(`  ${isKnownDiff ? 'KNOWN ' : ''}${d.path} ${d.what}: ${d.before} -> ${d.after}`);
+    }
+  }
+  for (const file of result.missing) out(`MISSING ${file}`);
+  for (const file of result.added) out(`ADDED ${file}`);
+  out(`compared ${result.files} files: ${unexpected} unexpected differences, ${knownCount} known (awaiting approval), ${result.missing.length} missing, ${result.added.length} added`);
+  return unexpected + result.missing.length > 0 ? 1 : 0;
+}

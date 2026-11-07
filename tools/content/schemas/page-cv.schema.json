@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/page-cv.schema.json",
+  "title": "cv.yaml",
+  "allOf": [
+    {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PageHead"
+    }
+  ],
+  "type": "object",
+  "required": [],
+  "properties": {
+    "title": true,
+    "description": true,
+    "heading": true,
+    "breadcrumb": true
+  },
+  "unevaluatedProperties": false
+}

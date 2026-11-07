@@ -5,13 +5,13 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Tech Stack</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Tech Stack</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <hr />
 </div>
@@ -21,10 +21,10 @@
       <div class="col"><h4>{{ group.name }}</h4></div>
     </div>
     <div class="row">
-      @for (tool of group.tools; track $index) {
+      @for (tool of group.items; track $index) {
         <div class="col-sm-1">
           <a [href]="tool.url" [title]="tool.name" target="_blank" rel="noopener noreferrer">
-            <img [ngSrc]="tool.image.ngSrc" [ngSrcset]="tool.image.ngSrcset" [sizes]="tool.image.sizes" [width]="tool.image.width" [height]="tool.image.height" [loaderParams]="tool.image.loaderParams" [alt]="tool.name" class="techstack">
+            <img [src]="tool.image.src" [alt]="tool.image.alt" class="techstack" loading="lazy">
           </a>
         </div>
       }

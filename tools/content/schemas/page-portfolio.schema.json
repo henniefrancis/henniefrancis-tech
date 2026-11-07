@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/page-portfolio.schema.json",
+  "title": "portfolio.yaml",
+  "allOf": [
+    {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PageHead"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "tiles"
+  ],
+  "properties": {
+    "title": true,
+    "description": true,
+    "heading": true,
+    "breadcrumb": true,
+    "tiles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "route",
+          "image"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          },
+          "route": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/InternalPath"
+          },
+          "image": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+          }
+        }
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/cert-detail-types.schema.json",
+  "title": "detail-types.yaml",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "types"
+  ],
+  "properties": {
+    "types": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Slug"
+          },
+          "name": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          }
+        }
+      }
+    }
+  }
+}

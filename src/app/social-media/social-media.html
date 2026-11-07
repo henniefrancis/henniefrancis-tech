@@ -5,13 +5,13 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Social Media</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Social Media</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <div class="row socials-grid">
     @for (social of socials; track $index) {
@@ -19,10 +19,10 @@
         <div class="socials zoom">
           @if (social.url) {
             <a [href]="social.url" [title]="social.name" target="_blank" rel="noopener noreferrer">
-              <img [ngSrc]="social.image.ngSrc" [ngSrcset]="social.image.ngSrcset" [sizes]="social.image.sizes" [width]="social.image.width" [height]="social.image.height" [loaderParams]="social.image.loaderParams" [alt]="social.name">
+              <img [src]="social.image.src" [alt]="social.image.alt" loading="lazy">
             </a>
           } @else {
-            <img [ngSrc]="social.image.ngSrc" [ngSrcset]="social.image.ngSrcset" [sizes]="social.image.sizes" [width]="social.image.width" [height]="social.image.height" [loaderParams]="social.image.loaderParams" [alt]="social.name">
+            <img [src]="social.image.src" [alt]="social.image.alt" loading="lazy">
           }
         </div>
       </div>

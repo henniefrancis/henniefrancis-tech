@@ -1,20 +1,19 @@
-import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ImageView, imageView } from '../content/image';
-import { byOrder } from '../shared/by-order';
-import raw from './certifications.json';
+import type { CertBadgeContent, CertCategory } from '../content/content.types';
+import { CERT_CATEGORIES } from '../content/generated/certifications';
+import { PAGES } from '../content/generated/pages';
 
-const STATUS_TEXT: Record<string, string> = { active: 'active', inprogress: 'in progress', todo: 'to do' };
+const STATUS_TEXT: Record<string, string> = {
+  active: 'active',
+  inprogress: 'in progress',
+  todo: 'to do',
+  expired: 'expired',
+  retired: 'retired',
+};
 
-export interface CertBadge {
-  name: string;
-  status: string;
+export interface CertBadge extends CertBadgeContent {
   statusText: string;
-  image: ImageView;
-  external: boolean;
-  href: string | null;
-  route: string | null;
 }
 
 export interface CertGroup {
@@ -22,41 +21,20 @@ export interface CertGroup {
   badges: CertBadge[];
 }
 
-export function isExternal(u: string): boolean {
-  return /^https?:\/\//i.test(u || '');
-}
-
-/** Sorted certification categories and badges, with the link target resolved (external href or internal route). */
-export function buildCertGroups(data: any): CertGroup[] {
-  return (data.categories ?? [])
-    .slice()
-    .sort(byOrder)
-    .map((c: any) => ({
-      name: c.name as string,
-      badges: (c.items ?? [])
-        .slice()
-        .sort(byOrder)
-        .map((i: any) => {
-          const url = i.url as string | undefined;
-          const ext = url !== undefined && isExternal(url);
-          return {
-            name: i.name as string,
-            status: i.status as string,
-            statusText: STATUS_TEXT[i.status] ?? i.status,
-            image: imageView(i.image),
-            external: ext,
-            href: ext ? url : null,
-            route: url === undefined || ext ? null : url.replace('/pages/', '/').replace(/\.html$/, ''),
-          };
-        }),
-    }));
+/** Adds the visible status label text to each badge. */
+export function buildCertGroups(categories: CertCategory[]): CertGroup[] {
+  return categories.map((category) => ({
+    name: category.name,
+    badges: category.badges.map((badge) => ({ ...badge, statusText: STATUS_TEXT[badge.status] })),
+  }));
 }
 
 @Component({
   selector: 'app-certifications',
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink],
   templateUrl: './certifications.html',
 })
 export class Certifications {
-  protected readonly groups = buildCertGroups(raw);
+  protected readonly page = PAGES['certifications'];
+  protected readonly groups = buildCertGroups(CERT_CATEGORIES);
 }

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/defs.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "ShortText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "not": {
+        "pattern": "<[A-Za-z/!?]|[\\u0000-\\u001F\\u007F\\u202A-\\u202E\\u2066-\\u2069]"
+      }
+    },
+    "PlainText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600,
+      "not": {
+        "pattern": "<[A-Za-z/!?]|[\\u0000-\\u001F\\u007F\\u202A-\\u202E\\u2066-\\u2069]"
+      }
+    },
+    "LongText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "not": {
+        "pattern": "<[A-Za-z/!?]|[\\u0000-\\u001F\\u007F\\u202A-\\u202E\\u2066-\\u2069]"
+      }
+    },
+    "Paragraphs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": {
+        "$ref": "#/$defs/LongText"
+      }
+    },
+    "HttpsUrl": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^https://[a-z0-9]([a-z0-9.-]*[a-z0-9])?(:[0-9]{1,5})?(/[^\\s]*)?$"
+    },
+    "InternalPath": {
+      "type": "string",
+      "maxLength": 200,
+      "pattern": "^/([a-z0-9-]+(/[A-Za-z0-9-]+)*)?$"
+    },
+    "Slug": {
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "DetailId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9-]{8,64}$"
+    },
+    "EventRef": {
+      "type": "string",
+      "maxLength": 130,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*/[0-9]{4}(-[a-z0-9]+)*$"
+    },
+    "ImagePath": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^images/[A-Za-z0-9._ -]+(/[A-Za-z0-9._ -]+)*$",
+      "not": {
+        "pattern": "(^|/)\\.\\.?(/|$)"
+      }
+    },
+    "ArchivePath": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^archive/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$",
+      "not": {
+        "pattern": "(^|/)\\.\\.?(/|$)"
+      }
+    },
+    "TextOrEmpty": {
+      "type": "string",
+      "maxLength": 200,
+      "not": {
+        "pattern": "<[A-Za-z/!?]|[\\u0000-\\u001F\\u007F\\u202A-\\u202E\\u2066-\\u2069]"
+      }
+    },
+    "ImageFieldLoose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "src",
+        "alt"
+      ],
+      "properties": {
+        "src": {
+          "$ref": "#/$defs/ImagePath"
+        },
+        "alt": {
+          "$ref": "#/$defs/TextOrEmpty"
+        }
+      }
+    },
+    "ImageField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "src",
+        "alt"
+      ],
+      "properties": {
+        "src": {
+          "$ref": "#/$defs/ImagePath"
+        },
+        "alt": {
+          "$ref": "#/$defs/PlainText"
+        }
+      }
+    },
+    "LinkedImage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "url",
+        "image"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/ShortText"
+        },
+        "url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "image": {
+          "$ref": "#/$defs/ImageField"
+        }
+      }
+    },
+    "SocialLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "image"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/ShortText"
+        },
+        "url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "image": {
+          "$ref": "#/$defs/ImageField"
+        }
+      }
+    },
+    "PageMeta": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "$ref": "#/$defs/ShortText"
+        },
+        "description": {
+          "$ref": "#/$defs/PlainText"
+        }
+      },
+      "required": [
+        "title"
+      ]
+    },
+    "PageHead": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "$ref": "#/$defs/ShortText"
+        },
+        "description": {
+          "$ref": "#/$defs/PlainText"
+        },
+        "heading": {
+          "$ref": "#/$defs/ShortText"
+        },
+        "breadcrumb": {
+          "$ref": "#/$defs/ShortText"
+        }
+      },
+      "required": [
+        "title",
+        "heading",
+        "breadcrumb"
+      ]
+    }
+  }
+}
