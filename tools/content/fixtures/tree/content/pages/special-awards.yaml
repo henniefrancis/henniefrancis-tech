@@ -1,0 +1,11 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture special-awards title
+description: Fixture special-awards description.
+heading: Fixture special-awards heading
+breadcrumb: Fixture special-awards crumb
+slides:
+  - src: images/fixture/award-one.png
+    alt: Award one
+  - src: images/fixture/award-two.png
+    alt: Award two

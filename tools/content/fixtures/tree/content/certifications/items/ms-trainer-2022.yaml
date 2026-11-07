@@ -1,0 +1,11 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/ms-trainer-2022.png
+  alt: ms-trainer-2022
+name: MS Trainer 2022
+vendor: microsoft
+kind: certification
+status: retired
+countAs: trainer
+url: https://learn.example.test/trainer-2022

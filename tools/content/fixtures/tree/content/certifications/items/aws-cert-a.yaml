@@ -1,0 +1,12 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/aws-cert-a.png
+  alt: aws-cert-a
+name: AWS Cert A
+vendor: aws
+kind: certification
+status: active
+url: https://credly.example.test/a
+issuedOn: 2024-01-15
+expiresOn: 2027-01-15

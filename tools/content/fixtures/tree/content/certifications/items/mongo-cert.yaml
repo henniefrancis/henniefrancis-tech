@@ -1,0 +1,12 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/mongo-cert.png
+  alt: mongo-cert
+name: Mongo Cert
+vendor: mongodb
+kind: certification
+status: active
+url: https://mongo.example.test/cert
+evidence:
+  - archive/credly/mongo/20261107T101500Z/snapshot.json

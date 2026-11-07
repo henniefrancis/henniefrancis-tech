@@ -1,0 +1,10 @@
+# Synthetic fixture content. Not real.
+
+title: Conference Two
+year: "2024"
+listing:
+  name: Conference Two 2024
+  image:
+    src: images/fixture/conf-two.png
+    alt: Conference Two 2024
+links: []

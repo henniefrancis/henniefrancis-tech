@@ -1,0 +1,10 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/aws-extra.png
+  alt: aws-extra
+name: AWS Extra Badge
+vendor: aws
+kind: extra-badge
+status: active
+url: https://credly.example.test/extra

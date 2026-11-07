@@ -1,0 +1,12 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/ms-cert-1.png
+  alt: ms-cert-1
+name: MS Cert 1
+vendor: microsoft
+kind: certification
+status: active
+detail:
+  type: mcts
+  id: AAAAAAAA-0000-0000-0000-000000000001

@@ -9,8 +9,8 @@ const GENERATED_ATTRS = [/^_ngcontent-/, /^_nghost-/, /^ng-reflect-/, /^ng-versi
 const HASHED = /-[A-Z0-9]{8}(?=\.[a-z0-9]+)/g;
 const NG_SCOPE = /ng-c\d+/g;
 /** Preload hints for lazy chunks differ with the chunking; they are not page content. */
-const isPreload = (node) => node.nodeName === 'link' && (node.attrs ?? []).some((a) => a.name === 'rel' && a.value === 'modulepreload');
-const isNgState = (node) => node.nodeName === 'script' && (node.attrs ?? []).some((a) => a.name === 'id' && a.value === 'ng-state');
+const isPreload = (node) => node.nodeName === 'link' && node.attrs.some((a) => a.name === 'rel' && a.value === 'modulepreload');
+const isNgState = (node) => node.nodeName === 'script' && node.attrs.some((a) => a.name === 'id' && a.value === 'ng-state');
 
 const normaliseValue = (value) => value.replace(HASHED, '-HASH').replace(NG_SCOPE, 'ng-c');
 const squash = (text) => text.replace(/\s+/g, ' ').trim();
@@ -24,7 +24,6 @@ export function normaliseNode(node) {
     if (child.nodeName === '#text') {
       // The Angular transfer state holds template ids that change whenever a template changes.
       const text = isNgState(node) ? '[ng-state]' : normaliseValue(collapse(child.value));
-      if (text === '') continue;
       if (typeof children.at(-1) === 'string') children[children.length - 1] = collapse(`${children.at(-1)}${text}`);
       else children.push(text);
     } else {

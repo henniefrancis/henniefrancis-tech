@@ -1,0 +1,13 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture blog title
+description: Fixture blog description.
+heading: Fixture blog heading
+breadcrumb: Fixture blog crumb
+intro: Coming soon.
+links:
+  - name: Blog Host
+    url: https://blog.example.test/me
+    image:
+      src: images/fixture/blog-host.png
+      alt: Blog Host

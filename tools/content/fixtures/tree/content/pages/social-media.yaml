@@ -1,0 +1,19 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture social-media title
+description: Fixture social-media description.
+heading: Fixture social-media heading
+breadcrumb: Fixture social-media crumb
+categories:
+  - name: Professional
+    items:
+      - name: Network
+        url: https://network.example.test/me
+        image:
+          src: images/fixture/network.png
+          alt: Network
+  - items:
+      - name: Image Only
+        image:
+          src: images/fixture/image-only.png
+          alt: Image Only

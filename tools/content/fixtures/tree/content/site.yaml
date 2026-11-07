@@ -1,0 +1,7 @@
+# Synthetic fixture content. Not real.
+
+name: Fixture Person
+copyright: (c) 2026 Fixture Person
+imageBaseUrl: https://img.example.test/base/
+features:
+  expiredLabels: true

@@ -1,0 +1,17 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture projects title
+description: Fixture projects description.
+heading: Fixture projects heading
+breadcrumb: Fixture projects crumb
+projects:
+  - name: Project One
+    badge: Outdated
+    description: |-
+      Describes project one.
+    diagram:
+      src: images/fixture/diagram.png
+      alt: Diagram
+  - name: Project Two
+    description: |-
+      Describes project two.

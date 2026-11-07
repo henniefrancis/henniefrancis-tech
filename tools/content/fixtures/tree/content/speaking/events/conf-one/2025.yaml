@@ -1,0 +1,35 @@
+# Synthetic fixture content. Not real.
+
+title: Conference One
+year: "2025"
+listing:
+  name: Conference One 2025
+  image:
+    src: images/fixture/conf-one.png
+    alt: Conference One 2025
+header:
+  url: https://conf-one.example.test/
+  image:
+    src: images/fixture/conf-one-header.png
+    alt: Conference One header
+heading: A talk title
+body: |-
+  First paragraph of the talk.
+
+  Second paragraph of the talk.
+links:
+  - title: Session page
+    image:
+      src: images/fixture/session.png
+      alt: Session page
+    url: https://sessions.example.test/talk
+  - title: Event Photos
+    image:
+      src: images/fixture/camera.png
+      alt: Event Photos
+    gallery: true
+  - title: Full Video
+    label: Watch
+    image:
+      src: images/fixture/video.png
+      alt: Full Video

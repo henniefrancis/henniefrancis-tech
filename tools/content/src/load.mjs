@@ -53,13 +53,18 @@ export function parseYaml(text) {
   if (doc.errors.length > 0) {
     return { data: undefined, errors: doc.errors.map((e) => `yaml-${String(e.code).toLowerCase()}`) };
   }
+  let hasAlias = false;
   visit(doc, {
+    Alias() {
+      hasAlias = true;
+    },
     Scalar(_key, node) {
       if (isScalar(node) && (node.type === 'BLOCK_LITERAL' || node.type === 'BLOCK_FOLDED')) {
         node.value = toParagraphs(String(node.value));
       }
     },
   });
+  if (hasAlias) return { data: undefined, errors: ['yaml-alias-not-allowed'] };
   return { data: normalise(doc.toJS()), errors: [] };
 }
 

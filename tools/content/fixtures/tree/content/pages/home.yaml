@@ -1,0 +1,29 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture Person
+description: Fixture home description.
+heading: Fixture Person
+name: Fixture Person
+profile:
+  src: images/fixture/profile.png
+  alt: Fixture profile
+tagline:
+  - Builder
+  - ${aws-certifications}x AWS Certified
+  - ${microsoft-certifications}x Microsoft Certified
+  - Pilot
+about: |-
+  First about paragraph.
+
+  Second about paragraph.
+tiles:
+  - name: Biography
+    route: /biography
+    image:
+      src: images/fixture/tile-bio.png
+      alt: Biography
+  - name: Portfolio
+    route: /portfolio
+    image:
+      src: images/fixture/tile-portfolio.png
+      alt: Portfolio

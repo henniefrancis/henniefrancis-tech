@@ -1,0 +1,17 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture portfolio title
+description: Fixture portfolio description.
+heading: Fixture portfolio heading
+breadcrumb: Fixture portfolio crumb
+tiles:
+  - name: Curriculum Vitae
+    route: /portfolio/cv
+    image:
+      src: images/fixture/cv.png
+      alt: Curriculum Vitae
+  - name: Projects
+    route: /portfolio/projects
+    image:
+      src: images/fixture/projects.png
+      alt: Projects

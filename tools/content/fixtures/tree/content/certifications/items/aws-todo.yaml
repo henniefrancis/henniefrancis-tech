@@ -1,0 +1,10 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/aws-todo.png
+  alt: aws-todo
+name: AWS Todo
+vendor: aws
+kind: certification
+status: todo
+url: https://credly.example.test/todo

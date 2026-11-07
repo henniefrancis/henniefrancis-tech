@@ -1,0 +1,10 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/aws-partner.png
+  alt: aws-partner
+name: AWS Partner Badge
+vendor: aws
+kind: partner-badge
+status: active
+url: https://credly.example.test/partner

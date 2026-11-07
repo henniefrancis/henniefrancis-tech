@@ -1,0 +1,10 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/aws-cert-b.png
+  alt: aws-cert-b
+name: AWS Cert B
+vendor: aws
+kind: certification
+status: expired
+url: https://credly.example.test/b

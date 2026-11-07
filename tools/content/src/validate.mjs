@@ -195,6 +195,9 @@ export function lintTree(tree) {
   return warnings.sort((a, b) => (a.file + a.pointer).localeCompare(b.file + b.pointer));
 }
 
+/** "1 error", "2 errors". */
+export const countLabel = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`;
+
 /** One line per error: file, pointer, rule. */
 export function formatErrors(errors) {
   return errors.map((e) => `${e.file} ${e.pointer || '/'} ${e.rule}`).join('\n');

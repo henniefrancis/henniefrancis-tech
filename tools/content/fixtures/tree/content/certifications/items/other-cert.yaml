@@ -1,0 +1,10 @@
+# Synthetic fixture content. Not real.
+
+image:
+  src: images/fixture/other-cert.png
+  alt: other-cert
+name: Other Cert
+vendor: other
+kind: certification
+status: active
+url: https://other.example.test/cert

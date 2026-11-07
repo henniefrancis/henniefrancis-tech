@@ -4,12 +4,12 @@ import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PAGE_KEYS, PAGE_ROUTES, recordKey, routeList } from './routes.mjs';
 import { countCertifications, resolveDeep } from './tokens.mjs';
-import { formatErrors, lintTree, validateTree } from './validate.mjs';
+import { countLabel, formatErrors, lintTree, validateTree } from './validate.mjs';
 import { loadTree } from './load.mjs';
 
 export class ContentError extends Error {
   constructor(errors) {
-    super(`Content validation failed (${errors.length} error${errors.length === 1 ? '' : 's'}):\n${formatErrors(errors)}`);
+    super(`Content validation failed (${countLabel(errors.length, 'error')}):\n${formatErrors(errors)}`);
     this.name = 'ContentError';
     this.errors = errors;
   }
@@ -144,11 +144,8 @@ export function buildModules(tree) {
   const pages = Object.fromEntries(
     PAGE_KEYS.map((key) => {
       const { title, description, heading, breadcrumb } = page(key);
-      const entry = { route: PAGE_ROUTES[key] ?? '/404', title };
-      if (description !== undefined) entry.description = description;
-      if (heading !== undefined) entry.heading = heading;
-      if (breadcrumb !== undefined) entry.breadcrumb = breadcrumb;
-      return [key, entry];
+      const optional = Object.fromEntries(Object.entries({ description, heading, breadcrumb }).filter(([, value]) => value !== undefined));
+      return [key, { route: PAGE_ROUTES[key] ?? '/404', title, ...optional }];
     }),
   );
   const cert = certificationModules(files);
@@ -225,7 +222,7 @@ export function main({ root, env, argv = [], out = console.log, err = console.er
     const tree = load(source);
     const result = buildModules(tree);
     const warnings = lintTree(tree);
-    if (warnings.length > 0) err(`content: ${warnings.length} warning${warnings.length === 1 ? '' : 's'}
+    if (warnings.length > 0) err(`content: ${countLabel(warnings.length, 'warning')}
 ${formatErrors(warnings)}`);
     const expected = flag(argv, '--expect-counts');
     const actual = `aws=${result.counts.aws},microsoft=${result.counts.microsoft}`;
