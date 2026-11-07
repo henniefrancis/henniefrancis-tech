@@ -1,45 +1,34 @@
 import { Routes } from '@angular/router';
-import { Home } from './home/home';
-import { Biography } from './biography/biography';
-import { CurrentRole } from './current-role/current-role';
-import { Portfolio } from './portfolio/portfolio';
-import { SocialMedia } from './social-media/social-media';
-import { PublicSpeaking } from './public-speaking/public-speaking';
-import { Blog } from './blog/blog';
-import { TechStack } from './tech-stack/tech-stack';
-import { Certifications } from './certifications/certifications';
-import { SpecialAwards } from './special-awards/special-awards';
-import { EventDetail } from './public-speaking/event-detail/event-detail';
-import { Gallery } from './public-speaking/gallery/gallery';
-import { Cv } from './portfolio/cv/cv';
-import { CareerHistory } from './portfolio/career-history/career-history';
-import { Projects } from './portfolio/projects/projects';
-import { CertDetail } from './certifications/cert-detail/cert-detail';
-import { NotFound } from './not-found/not-found';
+import { PAGES } from './content/generated/pages';
 
-const notFound = { component: NotFound, title: 'Page not found', data: { noindex: true } };
+// Every page is a lazy route, so a visitor downloads only the page code and the content that page shows.
+const notFound = {
+  loadComponent: () => import('./not-found/not-found').then((m) => m.NotFound),
+  title: PAGES['not-found'].title,
+  data: { noindex: true },
+};
 
 export const routes: Routes = [
-  { path: '', component: Home, title: 'Hennie Francis' },
-  { path: 'biography', component: Biography, title: "Hennie's Biography" },
-  { path: 'current-role', component: CurrentRole, title: "Hennie's Current Role" },
-  { path: 'portfolio', component: Portfolio, title: "Hennie's Portfolio" },
-  { path: 'social-media', component: SocialMedia, title: "Hennie's Social Media" },
-  { path: 'public-speaking', component: PublicSpeaking, title: "Hennie's Public Speaking" },
-  { path: 'blog', component: Blog, title: "Hennie's Blog" },
-  { path: 'tech-stack', component: TechStack, title: 'Tech Stack' },
-  { path: 'certifications', component: Certifications, title: "Hennie's Certifications" },
-  { path: 'special-awards', component: SpecialAwards, title: 'Special Awards' },
+  { path: '', loadComponent: () => import('./home/home').then((m) => m.Home), title: PAGES['home'].title },
+  { path: 'biography', loadComponent: () => import('./biography/biography').then((m) => m.Biography), title: PAGES['biography'].title },
+  { path: 'current-role', loadComponent: () => import('./current-role/current-role').then((m) => m.CurrentRole), title: PAGES['current-role'].title },
+  { path: 'portfolio', loadComponent: () => import('./portfolio/portfolio').then((m) => m.Portfolio), title: PAGES['portfolio'].title },
+  { path: 'social-media', loadComponent: () => import('./social-media/social-media').then((m) => m.SocialMedia), title: PAGES['social-media'].title },
+  { path: 'public-speaking', loadComponent: () => import('./public-speaking/public-speaking').then((m) => m.PublicSpeaking), title: PAGES['public-speaking'].title },
+  { path: 'blog', loadComponent: () => import('./blog/blog').then((m) => m.Blog), title: PAGES['blog'].title },
+  { path: 'tech-stack', loadComponent: () => import('./tech-stack/tech-stack').then((m) => m.TechStack), title: PAGES['tech-stack'].title },
+  { path: 'certifications', loadComponent: () => import('./certifications/certifications').then((m) => m.Certifications), title: PAGES['certifications'].title },
+  { path: 'special-awards', loadComponent: () => import('./special-awards/special-awards').then((m) => m.SpecialAwards), title: PAGES['special-awards'].title },
 
   // Public-speaking sub-pages (gallery route is more specific, so it comes first).
-  { path: 'public-speaking/:event/photos/:year', component: Gallery },
-  { path: 'public-speaking/:event/:year', component: EventDetail },
+  { path: 'public-speaking/:event/photos/:year', loadComponent: () => import('./public-speaking/gallery/gallery').then((m) => m.Gallery) },
+  { path: 'public-speaking/:event/:year', loadComponent: () => import('./public-speaking/event-detail/event-detail').then((m) => m.EventDetail) },
 
-  { path: 'portfolio/cv', component: Cv, title: "Hennie's CV" },
-  { path: 'portfolio/career-history', component: CareerHistory, title: "Hennie's Career History" },
-  { path: 'portfolio/projects', component: Projects, title: "Hennie's Projects" },
+  { path: 'portfolio/cv', loadComponent: () => import('./portfolio/cv/cv').then((m) => m.Cv), title: PAGES['cv'].title },
+  { path: 'portfolio/career-history', loadComponent: () => import('./portfolio/career-history/career-history').then((m) => m.CareerHistory), title: PAGES['career-history'].title },
+  { path: 'portfolio/projects', loadComponent: () => import('./portfolio/projects/projects').then((m) => m.Projects), title: PAGES['projects'].title },
 
-  { path: 'certifications/microsoft/:type/:id', component: CertDetail },
+  { path: 'certifications/microsoft/:type/:id', loadComponent: () => import('./certifications/cert-detail/cert-detail').then((m) => m.CertDetail) },
 
   // Anything else shows the styled not-found page. The "404" path exists only so the
   // build can prerender that page; tools/seo then moves it to 404.html.

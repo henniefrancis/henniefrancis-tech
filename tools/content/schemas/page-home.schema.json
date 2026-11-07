@@ -10,6 +10,7 @@
   "type": "object",
   "required": [
     "heading",
+    "name",
     "profile",
     "tagline",
     "about",
@@ -19,6 +20,9 @@
     "title": true,
     "description": true,
     "heading": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "name": {
       "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
     },
     "profile": {

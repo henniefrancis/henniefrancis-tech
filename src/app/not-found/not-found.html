@@ -5,19 +5,19 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Not Found</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Page not found</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <br /><br />
   <div class="row text-center">
     <div class="col">
-      <p>Sorry, the page you are looking for does not exist or has moved.</p>
-      <p><a routerLink="/">Back to the home page</a></p>
+      @for (para of content.message; track $index) { <p>{{ para }}</p> }
+      <p><a routerLink="/">{{ content.homeLink }}</a></p>
     </div>
   </div>
 </div>

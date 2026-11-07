@@ -4,6 +4,7 @@
 import { copyFileSync, existsSync, readFileSync, readdirSync, mkdirSync, rmSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 import { parseArgs } from 'node:util';
+import vm from 'node:vm';
 import { attr, clean, elements, extractArray, hasClass, parseHtml, slugify, textOf, toYaml, writeFile } from './lib.mjs';
 import { importCareer, importCv } from './cv-career.mjs';
 
@@ -35,12 +36,14 @@ const asHttps = (url) => url.replace(/^http:\/\//, 'https://');
 const routesSource = read('app.routes.ts');
 const titles = {};
 for (const m of routesSource.matchAll(/path: '([^']*)', component: \w+, title: (?:'([^']*)'|"([^"]*)")/g)) titles[m[1]] = m[2] ?? m[3];
+const descSource = read('shared/page-descriptions.ts');
+const descriptions = vm.runInNewContext(`(${descSource.slice(descSource.indexOf('= {') + 2, descSource.indexOf('};') + 1)})`);
 const page = (key, path, html) => {
   const dom = parseHtml(html);
   const els = elements(dom);
   const h1 = els.find((e) => e.tagName === 'h1');
   const crumb = els.find((e) => e.tagName === 'li' && hasClass(e, 'current'));
-  return { title: titles[path], heading: clean(textOf(h1)), breadcrumb: clean(textOf(crumb)) };
+  return { title: titles[path], description: descriptions[`/${path}`], heading: clean(textOf(h1)), breadcrumb: clean(textOf(crumb)) };
 };
 const pageFile = (key, data, opts) => writeFile(OUT, `content/pages/${key}.yaml`, toYaml(data, { comment: ` ${key} page content. Edit the text; keep the field names.`, ...opts }));
 
@@ -61,7 +64,9 @@ writeFile(OUT, 'content/site.yaml', toYaml({ name: 'Hennie Francis', copyright: 
     'home',
     {
       title: titles[''],
-      heading: clean(textOf(bio.childNodes.find((n) => n.tagName === 'h3'))),
+      description: descriptions['/'],
+      heading: clean(textOf(elements(parseHtml(html)).find((e) => e.tagName === 'h1'))),
+      name: clean(textOf(bio.childNodes.find((n) => n.tagName === 'h3'))),
       profile: img(homeBase, 'profile.png', 'Profile Picture'),
       tagline: tagline.map(tokens),
       about: ps.slice(1).map((p) => clean(textOf(p))),
@@ -129,7 +134,7 @@ writeFile(OUT, 'content/site.yaml', toYaml({ name: 'Hennie Francis', copyright: 
 // ---- social media ------------------------------------------------------------------------
 {
   const data = json('social-media/social.json');
-  const items = data.items.slice().sort(byOrder).map((i) => ({ name: i.name, url: asHttps(i.url), image: img(data.imageBaseUrl, i.image, i.name) }));
+  const items = data.items.slice().sort(byOrder).map((i) => ({ name: i.name, ...(i.url ? { url: asHttps(i.url) } : {}), image: img(data.imageBaseUrl, i.image, i.name) }));
   pageFile('social-media', { ...page('social-media', 'social-media', read('social-media/social-media.html')), categories: [{ items }] });
 }
 
@@ -229,6 +234,14 @@ const MS_DETAIL_TYPES = { mcts: 'Microsoft Certified Technology Specialist', mcp
     writeFile(OUT, `content/speaking/galleries/${key}.yaml`, toYaml({ title: d.title, year: d.year, photos: d.photos.map((p) => img(d.assetBaseUrl, d.photoBase + p.image, p.alt)) }));
   }
   pageFile('public-speaking', { ...page('public-speaking', 'public-speaking', read('public-speaking/public-speaking.html')), years });
+}
+
+// ---- not-found page (content of the unknown-path page) ----------------------------------------
+{
+  const html = read('not-found/not-found.html');
+  const ps = elements(parseHtml(html)).filter((e) => e.tagName === 'p');
+  const routeTitle = routesSource.match(/title: '(Page not found)'/)[1];
+  pageFile('not-found', { title: routeTitle, heading: clean(textOf(elements(parseHtml(html)).find((e) => e.tagName === 'h1'))), breadcrumb: clean(textOf(elements(parseHtml(html)).find((e) => e.tagName === 'li' && hasClass(e, 'current')))), message: [clean(textOf(ps[0]))], homeLink: clean(textOf(ps[1])) }, { blocks: ['message'] });
 }
 
 // ---- CV and career history ------------------------------------------------------------

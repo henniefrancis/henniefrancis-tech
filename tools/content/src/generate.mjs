@@ -103,6 +103,20 @@ function speakingModules(files) {
   return { events, galleries, index };
 }
 
+/** Small summaries of the dynamic pages, for the SEO tags, so the full records stay in their lazy chunks. */
+function recordSummaries(events, galleries, details) {
+  const out = {};
+  for (const [key, e] of Object.entries(events)) {
+    out[`/public-speaking/${key}`] = { kind: 'event', title: e.title, year: e.year, ...(e.heading ? { heading: e.heading } : {}) };
+  }
+  for (const [key, g] of Object.entries(galleries)) {
+    const [event, edition] = key.split('/');
+    out[`/public-speaking/${event}/photos/${edition}`] = { kind: 'gallery', title: g.title, year: g.year };
+  }
+  for (const [key, d] of Object.entries(details)) out[`/certifications/microsoft/${key}`] = { kind: 'certificate', title: d.title };
+  return out;
+}
+
 function prerenderParams(events, galleries, details) {
   const pair = (key, a, b) => ({ [a]: key.slice(0, key.indexOf('/')), [b]: key.slice(key.indexOf('/') + 1) });
   return {
@@ -130,7 +144,7 @@ export function buildModules(tree) {
   const pages = Object.fromEntries(
     PAGE_KEYS.map((key) => {
       const { title, description, heading, breadcrumb } = page(key);
-      const entry = { route: PAGE_ROUTES[key], title };
+      const entry = { route: PAGE_ROUTES[key] ?? '/404', title };
       if (description !== undefined) entry.description = description;
       if (heading !== undefined) entry.heading = heading;
       if (breadcrumb !== undefined) entry.breadcrumb = breadcrumb;
@@ -146,6 +160,7 @@ export function buildModules(tree) {
     'pages.ts': single('PagesContent', 'pages', pages),
     'home.ts': single('HomeContent', 'home', withoutKeys(page('home'), ['title', 'description'])),
     'biography.ts': single('BiographyContent', 'biography', own('biography')),
+    'not-found.ts': single('NotFoundContent', 'not-found', own('not-found')),
     'portfolio.ts': single('PortfolioContent', 'portfolio', own('portfolio')),
     'projects.ts': single('ProjectsContent', 'projects', own('projects')),
     'blog.ts': single('BlogContent', 'blog', own('blog')),
@@ -169,6 +184,7 @@ export function buildModules(tree) {
         ['SPEAKING_INDEX', 'YearGroup[]', speaking.index],
       ],
     ),
+    'records.ts': single('RecordSummaries', 'records', recordSummaries(speaking.events, speaking.galleries, cert.details)),
     'prerender.ts': moduleSource(
       ['PrerenderParams'],
       [

@@ -15,7 +15,8 @@ export const PAGE_ROUTES = Object.freeze({
   'public-speaking': '/public-speaking',
 });
 
-export const PAGE_KEYS = Object.keys(PAGE_ROUTES);
+/** Page files. `not-found` has no route of its own: it is the content of the unknown-path page. */
+export const PAGE_KEYS = [...Object.keys(PAGE_ROUTES), 'not-found'];
 
 /** Split `speaking/events/<event>/<edition>.yaml` style paths into a "<event>/<edition>" key. */
 export function recordKey(path, folder) {

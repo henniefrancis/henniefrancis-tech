@@ -2,17 +2,18 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, TitleStrategy } from '@angular/router';
-import { imageSrc } from '../content/image';
-import home from '../home/home.data.json';
-import { CERT_DETAILS } from '../certifications/cert-detail/cert-details.data';
-import { EVENTS } from '../public-speaking/data/events.data';
-import { GALLERIES } from '../public-speaking/data/galleries.data';
-import { DEFAULT_DESCRIPTION, PAGE_DESCRIPTIONS } from './page-descriptions';
+import { PAGES } from '../content/generated/pages';
+import { RECORDS } from '../content/generated/records';
+import { SITE } from '../content/generated/site';
 
 export const SITE_URL = 'https://henniefrancis.tech';
-export const SITE_NAME = 'Hennie Francis';
-/** Share image: the largest variant of the profile photo, served from the site's own image path. */
-export const SHARE_IMAGE = `${SITE_URL}${imageSrc(home.profile.image)}`;
+export const SITE_NAME = SITE.name;
+
+/** Meta descriptions come from the page content (config); the home page text is the fallback. */
+const PAGE_DESCRIPTIONS: Record<string, string | undefined> = Object.fromEntries(Object.values(PAGES).map((p) => [p.route, p.description]));
+export const DEFAULT_DESCRIPTION = PAGES.home.description ?? '';
+/** Share image on our own origin until the optimised profile image is wired in. */
+export const SHARE_IMAGE = `${SITE_URL}/apple-touch-icon.png`;
 
 /** Route path without query, fragment or trailing slash; the home page stays "/". */
 export function normalisePath(url: string): string {
@@ -29,20 +30,13 @@ export function canonicalUrl(path: string): string {
 export function descriptionFor(path: string): string {
   const fixed = PAGE_DESCRIPTIONS[path];
   if (fixed) return fixed;
-  const seg = path.split('/').filter(Boolean);
-  if (seg[0] === 'public-speaking' && seg.length === 4 && seg[2] === 'photos') {
-    const g = GALLERIES[`${seg[1]}/${seg[3]}`];
-    if (g) return `Photos of Hennie Francis at ${g.title} ${g.year}.`;
-  } else if (seg[0] === 'public-speaking' && seg.length === 3) {
-    const e = EVENTS[`${seg[1]}/${seg[2]}`];
-    if (e) {
-      const where = `${e.title} ${e.year}`;
-      return e.heading ? `${e.heading}: Hennie Francis at ${where}.` : `Hennie Francis at ${where}.`;
-    }
-  } else if (seg[0] === 'certifications' && seg[1] === 'microsoft' && seg.length === 4) {
-    const c = CERT_DETAILS[`${seg[2]}/${seg[3]}`];
-    if (c) return `${c.title}, earned by Hennie Francis.`;
+  const record = RECORDS[path];
+  if (record?.kind === 'gallery') return `Photos of Hennie Francis at ${record.title} ${record.year}.`;
+  if (record?.kind === 'event') {
+    const where = `${record.title} ${record.year}`;
+    return record.heading ? `${record.heading}: Hennie Francis at ${where}.` : `Hennie Francis at ${where}.`;
   }
+  if (record?.kind === 'certificate') return `${record.title}, earned by Hennie Francis.`;
   return DEFAULT_DESCRIPTION;
 }
 

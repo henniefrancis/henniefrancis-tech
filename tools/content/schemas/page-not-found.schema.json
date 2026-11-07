@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/page-not-found.schema.json",
+  "title": "not-found.yaml",
+  "allOf": [
+    {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PageHead"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "message",
+    "homeLink"
+  ],
+  "properties": {
+    "title": true,
+    "description": true,
+    "heading": true,
+    "breadcrumb": true,
+    "message": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Paragraphs"
+    },
+    "homeLink": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PlainText"
+    }
+  },
+  "unevaluatedProperties": false
+}

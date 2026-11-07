@@ -8,21 +8,24 @@ import { parse } from 'parse5';
 const GENERATED_ATTRS = [/^_ngcontent-/, /^_nghost-/, /^ng-reflect-/, /^ng-version$/, /^ng-server-context$/, /^ngh$/, /^ng-app-id$/];
 const HASHED = /-[A-Z0-9]{8}(?=\.[a-z0-9]+)/g;
 const NG_SCOPE = /ng-c\d+/g;
+/** Preload hints for lazy chunks differ with the chunking; they are not page content. */
+const isPreload = (node) => node.nodeName === 'link' && (node.attrs ?? []).some((a) => a.name === 'rel' && a.value === 'modulepreload');
 const isNgState = (node) => node.nodeName === 'script' && (node.attrs ?? []).some((a) => a.name === 'id' && a.value === 'ng-state');
 
 const normaliseValue = (value) => value.replace(HASHED, '-HASH').replace(NG_SCOPE, 'ng-c');
 const squash = (text) => text.replace(/\s+/g, ' ').trim();
+const collapse = (text) => text.replace(/\s+/g, ' ');
 
 /** Convert a parse5 node into a plain comparable tree. Text nodes become strings. */
 export function normaliseNode(node) {
   const children = [];
   for (const child of node.childNodes ?? []) {
-    if (child.nodeName === '#comment') continue;
+    if (child.nodeName === '#comment' || isPreload(child)) continue;
     if (child.nodeName === '#text') {
       // The Angular transfer state holds template ids that change whenever a template changes.
-      const text = isNgState(node) ? '[ng-state]' : normaliseValue(squash(child.value));
+      const text = isNgState(node) ? '[ng-state]' : normaliseValue(collapse(child.value));
       if (text === '') continue;
-      if (typeof children.at(-1) === 'string') children[children.length - 1] = `${children.at(-1)} ${text}`;
+      if (typeof children.at(-1) === 'string') children[children.length - 1] = collapse(`${children.at(-1)}${text}`);
       else children.push(text);
     } else {
       children.push(normaliseNode(child));
@@ -32,6 +35,12 @@ export function normaliseNode(node) {
   for (const { name, value } of (node.attrs ?? []).slice().sort((a, b) => a.name.localeCompare(b.name))) {
     if (!GENERATED_ATTRS.some((re) => re.test(name))) attrs[name] = normaliseValue(name === 'class' ? squash(value) : value);
   }
+  // Spaces next to elements are kept (they render); spaces at the edges of an element are not.
+  if (typeof children[0] === 'string') children[0] = children[0].trimStart();
+  if (typeof children.at(-1) === 'string') children[children.length - 1] = children.at(-1).trimEnd();
+  const kept = children.filter((c) => c !== '');
+  children.length = 0;
+  children.push(...kept);
   // <template> content lives outside childNodes in parse5.
   const content = node.content ? normaliseNode(node.content).c : [];
   return { t: node.nodeName, a: attrs, c: [...children, ...content] };

@@ -39,7 +39,8 @@ export type PageKey =
   | 'tech-stack'
   | 'special-awards'
   | 'certifications'
-  | 'public-speaking';
+  | 'public-speaking'
+  | 'not-found';
 
 export type PagesContent = Record<PageKey, PageMetaContent>;
 
@@ -52,6 +53,8 @@ export interface Tile {
 export interface HomeContent {
   about: string[];
   heading: string;
+  /** Name shown in the about card. */
+  name: string;
   profile: Img;
   tagline: string[];
   tiles: Tile[];
@@ -60,6 +63,11 @@ export interface HomeContent {
 export interface BiographyContent {
   paragraphs: string[];
   portrait: Img;
+}
+
+export interface NotFoundContent {
+  homeLink: string;
+  message: string[];
 }
 
 export interface PortfolioContent {
@@ -170,3 +178,10 @@ export interface PrerenderParams {
   events: { event: string; year: string }[];
   galleries: { event: string; year: string }[];
 }
+
+export type RecordSummary =
+  | { kind: 'event'; title: string; year: string; heading?: string }
+  | { kind: 'gallery'; title: string; year: string }
+  | { kind: 'certificate'; title: string };
+
+export type RecordSummaries = Record<string, RecordSummary>;

@@ -1,17 +1,15 @@
-import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { imageView } from '../content/image';
-import data from './home.data.json';
+import { HOME } from '../content/generated/home';
+import { PAGES } from '../content/generated/pages';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
-  /** Profile photo and dashboard tiles (routes are the clean Angular paths). */
-  protected readonly profile = { ...data.profile, image: imageView(data.profile.image) };
-  protected readonly tiles = data.tiles.map((t) => ({ ...t, image: imageView(t.image) }));
+  protected readonly page = PAGES['home'];
+  protected readonly home = HOME;
 }
