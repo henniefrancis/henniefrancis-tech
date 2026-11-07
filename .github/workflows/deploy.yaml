@@ -360,7 +360,7 @@ jobs:
           failed=0
           for path in / /biography /public-speaking /certifications /version.json; do
             code=000
-            for attempt in 1 2 3; do
+            for _ in 1 2 3; do
               code=$(curl -sSL --max-redirs 3 --max-time 20 -o /dev/null -w '%{http_code}' "${base}${path}" || echo 000)
               [ "$code" = "200" ] && break
               sleep 5

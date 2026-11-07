@@ -210,7 +210,7 @@ jobs:
         if: steps.tf.outputs.changed == 'true'
         run: |
           set -euo pipefail
-          args=(--severity MEDIUM,HIGH,CRITICAL --exit-code 1)
+          args=(--severity "MEDIUM,HIGH,CRITICAL" --exit-code 1)
           if [ -f terraform/.trivyignore.yaml ]; then
             args+=(--ignorefile terraform/.trivyignore.yaml)
           fi
