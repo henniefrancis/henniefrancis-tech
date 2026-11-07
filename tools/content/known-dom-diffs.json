@@ -4,13 +4,13 @@
     "what": "attribute href",
     "before": "http://www.medium.com/@henniefrancis",
     "after": "https://www.medium.com/@henniefrancis",
-    "reason": "https only links rule; owner to approve"
+    "reason": "https only links rule; approved by the owner"
   },
   {
     "file": "blog/index.html",
     "what": "attribute href",
     "before": "http://www.medium.com/@henniefrancis",
     "after": "https://www.medium.com/@henniefrancis",
-    "reason": "https only links rule; owner to approve"
+    "reason": "https only links rule; approved by the owner"
   }
 ]
