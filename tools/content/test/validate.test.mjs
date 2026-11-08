@@ -169,6 +169,16 @@ describe('cross-file checks', () => {
     has(tree, 'certifications/categories.yaml /categories/0/items/2 unknown-item');
     has(tree, 'certifications/items/orphan.yaml  item-not-listed');
   });
+  it('rejects two items that link to the same Credly badge page', () => {
+    const tree = fixtureTree();
+    const link = 'https://www.credly.com/badges/11111111-2222-3333-4444-555555555555';
+    tree.files['certifications/items/aws-cert-a.yaml'].url = link;
+    tree.files['certifications/items/aws-extra.yaml'].url = link;
+    has(tree, 'certifications/items/aws-cert-a.yaml /url duplicate-badge-link');
+    has(tree, 'certifications/items/aws-extra.yaml /url duplicate-badge-link');
+    tree.files['certifications/items/aws-extra.yaml'].url = 'https://www.credly.com/badges/66666666-7777-8888-9999-000000000000';
+    expect(rules(validateTree(tree)).some((e) => e.includes('duplicate-badge-link'))).toBe(false);
+  });
   it('limits countAs to certifications and expired labels to the feature flag', () => {
     const tree = fixtureTree();
     tree.files['certifications/items/aws-extra.yaml'].countAs = 'x';

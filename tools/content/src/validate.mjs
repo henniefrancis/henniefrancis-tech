@@ -65,6 +65,17 @@ function checkCertifications(files, archive, add) {
       listed.set(slug, true);
     }),
   );
+  // Two items must never share one Credly badge page: a copied link shows the
+  // wrong badge, and the evidence archive would be filed under the wrong one.
+  const badgeLinks = new Map();
+  for (const [slug, item] of Object.entries(items)) {
+    if (typeof item.url === 'string' && item.url.startsWith('https://www.credly.com/badges/')) {
+      badgeLinks.set(item.url, [...(badgeLinks.get(item.url) ?? []), slug]);
+    }
+  }
+  for (const slugs of badgeLinks.values()) {
+    if (slugs.length > 1) slugs.forEach((slug) => add(`certifications/items/${slug}.yaml`, '/url', 'duplicate-badge-link'));
+  }
   for (const [slug, item] of Object.entries(items)) {
     const file = `certifications/items/${slug}.yaml`;
     if (!listed.has(slug)) add(file, '', 'item-not-listed');
