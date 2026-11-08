@@ -31,6 +31,8 @@
               }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fontsource/dongle/700.css",
               "src/styles.scss",
               "src/styles/style.css",
               "src/styles/mw300.css",
@@ -44,6 +46,9 @@
               "src/styles/mw1200.css",
               "src/styles/mw1300.css"
             ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
             "server": "src/main.server.ts",
             "outputMode": "static",
             "security": {
@@ -55,8 +60,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "300kB",
-                  "maximumError": "500kB"
+                  "maximumWarning": "800kB",
+                  "maximumError": "1000kB"
                 },
                 {
                   "type": "anyComponentStyle",
