@@ -107,6 +107,7 @@ resource "aws_cloudfront_distribution" "frontend" {
     compress               = true
     cache_policy_id        = aws_cloudfront_cache_policy.site.id
 
+    origin_request_policy_id   = aws_cloudfront_origin_request_policy.site.id
     response_headers_policy_id = aws_cloudfront_response_headers_policy.site.id
 
     # www -> apex 301 at the edge (the origin never sees the viewer Host).

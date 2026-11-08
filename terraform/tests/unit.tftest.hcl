@@ -454,6 +454,30 @@ run "image_bucket_is_private_versioned_and_encrypted" {
   }
 }
 
+run "query_string_reaches_the_origin_but_not_the_cache_key" {
+  command = plan
+
+  assert {
+    condition     = one(aws_cloudfront_origin_request_policy.site.query_strings_config).query_string_behavior == "all"
+    error_message = "The origin request policy must forward the query string."
+  }
+
+  assert {
+    condition     = one(aws_cloudfront_origin_request_policy.site.headers_config).header_behavior == "none" && one(aws_cloudfront_origin_request_policy.site.cookies_config).cookie_behavior == "none"
+    error_message = "No headers or cookies may be forwarded to the origin."
+  }
+
+  assert {
+    condition     = one(one(aws_cloudfront_cache_policy.site.parameters_in_cache_key_and_forwarded_to_origin).query_strings_config).query_string_behavior == "none"
+    error_message = "The query string must stay out of the cache key."
+  }
+
+  assert {
+    condition     = aws_cloudfront_cache_policy.site.default_ttl == 0 && aws_cloudfront_cache_policy.site.min_ttl == 0
+    error_message = "Pages and redirects must be revalidated, so TTLs stay 0."
+  }
+}
+
 run "image_bucket_lifecycle" {
   command = plan
 

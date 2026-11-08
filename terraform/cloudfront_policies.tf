@@ -51,6 +51,30 @@ resource "aws_cloudfront_cache_policy" "site" {
   }
 }
 
+# Origin request policy: send the viewer query string to the origin, but not
+# in the cache key. nginx redirects (/x/ and /x.html to /x) append the query
+# they receive, so without this a campaign parameter would be dropped. The
+# cache policy above has a TTL of 0 for pages and redirects, so a redirect
+# is revalidated per request and is never served to a viewer with a
+# different query. No headers or cookies are forwarded, so the origin still
+# only ever sees its own hostname.
+resource "aws_cloudfront_origin_request_policy" "site" {
+  name    = "${var.project_name}-site-query"
+  comment = "Forward the viewer query string to the origin (not in the cache key). No headers or cookies."
+
+  cookies_config {
+    cookie_behavior = "none"
+  }
+
+  headers_config {
+    header_behavior = "none"
+  }
+
+  query_strings_config {
+    query_string_behavior = "all"
+  }
+}
+
 # Response headers policy. override = true so these values win over any
 # header the origin (or S3) also sets. NO Content-Security-Policy here:
 # it arrives in a later change, and must then OMIT script-src and default-src

@@ -28,7 +28,7 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 | `ec2.tf` | t4g.nano AL2023 ARM64, IMDSv2, encrypted gp3, EIP, IPv6 |
 | `templates/user_data.sh.tftpl` | nginx (tuned for 512 MB) + certbot bootstrap |
 | `cloudfront.tf` | Distribution (http2and3, IPv6, https-only origin with secret header, `/img/*` behaviour) + ACM cert in us-east-1 |
-| `cloudfront_policies.tf` | Site cache policy (empty key) and response headers policy |
+| `cloudfront_policies.tf` | Site cache policy (empty key), origin request policy (forwards the query string, not keyed) and response headers policy |
 | `cloudfront_functions.tf`, `functions/` | www to apex 301 at the edge, with a Node unit test |
 | `tests/unit.tftest.hcl` | Plan-only tests with mock providers — no credentials needed |
 | `tests/retained-resources.sh` | Static check that retained resources keep `prevent_destroy` |
