@@ -189,7 +189,8 @@ describe('headers', () => {
     const { get } = await start({ cspEnforce: true });
     const csp = (await get('/')).headers.get('content-security-policy');
     expect(csp).toContain("object-src 'none'");
-    expect(csp).toContain('upgrade-insecure-requests');
+    expect(csp).toContain("img-src 'self' data:");
+    expect(csp).not.toContain('upgrade-insecure-requests');
     expect(csp).not.toContain('script-src');
     expect(csp).not.toContain('default-src');
     expect(csp).not.toContain('report-uri');

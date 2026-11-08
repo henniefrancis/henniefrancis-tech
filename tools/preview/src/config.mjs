@@ -15,7 +15,7 @@ Usage: node src/cli.mjs --dir <build output> [options]
   --host <addr>         bind address (default 0.0.0.0, so phones on the Wi-Fi can connect)
   --mode <v1|v2>        v1: origin header check is log-only; v2: 403 without the header
   --csp-report-only     send the Content-Security-Policy-Report-Only header and collect reports
-  --csp-enforce         send the enforced Content-Security-Policy header (the policy the edge carries)
+  --csp-enforce         send the enforced Content-Security-Policy header (the policy the edge carries, without upgrade-insecure-requests on plain http)
   --edge-headers        also send the CloudFront response-header-policy headers
   --img-dir <path>      serve /img/* from this directory (layout: <id>/<width>.webp)
   --img-origin <url>    proxy /img/* to this https origin (for example the live site)

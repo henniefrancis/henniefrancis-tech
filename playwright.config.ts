@@ -11,9 +11,9 @@ import { PROJECTS } from './e2e/lib/devices';
  *   other tools and must not be chosen.
  * - EXPECT_EDGE=1: with BASE_URL set, also run the edge header checks (production after cutover).
  * - E2E_CSP_ENFORCE=1: the local preview also sends the enforced Content-Security-Policy header (the policy the
- *   edge carries). Needs every image to come from the site origin, so it is off while images still load from
- *   their old location.
+ *   edge carries). Images come from the site origin, so use it together with E2E_IMG_DIR.
  * - E2E_DIST: directory the preview serves (default: the Angular browser output).
+ * - E2E_IMG_DIR: serve /img/* from this directory (layout <id>/<width>.webp) instead of the site image store.
  * - Suites are selected with tags: `--grep @visual`, `--grep @capture`, and
  *   `--grep-invert "@visual|@capture"` for the functional suite.
  * - Retries are 0 on purpose: a flaky test is fixed, never retried.
@@ -28,6 +28,8 @@ const externalBase = process.env['BASE_URL'];
 const baseURL = externalBase ?? `http://127.0.0.1:${port}`;
 // Angular workspace at the repo root, so the build lands in dist/.
 const dist = process.env['E2E_DIST'] ?? 'dist/henniefrancis-tech/browser';
+const imgDir = process.env['E2E_IMG_DIR'];
+const imgArg = imgDir ? ` --img-dir "${imgDir}"` : '';
 
 export default defineConfig({
   testDir: './e2e',
@@ -42,7 +44,7 @@ export default defineConfig({
   webServer: externalBase
     ? undefined
     : {
-        command: `node tools/preview/src/cli.mjs --dir "${dist}" --port ${port} --host 127.0.0.1 --edge-headers${process.env['E2E_CSP_ENFORCE'] ? ' --csp-enforce' : ''}`,
+        command: `node tools/preview/src/cli.mjs --dir "${dist}" --port ${port} --host 127.0.0.1 --edge-headers${imgArg}${process.env['E2E_CSP_ENFORCE'] ? ' --csp-enforce' : ''}`,
         url: `http://127.0.0.1:${port}/`,
         reuseExistingServer: false,
         timeout: 30_000,

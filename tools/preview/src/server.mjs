@@ -61,7 +61,9 @@ export function createPreviewServer(cfg, deps = {}) {
 
   const commonHeaders = () => {
     const h = cfg.edgeHeaders ? { ...EDGE_HEADERS } : {};
-    if (cfg.cspEnforce) h['content-security-policy'] = CSP_DIRECTIVES.join('; ');
+    // The preview is plain http, and WebKit would then request every subresource over https and fail, so the
+    // enforced policy leaves out upgrade-insecure-requests (the edge sends it over https).
+    if (cfg.cspEnforce) h['content-security-policy'] = CSP_DIRECTIVES.filter((d) => d !== 'upgrade-insecure-requests').join('; ');
     if (cfg.cspReportOnly) {
       h['content-security-policy-report-only'] = [...CSP_DIRECTIVES, `report-uri ${CSP_REPORT_PATH}`].join('; ');
     }
