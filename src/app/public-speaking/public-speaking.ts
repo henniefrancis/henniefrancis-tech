@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { imageSrc } from '../content/image';
 import { byOrder } from '../shared/by-order';
 import raw from './public-speaking.json';
 
@@ -15,7 +16,6 @@ export function toRoute(url: string): string {
 
 /** Sorted years and talks with their route and full image URL. */
 export function buildYears(data: any): YearGroup[] {
-  const base: string = data.imageBaseUrl ?? '';
   return (data.categories ?? [])
     .slice()
     .sort(byOrder)
@@ -24,7 +24,7 @@ export function buildYears(data: any): YearGroup[] {
       talks: (c.items ?? [])
         .slice()
         .sort(byOrder)
-        .map((i: any) => ({ name: i.name as string, route: toRoute(i.url as string), src: base + i.image })),
+        .map((i: any) => ({ name: i.name as string, route: toRoute(i.url as string), src: imageSrc(i.image) })),
     }));
 }
 

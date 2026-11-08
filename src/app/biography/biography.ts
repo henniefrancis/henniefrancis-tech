@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ImageRef, imageSrc } from '../content/image';
+
+const PORTRAIT: ImageRef = { id: '6db0ec962ed38a7a', w: 787, h: 1000, widths: [394, 787] };
 
 @Component({
   selector: 'app-biography',
@@ -8,8 +11,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './biography.scss',
 })
 export class Biography {
-  protected readonly portrait =
-    'https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/biography/portrait.png';
+  protected readonly portrait = imageSrc(PORTRAIT);
 
   protected readonly paragraphs: string[] = [
     'Residing in the vibrant city of Cape Town, South Africa, Hennie Francis is a driving force in the world of technology.',

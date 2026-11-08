@@ -1,11 +1,10 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": "AWS re:Invent 2025 re:Cap",
   "year": "2026",
   "header": {
     "url": "https://www.awscommunity.co.za/events/recap/2024",
-    "image": "public-speaking/recap_2026.png",
+    "image": { "id": "a621c6f345692880", "w": 1035, "h": 400, "widths": [480, 960, 1035] },
     "alt": "AWS re:Invent 2025 re:Cap 2026"
   },
   "heading": "AWS re:Invent 2025 re:Cap 2026 Community Edition",
@@ -15,13 +14,13 @@
   "links": [
     {
       "url": "https://sessionize.com/s/henniefrancis/aws-reinvent-2025-recap-2026-community-edition/168913",
-      "image": "social-media/sessionize.png",
+      "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] },
       "title": "Sessionize",
       "alt": "Sessionize"
     },
     {
-      "url": "photos/2026.html",
-      "image": "public-speaking/camera.jpeg",
+      "url": "photos/2026",
+      "image": { "id": "460653d7453ae543", "w": 700, "h": 560, "widths": [350, 700] },
       "title": "Event Photos",
       "alt": "Event Photos"
     }

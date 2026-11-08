@@ -1,60 +1,58 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": "AWS re:Invent 2025 re:Cap",
   "year": "2026",
-  "photoBase": "event-photos/aws-recap/2026/",
   "photos": [
     {
-      "image": "p1.png",
+      "image": { "id": "1845b31edbae0b8a", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 1"
     },
     {
-      "image": "p2.png",
+      "image": { "id": "df200e9fc2b91940", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 2"
     },
     {
-      "image": "p3.png",
+      "image": { "id": "680d47ec8bd5fcb9", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 3"
     },
     {
-      "image": "p4.png",
+      "image": { "id": "cc8bf4d32f26cdd3", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 4"
     },
     {
-      "image": "p5.png",
+      "image": { "id": "9cba3761a9d17297", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 5"
     },
     {
-      "image": "p6.png",
+      "image": { "id": "c33ecc37f7e3025c", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 6"
     },
     {
-      "image": "p7.png",
+      "image": { "id": "50f0084bbc7c8843", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 7"
     },
     {
-      "image": "p8.png",
+      "image": { "id": "6d3d92a0ac4e68ad", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 8"
     },
     {
-      "image": "p9.png",
+      "image": { "id": "c20ab584f18723b5", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 9"
     },
     {
-      "image": "p10.png",
+      "image": { "id": "2f7ba9aaa2334254", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 10"
     },
     {
-      "image": "p11.png",
+      "image": { "id": "c941cb40b0af11d2", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 11"
     },
     {
-      "image": "p12.png",
+      "image": { "id": "75730a10b1b49a87", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 12"
     },
     {
-      "image": "p13.png",
+      "image": { "id": "7aaab919d45f0f95", "w": 1024, "h": 512, "widths": [480, 960, 1024] },
       "alt": "Photo 13"
     }
   ]

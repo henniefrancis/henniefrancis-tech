@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { imageSrc } from '../content/image';
 import { byOrder } from '../shared/by-order';
 import raw from './tech-stack.json';
 
@@ -10,7 +11,6 @@ export interface TechGroup {
 
 /** Sorted tech-stack categories and tools with their full image URL. */
 export function buildTechGroups(data: any): TechGroup[] {
-  const base: string = data.imageBaseUrl ?? '';
   return (data.categories ?? [])
     .slice()
     .sort(byOrder)
@@ -19,7 +19,7 @@ export function buildTechGroups(data: any): TechGroup[] {
       tools: (c.items ?? [])
         .slice()
         .sort(byOrder)
-        .map((i: any) => ({ name: i.name as string, url: i.url as string, src: base + i.image })),
+        .map((i: any) => ({ name: i.name as string, url: i.url as string, src: imageSrc(i.image) })),
     }));
 }
 

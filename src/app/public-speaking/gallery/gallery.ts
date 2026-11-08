@@ -1,5 +1,6 @@
 import { Component, afterNextRender, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { imageSrc } from '../../content/image';
 import { GALLERIES } from '../data/galleries.data';
 
 export interface Photo {
@@ -9,7 +10,7 @@ export interface Photo {
 
 export function buildPhotos(d: any): Photo[] {
   if (!d) return [];
-  return (d.photos ?? []).map((p: any) => ({ src: d.assetBaseUrl + d.photoBase + p.image, alt: p.alt }));
+  return (d.photos ?? []).map((p: any) => ({ src: imageSrc(p.image), alt: p.alt }));
 }
 
 /** Starts the Bootstrap carousel when the page has one and Bootstrap is loaded. */

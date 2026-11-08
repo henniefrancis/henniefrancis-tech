@@ -32,7 +32,7 @@ describe('static pages', () => {
   it('Home renders the profile picture and one tile per section, in order', async () => {
     const el = await render(Home);
     const tiles = imgs(el).filter((i) => i.alt !== 'Profile Picture');
-    expect(el.querySelector('img[alt="Profile Picture"]')?.getAttribute('src')).toMatch(/\/profile\.png$/);
+    expect(el.querySelector('img[alt="Profile Picture"]')?.getAttribute('src')).toMatch(/^\/img\/[0-9a-f]{16}\/\d+\.webp$/);
     expect(tiles.map((i) => i.alt)).toEqual([
       'Biography',
       'Current Role',
@@ -52,7 +52,7 @@ describe('static pages', () => {
   it('Biography renders the portrait and every paragraph', async () => {
     const el = await render(Biography);
     expect(el.querySelector('h1')?.textContent).toBe('Biography');
-    expect(el.querySelector('img')?.getAttribute('src')).toMatch(/portrait\.png$/);
+    expect(el.querySelector('img')?.getAttribute('src')).toMatch(/^\/img\/[0-9a-f]{16}\/\d+\.webp$/);
     expect(el.textContent).toContain('Cape Town, South Africa');
     expect(el.querySelectorAll('p').length).toBeGreaterThanOrEqual(9);
   });

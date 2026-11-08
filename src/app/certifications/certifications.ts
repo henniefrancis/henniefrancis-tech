@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { imageSrc } from '../content/image';
 import { byOrder } from '../shared/by-order';
 import raw from './certifications.json';
 
@@ -26,7 +27,6 @@ export function isExternal(u: string): boolean {
 
 /** Sorted certification categories and badges, with the link target resolved (external href or internal route). */
 export function buildCertGroups(data: any): CertGroup[] {
-  const base: string = data.imageBaseUrl ?? '';
   return (data.categories ?? [])
     .slice()
     .sort(byOrder)
@@ -41,7 +41,7 @@ export function buildCertGroups(data: any): CertGroup[] {
             name: i.name as string,
             status: i.status as string,
             statusText: STATUS_TEXT[i.status] ?? i.status,
-            src: base + i.image,
+            src: imageSrc(i.image),
             external: ext,
             href: ext ? (i.url as string) : null,
             route: ext ? null : (i.url as string).replace('/pages/', '/').replace(/\.html$/, ''),

@@ -1,11 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { imageSrc } from './content/image';
 import { CertDetail } from './certifications/cert-detail/cert-detail';
 import { CERT_DETAILS } from './certifications/cert-detail/cert-details.data';
 import { EventDetail, buildEventLinks } from './public-speaking/event-detail/event-detail';
 import { EVENTS } from './public-speaking/data/events.data';
 import { Gallery, buildPhotos, startCarousel } from './public-speaking/gallery/gallery';
 import { GALLERIES } from './public-speaking/data/galleries.data';
+
+const ref = (id: string) => ({ id, w: 100, h: 50, widths: [100] });
 
 async function renderWith(component: any, inputs: Record<string, string>): Promise<HTMLElement> {
   TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
@@ -22,7 +25,7 @@ describe('CertDetail', () => {
   it('renders the certificate title, image and type name', async () => {
     const el = await renderWith(CertDetail, { type, id });
     expect(el.querySelector('h1')?.textContent).toBe(CERT_DETAILS[key].title);
-    expect(el.querySelector('.certificate img')?.getAttribute('src')).toBe(CERT_DETAILS[key].image);
+    expect(el.querySelector('.certificate img')?.getAttribute('src')).toBe(imageSrc(CERT_DETAILS[key].image));
     expect(el.querySelector('.breadcrumb')?.textContent).toContain('Microsoft Certified');
   });
 
@@ -33,7 +36,7 @@ describe('CertDetail', () => {
 
   it('uses the generic Microsoft label when only the type is unknown but the record exists', async () => {
     const orig = CERT_DETAILS['zzz/known'];
-    CERT_DETAILS['zzz/known'] = { title: 'T', image: 'i.png' };
+    CERT_DETAILS['zzz/known'] = { title: 'T', image: { id: 'abcdef0123456789', w: 10, h: 10, widths: [10] } };
     try {
       const el = await renderWith(CertDetail, { type: 'zzz', id: 'known' });
       const crumbs = Array.from(el.querySelectorAll('.breadcrumb-item')).map((c) => c.textContent?.trim());
@@ -69,20 +72,19 @@ describe('EventDetail', () => {
   it('buildEventLinks drops disabled and empty links and resolves external, photos and plain links', () => {
     const out = buildEventLinks(
       {
-        assetBaseUrl: 'b/',
         links: [
           null,
-          { url: 'https://x.test/a', title: 'Ext', image: 'a.png', alt: 'Alt', label: 'Lbl' },
-          { url: 'photos/2025-cl.html', title: 'Photos', image: 'p.png' },
-          { url: 'other/page', title: 'Plain', image: 'o.png' },
-          { url: 'https://x.test/off', title: 'Off', image: 'x.png', enabled: false },
-          { title: 'NoUrl', image: 'n.png' },
+          { url: 'https://x.test/a', title: 'Ext', image: ref('a'), alt: 'Alt', label: 'Lbl' },
+          { url: 'photos/2025-cl.html', title: 'Photos', image: ref('p') },
+          { url: 'other/page', title: 'Plain', image: ref('o') },
+          { url: 'https://x.test/off', title: 'Off', image: ref('x'), enabled: false },
+          { title: 'NoUrl', image: ref('n') },
         ],
       },
       'aws-summit',
     );
     expect(out).toEqual([
-      { title: 'Ext', alt: 'Alt', label: 'Lbl', external: true, href: 'https://x.test/a', route: null, src: 'b/a.png' },
+      { title: 'Ext', alt: 'Alt', label: 'Lbl', external: true, href: 'https://x.test/a', route: null, src: `/img/a/100.webp` },
       {
         title: 'Photos',
         alt: 'Photos',
@@ -90,9 +92,9 @@ describe('EventDetail', () => {
         external: false,
         href: null,
         route: '/public-speaking/aws-summit/photos/2025-cl',
-        src: 'b/p.png',
+        src: `/img/p/100.webp`,
       },
-      { title: 'Plain', alt: 'Plain', label: null, external: false, href: null, route: null, src: 'b/o.png' },
+      { title: 'Plain', alt: 'Plain', label: null, external: false, href: null, route: null, src: `/img/o/100.webp` },
     ]);
   });
 });
@@ -126,11 +128,11 @@ describe('Gallery', () => {
     expect(ctor.mock.calls[0][1]).toEqual({ interval: 2000, touch: false });
   });
 
-  it('buildPhotos joins base, folder and file, and tolerates missing data', () => {
+  it('buildPhotos builds image URLs from refs and tolerates missing data', () => {
     expect(buildPhotos(null)).toEqual([]);
-    expect(buildPhotos({ assetBaseUrl: 'b/', photoBase: 'p/' })).toEqual([]);
-    expect(buildPhotos({ assetBaseUrl: 'b/', photoBase: 'p/', photos: [{ image: '1.jpg', alt: 'One' }] })).toEqual([
-      { src: 'b/p/1.jpg', alt: 'One' },
+    expect(buildPhotos({})).toEqual([]);
+    expect(buildPhotos({ photos: [{ image: ref('one'), alt: 'One' }] })).toEqual([
+      { src: '/img/one/100.webp', alt: 'One' },
     ]);
   });
 

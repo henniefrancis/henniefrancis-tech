@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { imageSrc } from '../../content/image';
 import { EVENTS } from '../data/events.data';
 
 export interface EventLink {
@@ -28,7 +29,7 @@ export function buildEventLinks(d: any, event: string): EventLink[] {
         external,
         href: external ? l.url : null,
         route: isPhotos ? `/public-speaking/${event}/photos/${photoYear}` : null,
-        src: d.assetBaseUrl + l.image,
+        src: imageSrc(l.image),
       };
     });
 }
@@ -40,6 +41,8 @@ export function buildEventLinks(d: any, event: string): EventLink[] {
 })
 export class EventDetail {
   // Bound from the route params via withComponentInputBinding().
+  protected readonly imageSrc = imageSrc;
+
   readonly event = input.required<string>();
   readonly year = input.required<string>();
 

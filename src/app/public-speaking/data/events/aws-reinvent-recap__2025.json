@@ -1,11 +1,10 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": "AWS re:Invent 2024 re:Cap",
   "year": "2025",
   "header": {
     "url": "https://www.awscommunity.co.za/events/recap/2024",
-    "image": "public-speaking/recap_2025.png",
+    "image": { "id": "9310ed05dc048f7b", "w": 1035, "h": 400, "widths": [480, 960, 1035] },
     "alt": "AWS re:Invent 2024 re:Cap 2025"
   },
   "heading": "Cloud Innovation at Its Best: S3 Tables, DSQL, and EKS Auto Mode",
@@ -13,19 +12,19 @@
   "links": [
     {
       "url": "https://sessionize.com/s/henniefrancis/cloud-innovation-at-its-best-s3-tables-dsql-and-ek/130844",
-      "image": "social-media/sessionize.png",
+      "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] },
       "title": "Sessionize",
       "alt": "Sessionize"
     },
     {
-      "url": "photos/2025.html",
-      "image": "public-speaking/camera.jpeg",
+      "url": "photos/2025",
+      "image": { "id": "460653d7453ae543", "w": 700, "h": 560, "widths": [350, 700] },
       "title": "Event Photos",
       "alt": "Event Photos"
     },
     {
       "url": "https://www.youtube.com/watch?v=os12ev7neTg",
-      "image": "public-speaking/youtube.png",
+      "image": { "id": "c1f049d25803148e", "w": 478, "h": 203, "widths": [350, 478] },
       "title": "Full Video on YouTube",
       "alt": "Full Video on YouTube"
     }

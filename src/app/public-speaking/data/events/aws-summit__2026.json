@@ -1,11 +1,10 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": "AWS Summit Johannesburg",
   "year": "2026",
   "header": {
     "url": "https://aws.amazon.com/events/summits/emea/johannesburg/agenda",
-    "image": "public-speaking/aws_summit_2026.png",
+    "image": { "id": "72668fca7bc9123b", "w": 1035, "h": 400, "widths": [480, 960, 1035] },
     "alt": "AWS Summit Johannesburg 2026"
   },
   "heading": "Kiro: The AI Teammate That Doesn’t Break Prod",
@@ -16,19 +15,19 @@
   "links": [
     {
       "url": "https://sessionize.com/s/henniefrancis/kiro-the-ai-teammate-that-doesnt-break-prod/165171",
-      "image": "social-media/sessionize.png",
+      "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] },
       "title": "Sessionize",
       "alt": "Sessionize"
     },
     {
-      "url": "photos/2026.html",
-      "image": "public-speaking/camera.jpeg",
+      "url": "photos/2026",
+      "image": { "id": "460653d7453ae543", "w": 700, "h": 560, "widths": [350, 700] },
       "title": "Event Photos",
       "alt": "Event Photos"
     },
     {
       "url": "#",
-      "image": "public-speaking/youtube.png",
+      "image": { "id": "c1f049d25803148e", "w": 478, "h": 203, "widths": [350, 478] },
       "title": "Full Video on YouTube",
       "alt": "Full Video on YouTube"
     }

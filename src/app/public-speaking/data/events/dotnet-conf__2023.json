@@ -1,11 +1,10 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": "Microsoft .NET Conference",
   "year": "2023",
   "header": {
     "url": "https://cptmsdug.dev/netconf2023",
-    "image": "public-speaking/dotnet_conf_2023.png",
+    "image": { "id": "36942fad07bae59b", "w": 1035, "h": 400, "widths": [480, 960, 1035] },
     "alt": ".NET Conference 2023"
   },
   "heading": "Infrastructure as Code: The Developer's Secret Weapon",
@@ -15,7 +14,7 @@
   "links": [
     {
       "url": "https://sessionize.com/s/henniefrancis/infrastructure-as-code-the-developers-secret-weapo/98255",
-      "image": "social-media/sessionize.png",
+      "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] },
       "title": "Sessionize",
       "alt": "Sessionize"
     }

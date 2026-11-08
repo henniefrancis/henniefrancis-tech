@@ -23,7 +23,7 @@
       <div class="row heading">
         <div class="col">
           <a [href]="d.header.url" target="_blank" rel="noopener noreferrer" [title]="d.header.alt || d.title">
-            <img [src]="d.assetBaseUrl + d.header.image" class="eventheader" [alt]="d.header.alt || d.title">
+            <img [src]="imageSrc(d.header.image)" class="eventheader" [alt]="d.header.alt || d.title">
           </a>
         </div>
       </div>

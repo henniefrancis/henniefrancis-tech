@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ImageRef, imageSrc } from '../../content/image';
 import { CERT_DETAILS } from './cert-details.data';
 
 const TYPE_NAME: Record<string, string> = {
@@ -15,10 +16,12 @@ const TYPE_NAME: Record<string, string> = {
   templateUrl: './cert-detail.html',
 })
 export class CertDetail {
+  protected readonly imageSrc = imageSrc;
+
   readonly type = input.required<string>();
   readonly id = input.required<string>();
 
-  protected readonly data = computed<{ title: string; image: string } | null>(
+  protected readonly data = computed<{ title: string; image: ImageRef } | null>(
     () => CERT_DETAILS[`${this.type()}/${this.id()}`] ?? null,
   );
   protected readonly typeName = computed(() => TYPE_NAME[this.type()] ?? 'Microsoft');
