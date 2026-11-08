@@ -13,6 +13,11 @@ describe('normaliseHtml', () => {
     const b = page('<app-root _nghost-ng-c9="" ng-version="23.0.0"><p _ngcontent-ng-c9="" class="a b">Hello world</p></app-root><script src="main-WXYZ9876.js"></script>', '<style>p[_ngcontent-ng-c456]{}</style>');
     expect(same(a, b)).toEqual([]);
   });
+  it('ignores the script hashes of the content security policy but not the rest of the policy', () => {
+    const policy = (hash, extra = '') => `<meta http-equiv="Content-Security-Policy" content="script-src 'strict-dynamic' 'sha256-${hash}' https:${extra}">`;
+    expect(same(page('', policy('abcDEF123+/=')), page('', policy('xyz987')))).toEqual([]);
+    expect(same(page('', policy('abc')), page('', policy('abc', '; object-src none'))).length).toBeGreaterThan(0);
+  });
   it('ignores the Angular transfer state content', () => {
     expect(same(page('<script id="ng-state" type="application/json">{"a":1}</script>'), page('<script id="ng-state" type="application/json">{"a":2}</script>'))).toEqual([]);
   });

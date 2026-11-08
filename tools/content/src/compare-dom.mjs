@@ -8,11 +8,13 @@ import { parse } from 'parse5';
 const GENERATED_ATTRS = [/^_ngcontent-/, /^_nghost-/, /^ng-reflect-/, /^ng-version$/, /^ng-server-context$/, /^ngh$/, /^ng-app-id$/];
 const HASHED = /-[A-Z0-9]{8}(?=\.[a-z0-9]+)/g;
 const NG_SCOPE = /ng-c\d+/g;
+/** Script hashes in the content security policy change with every build (the loader names hashed chunks). */
+const SCRIPT_HASH = /'sha256-[A-Za-z0-9+/=]+'/g;
 /** Preload hints for lazy chunks differ with the chunking; they are not page content. */
 const isPreload = (node) => node.nodeName === 'link' && node.attrs.some((a) => a.name === 'rel' && a.value === 'modulepreload');
 const isNgState = (node) => node.nodeName === 'script' && node.attrs.some((a) => a.name === 'id' && a.value === 'ng-state');
 
-const normaliseValue = (value) => value.replace(HASHED, '-HASH').replace(NG_SCOPE, 'ng-c');
+const normaliseValue = (value) => value.replace(HASHED, '-HASH').replace(NG_SCOPE, 'ng-c').replace(SCRIPT_HASH, "'sha256-HASH'");
 const squash = (text) => text.replace(/\s+/g, ' ').trim();
 const collapse = (text) => text.replace(/\s+/g, ' ');
 
