@@ -6,8 +6,8 @@ export const BASE_DELAY_MS = 500;
 export const MAX_DELAY_MS = 20_000;
 export const REQUEST_TIMEOUT_MS = 30_000;
 
-const RETRYABLE = new Set([408, 425, 429, 500, 502, 503, 504]);
-const defaultSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+export const RETRYABLE = new Set([408, 425, 429, 500, 502, 503, 504]);
+export const defaultSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Seconds in Retry-After (HTTP-date form is ignored) to milliseconds, capped. */
 export function retryAfterMs(header) {
