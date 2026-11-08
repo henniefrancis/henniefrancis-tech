@@ -59,6 +59,17 @@ jobs:
             package-lock.json
             tools/*/package-lock.json
 
+      - name: Install dependencies (root, tools)
+        run: |
+          set -euo pipefail
+          npm ci
+          shopt -s nullglob
+          for f in tools/*/package.json; do
+            (cd "$(dirname "$f")" && npm ci)
+          done
+
+      # The private content is checked out only AFTER the install above, so no
+      # package install script ever runs with the content on disk.
       - name: Check out the content (same repository pull requests)
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         uses: ./.github/actions/checkout-content
@@ -79,15 +90,6 @@ jobs:
             echo "CONTENT_SRC=${GITHUB_WORKSPACE}/content-src" >> "$GITHUB_ENV"
           fi
 
-      - name: Install dependencies (root, tools)
-        run: |
-          set -euo pipefail
-          npm ci
-          shopt -s nullglob
-          for f in tools/*/package.json; do
-            (cd "$(dirname "$f")" && npm ci)
-          done
-
       # prebuild validates the content and fails closed; postbuild writes the
       # script policy into every prerendered page.
       - name: Production build
@@ -103,7 +105,7 @@ jobs:
       - name: Unsafe HTML APIs and generated files
         run: |
           set -euo pipefail
-          if git grep -nE 'innerHTML|outerHTML|bypassSecurityTrust|DomSanitizer|insertAdjacentHTML|[innerHtml]' -- src/app ':!*.spec.ts'; then
+          if git grep -nE 'innerHTML|outerHTML|bypassSecurityTrust|DomSanitizer|insertAdjacentHTML|\[innerHtml\]|\[outerHTML\]' -- src/app ':!*.spec.ts'; then
             echo "::error::Unsafe HTML APIs found under src/app."
             exit 1
           fi

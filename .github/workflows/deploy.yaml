@@ -215,14 +215,6 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      # The exact content commit that was validated in the prepare job.
-      - name: Check out the content
-        uses: ./.github/actions/checkout-content
-        with:
-          client-id: ${{ vars.CONTENT_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CONTENT_APP_PRIVATE_KEY }}
-          ref: ${{ needs.prepare.outputs.config_sha }}
-
       - name: Setup Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -232,10 +224,9 @@ jobs:
             package-lock.json
             tools/*/package-lock.json
 
-      # npm run build validates the content again and writes the data modules
-      # (prebuild), builds, prerenders and writes the script policy into every
-      # page (postbuild); the last line checks the policy.
-      - name: Install and build (Angular, prerendered)
+      # Dependencies first: install scripts run before the private content is
+      # on the runner. The content checkout follows, then the build.
+      - name: Install dependencies
         run: |
           set -euo pipefail
           npm ci
@@ -243,6 +234,21 @@ jobs:
           for f in tools/*/package.json; do
             (cd "$(dirname "$f")" && npm ci --ignore-scripts --no-audit --no-fund)
           done
+
+      # The exact content commit that was validated in the prepare job.
+      - name: Check out the content
+        uses: ./.github/actions/checkout-content
+        with:
+          client-id: ${{ vars.CONTENT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_APP_PRIVATE_KEY }}
+          ref: ${{ needs.prepare.outputs.config_sha }}
+
+      # npm run build validates the content again and writes the data modules
+      # (prebuild), builds, prerenders and writes the script policy into every
+      # page (postbuild); the last line checks the policy.
+      - name: Build (Angular, prerendered)
+        run: |
+          set -euo pipefail
           npm run build
           node tools/csp/cli.mjs --check "dist/${PROJECT_NAME}/browser"
 
