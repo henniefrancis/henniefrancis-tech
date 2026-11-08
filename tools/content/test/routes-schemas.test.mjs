@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PAGE_KEYS, PAGE_ROUTES, recordKey, routeList } from '../src/routes.mjs';
-import { SCHEMA_DIR, getSchemas } from '../src/schemas.mjs';
+import { SCHEMA_DIR, getSchemas, personalDataFields } from '../src/schemas.mjs';
 
 describe('routes', () => {
   it('has 13 routed pages plus the not-found page file', () => {
@@ -36,5 +36,16 @@ describe('getSchemas', () => {
   });
   it('can be rebuilt on demand', () => {
     expect(getSchemas(SCHEMA_DIR, true).get('site')).toBeTypeOf('function');
+  });
+});
+
+describe('personalDataFields', () => {
+  it('lists every field marked as personal data, so they can be removed in one place', () => {
+    const found = personalDataFields();
+    expect(Object.keys(found).sort()).toEqual(['page-career-history', 'page-cv']);
+    expect(found['page-cv']).toHaveLength(3);
+    expect(found['page-cv'].every((p) => p.includes('contact'))).toBe(true);
+    expect(found['page-career-history']).toHaveLength(3);
+    expect(found['page-career-history'].every((p) => p.includes('referee'))).toBe(true);
   });
 });

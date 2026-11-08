@@ -185,3 +185,37 @@ export type RecordSummary =
   | { kind: 'certificate'; title: string };
 
 export type RecordSummaries = Record<string, RecordSummary>;
+
+export interface CvContent {
+  awards: { heading: string; items: { flag?: string; link?: { text: string; url: string }; name: string; note?: string }[] };
+  contact: { email: string; heading: string; location: string; phone: { display: string; e164: string }; website: string };
+  education: { heading: string; items: { institution: string; title: string }[] };
+  experience: { employers: { name: string; positions: { gap?: 'outside'; period: string; titles: string[] }[] }[]; heading: string };
+  interests: { heading: string; rows: string[][] };
+  languages: { heading: string; items: { level: string; name: string }[] };
+  name: string;
+  organizations: {
+    heading: string;
+    items: { bare?: true; description: string; name: string; period: string; roles: string[]; url: string }[];
+  };
+  skills: { heading: string; rows: string[][] };
+  summary: string[];
+  volunteer: { heading: string };
+}
+
+export type Responsibility = string | { group: string; items: string[] };
+
+export interface CareerPosition {
+  columns: 'wide' | 'medium' | 'narrow';
+  period: string;
+  reason: string;
+  reasonLabel?: string;
+  referee?: { email: string; name: string; phone: string };
+  responsibilities: Responsibility[];
+  titles: string[];
+}
+
+export interface CareerHistoryContent {
+  labels: { positionDetails: string; reason: string; references: string; responsibilities: string };
+  employers: { id: string; location: string; names: string[]; positions: CareerPosition[] }[];
+}

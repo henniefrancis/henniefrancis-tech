@@ -33,7 +33,7 @@ describe('buildModules', () => {
   });
   it('emits every module with the generated header and the content hash', () => {
     expect(Object.keys(result.modules).sort()).toEqual(
-      ['biography.ts', 'blog.ts', 'certifications.ts', 'current-role.ts', 'home.ts', 'meta.ts', 'not-found.ts', 'pages.ts', 'portfolio.ts', 'prerender.ts', 'projects.ts', 'records.ts', 'site.ts', 'social.ts', 'special-awards.ts', 'speaking.ts', 'tech-stack.ts'].sort(),
+      ['biography.ts', 'blog.ts', 'career-history.ts', 'certifications.ts', 'current-role.ts', 'cv.ts', 'home.ts', 'meta.ts', 'not-found.ts', 'pages.ts', 'portfolio.ts', 'prerender.ts', 'projects.ts', 'records.ts', 'site.ts', 'social.ts', 'special-awards.ts', 'speaking.ts', 'tech-stack.ts'].sort(),
     );
     for (const source of Object.values(result.modules)) expect(source).toContain('GENERATED');
     expect(result.modules['meta.ts']).toContain(result.hash);

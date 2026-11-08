@@ -6,12 +6,15 @@ import { Biography } from './biography/biography';
 import { Blog } from './blog/blog';
 import { Portfolio } from './portfolio/portfolio';
 import { SpecialAwards } from './special-awards/special-awards';
-import { Cv } from './portfolio/cv/cv';
-import { CareerHistory } from './portfolio/career-history/career-history';
+import { dividerSegments } from './shared/divider-segments';
+import { Cv, chunk, skillLayout } from './portfolio/cv/cv';
+import { CareerHistory, columnClasses, isGroup } from './portfolio/career-history/career-history';
 import { Projects } from './portfolio/projects/projects';
 import { NotFound } from './not-found/not-found';
 import { BIOGRAPHY } from './content/generated/biography';
 import { BLOG } from './content/generated/blog';
+import { CAREER_HISTORY } from './content/generated/career-history';
+import { CV } from './content/generated/cv';
 import { HOME } from './content/generated/home';
 import { NOT_FOUND } from './content/generated/not-found';
 import { PAGES } from './content/generated/pages';
@@ -101,14 +104,130 @@ describe('static pages', () => {
     expect(el.querySelector('.breadcrumb-item a[href="/portfolio"]')?.textContent).toBe(PAGES['portfolio'].breadcrumb);
   });
 
-  it.each([
-    ['Cv', Cv, 'cv'],
-    ['CareerHistory', CareerHistory, 'career-history'],
-  ] as [string, Type<unknown>, 'cv' | 'career-history'][])('%s takes its heading and breadcrumb from the page content', async (_name, component, key) => {
-    const el = await render(component);
-    expect(text(el.querySelector('h1'))).toBe(PAGES[key].heading);
-    expect(text(el.querySelector('.breadcrumb-item.current'))).toBe(PAGES[key].breadcrumb);
+  it('Cv takes its heading and breadcrumb from the page content and links back to the portfolio', async () => {
+    const el = await render(Cv);
+    expect(text(el.querySelector('h1'))).toBe(PAGES['cv'].heading);
+    expect(text(el.querySelector('.breadcrumb-item.current'))).toBe(PAGES['cv'].breadcrumb);
     expect(el.querySelector('a.back')?.getAttribute('href')).toBe('/portfolio');
+  });
+
+  it('Cv builds mailto and tel links from the typed contact fields', async () => {
+    const el = await render(Cv);
+    const email = el.querySelector('a[title="Email"]');
+    const phone = el.querySelector('a[title="Phone"]');
+    expect(email?.getAttribute('href')).toBe('mailto:' + CV.contact.email);
+    expect(email?.textContent).toBe(CV.contact.email);
+    expect(phone?.getAttribute('href')).toBe('tel:' + CV.contact.phone.e164);
+    expect(phone?.textContent).toBe(CV.contact.phone.display);
+    expect(el.querySelector('a[href="' + CV.contact.website + '"]')?.textContent).toBe(CV.contact.website);
+    expect(el.textContent).toContain(CV.contact.location);
+  });
+
+  it('Cv renders every section heading, in order', async () => {
+    const el = await render(Cv);
+    expect(Array.from(el.querySelectorAll('h3')).map((h) => h.textContent)).toEqual([
+      CV.name,
+      CV.contact.heading,
+      CV.skills.heading,
+      CV.experience.heading,
+      CV.awards.heading,
+      CV.organizations.heading,
+      CV.education.heading,
+      CV.volunteer.heading,
+      CV.languages.heading,
+      CV.interests.heading,
+    ]);
+    expect(el.textContent).toContain(CV.summary[0]);
+  });
+
+  it('Cv lays out skills in rows, positions with dividers, and awards with the optional flag and link', async () => {
+    const el = await render(Cv);
+    const skills = CV.skills.rows.flat();
+    const skillCells = Array.from(el.querySelectorAll('.contact .row.pb-3 > div')).map((c) => c.textContent).filter((t) => t && skills.includes(t));
+    expect(skillCells).toEqual(skills);
+    expect(el.querySelector('.row.pb-3 > .col-1 + .col-3')).not.toBeNull();
+    const periods = Array.from(el.querySelectorAll('h5 sub')).map((x) => x.textContent?.trim());
+    expect(periods).toEqual(CV.experience.employers.flatMap((e) => e.positions.map((p) => p.period)));
+    expect(el.querySelectorAll('h5 .devider').length).toBeGreaterThan(0);
+    expect(text(el.querySelector('sup.todo'))).toBe(CV.awards.items[0].flag);
+    expect(el.querySelector('a[href="' + CV.awards.items[0].link!.url + '"]')?.textContent).toBe(CV.awards.items[0].link!.text);
+    expect(el.textContent).toContain(CV.awards.items[1].note!);
+  });
+
+  it('Cv lists the organizations twice, with descriptions bare or in a paragraph', async () => {
+    const el = await render(Cv);
+    for (const org of CV.organizations.items) {
+      expect(el.querySelectorAll('a[href="' + org.url + '"]').length).toBe(2);
+      expect(el.textContent).toContain(org.description);
+    }
+    const bare = CV.organizations.items.find((o) => o.bare)!;
+    const cell = Array.from(el.querySelectorAll('.col-5')).find((c) => c.textContent?.trim() === bare.description);
+    expect(cell?.querySelector('p')).toBeNull();
+    expect(el.querySelectorAll('.row .col > hr').length).toBe(Math.ceil(CV.organizations.items.length / 2) - 1);
+    expect(el.textContent).toContain(CV.organizations.items[0].roles.join(' ● '));
+  });
+
+  it('Cv renders education, languages and interests', async () => {
+    const el = await render(Cv);
+    for (const item of CV.education.items) expect(el.textContent).toContain(item.institution);
+    for (const language of CV.languages.items) expect(el.textContent).toContain(language.level);
+    expect(Array.from(el.querySelectorAll('.col > h5')).map((h) => h.textContent)).toEqual(CV.interests.rows.flat());
+  });
+
+  it('CV helpers split rows and pick column classes', () => {
+    expect(chunk([1, 2, 3], 2)).toEqual([[1, 2], [3]]);
+    expect(chunk([], 2)).toEqual([]);
+    expect(skillLayout(['a', 'b', 'c', 'd'])).toEqual({ offset: 'col-1', cols: ['col-3', 'col-3', 'col-3', 'col-2'] });
+    expect(skillLayout(['a', 'b', 'c'])).toEqual({ offset: 'col-3', cols: ['col-3', 'col-3', 'col-3'] });
+  });
+
+  it('CareerHistory renders employers collapsed with their positions, responsibilities and references', async () => {
+    const el = await render(CareerHistory);
+    expect(text(el.querySelector('h1'))).toBe(PAGES['career-history'].heading);
+    expect(text(el.querySelector('.breadcrumb-item.current'))).toBe(PAGES['career-history'].breadcrumb);
+    expect(el.querySelector('a.back')?.getAttribute('href')).toBe('/portfolio');
+    const toggles = Array.from(el.querySelectorAll('[data-bs-toggle="collapse"]'));
+    expect(toggles.map((t) => t.getAttribute('data-bs-target'))).toEqual(CAREER_HISTORY.employers.map((e) => '#' + e.id));
+    for (const employer of CAREER_HISTORY.employers) {
+      const panel = el.querySelector('#' + employer.id + '.collapse')!;
+      expect(panel.querySelectorAll('.careerdetails').length).toBe(employer.positions.length);
+    }
+    expect(el.querySelectorAll('.career h4 .devider').length).toBe(1);
+    expect(Array.from(el.querySelectorAll('.careerdetails h4')).every((h) => h.textContent === CAREER_HISTORY.labels.positionDetails)).toBe(true);
+    expect(el.querySelectorAll('.container-fluid-content > br').length).toBe(CAREER_HISTORY.employers.length - 1);
+  });
+
+  it('CareerHistory shows grouped and plain responsibilities, the reason label override and optional referees', async () => {
+    const el = await render(CareerHistory);
+    expect(el.querySelectorAll('.careerdetails ul ul').length).toBe(2);
+    expect(Array.from(el.querySelectorAll('.careerdetails h5')).map((h) => h.textContent)).toContain('Reason for Leaving:');
+    const referees = CAREER_HISTORY.employers.flatMap((e) => e.positions).filter((p) => p.referee);
+    expect(Array.from(el.querySelectorAll('.careerdetails h5')).filter((h) => h.textContent === CAREER_HISTORY.labels.references).length).toBe(referees.length);
+    expect(el.textContent).toContain(referees[0].referee!.email);
+    const widths = Array.from(el.querySelectorAll('.careerdetails > .row:nth-child(3) > div:nth-child(2)')).map((d) => d.className);
+    expect(widths).toEqual(['col-10', 'col-5', 'col-6']);
+  });
+
+  it('dividerSegments keeps the spaces around each divider in the piece that owns them', () => {
+    expect(dividerSegments(['A'])).toEqual(['A']);
+    expect(dividerSegments(['A'], '!')).toEqual(['A!']);
+    expect(dividerSegments(['A', 'B', 'C'], ' (x)')).toEqual(['A ', ' B ', ' C (x)']);
+    expect(dividerSegments([])).toEqual([]);
+  });
+
+  it('Cv keeps the space before the period outside the small text only when a position says so', async () => {
+    const el = await render(Cv);
+    const subs = Array.from(el.querySelectorAll('h5 sub')).map((x) => x.textContent);
+    const positions = CV.experience.employers.flatMap((e) => e.positions);
+    expect(subs).toEqual(positions.map((p) => (p.gap === 'outside' ? p.period : ' ' + p.period)));
+  });
+
+  it('career helpers pick column classes and tell groups from plain items', () => {
+    expect(columnClasses('wide')).toEqual(['col-1', 'col-10', 'col-1']);
+    expect(columnClasses('medium')).toEqual(['col-4', 'col-6', 'col-2']);
+    expect(columnClasses('narrow')).toEqual(['col-4', 'col-5', 'col-3']);
+    expect(isGroup('plain')).toBe(false);
+    expect(isGroup({ group: 'g', items: [] })).toBe(true);
   });
 
   it('NotFound explains the problem, has one h1 and links home', async () => {

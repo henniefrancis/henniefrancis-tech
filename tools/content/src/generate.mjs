@@ -158,6 +158,8 @@ export function buildModules(tree) {
     'home.ts': single('HomeContent', 'home', withoutKeys(page('home'), ['title', 'description'])),
     'biography.ts': single('BiographyContent', 'biography', own('biography')),
     'not-found.ts': single('NotFoundContent', 'not-found', own('not-found')),
+    'cv.ts': single('CvContent', 'cv', own('cv')),
+    'career-history.ts': single('CareerHistoryContent', 'career-history', own('career-history')),
     'portfolio.ts': single('PortfolioContent', 'portfolio', own('portfolio')),
     'projects.ts': single('ProjectsContent', 'projects', own('projects')),
     'blog.ts': single('BlogContent', 'blog', own('blog')),

@@ -100,6 +100,18 @@ describe('structure and schema errors', () => {
     tree.files['certifications/items/aws-cert-a.yaml'].image.alt = '';
     expect(rules(lintTree(tree))).toContain('certifications/items/aws-cert-a.yaml /image/alt empty-name');
   });
+  it('types the contact and referee fields', () => {
+    const setters = [
+      ['pages/cv.yaml', (t, x) => (t.files['pages/cv.yaml'].contact.email = x)],
+      ['pages/cv.yaml', (t, x) => (t.files['pages/cv.yaml'].contact.phone.e164 = x)],
+      ['pages/career-history.yaml', (t, x) => (t.files['pages/career-history.yaml'].employers[0].positions[0].referee.email = x)],
+    ];
+    for (const [path, set] of setters) {
+      const tree = fixtureTree();
+      set(tree, 'not valid');
+      expect(rules(validateTree(tree)).some((r) => r.startsWith(path) && r.endsWith('pattern'))).toBe(true);
+    }
+  });
   it('requires exactly one of url and detail on a certification', () => {
     const tree = fixtureTree();
     delete tree.files['certifications/items/aws-cert-a.yaml'].url;

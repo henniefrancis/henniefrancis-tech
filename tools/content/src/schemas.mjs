@@ -15,6 +15,8 @@ export function getSchemas(dir = SCHEMA_DIR, force = false) {
   if (cached && !force) return cached;
   const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false });
   addFormats(ajv, ['date']);
+  // Annotation only: marks fields that hold personal data, so they can be found (and removed) in one place.
+  ajv.addKeyword({ keyword: 'x-personal-data', schemaType: 'boolean' });
   for (const file of readdirSync(dir).sort()) {
     ajv.addSchema(JSON.parse(readFileSync(join(dir, file), 'utf8')));
   }
@@ -23,4 +25,18 @@ export function getSchemas(dir = SCHEMA_DIR, force = false) {
     get: (name) => ajv.getSchema(`${SCHEMA_ID_BASE}${name}.schema.json`),
   };
   return cached;
+}
+
+/** JSON pointers (schema side) of every property marked as personal data, per schema name. */
+export function personalDataFields(dir = SCHEMA_DIR) {
+  const found = {};
+  const walk = (node, pointer, name) => {
+    if (Array.isArray(node)) node.forEach((n, i) => walk(n, `${pointer}/${i}`, name));
+    else if (node !== null && typeof node === 'object') {
+      if (node['x-personal-data'] === true) (found[name] ??= []).push(pointer);
+      for (const [k, v] of Object.entries(node)) walk(v, `${pointer}/${k}`, name);
+    }
+  };
+  for (const file of readdirSync(dir).sort()) walk(JSON.parse(readFileSync(join(dir, file), 'utf8')), '', file.replace('.schema.json', ''));
+  return found;
 }

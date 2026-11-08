@@ -16,6 +16,50 @@ const normaliseValue = (value) => value.replace(HASHED, '-HASH').replace(NG_SCOP
 const squash = (text) => text.replace(/\s+/g, ' ').trim();
 const collapse = (text) => text.replace(/\s+/g, ' ');
 
+const INLINE = new Set(['a', 'b', 'i', 'em', 'strong', 'span', 'sub', 'sup', 'small', 'label', 'code']);
+
+/**
+ * Moves collapsible spaces to where they render the same either way: a space at the edge of an inline
+ * element is the same as a space just outside it, and spaces next to a line break do not render.
+ */
+function settleSpaces(children) {
+  const out = [];
+  const pushText = (text) => {
+    if (text === '') return;
+    if (typeof out.at(-1) === 'string') out[out.length - 1] = collapse(`${out.at(-1)}${text}`);
+    else out.push(text);
+  };
+  for (const node of children) {
+    if (typeof node === 'string') {
+      pushText(node);
+    } else if (INLINE.has(node.t)) {
+      let lead = '';
+      let trail = '';
+      if (typeof node.c[0] === 'string' && node.c[0].startsWith(' ')) {
+        node.c[0] = node.c[0].slice(1);
+        lead = ' ';
+      }
+      if (typeof node.c.at(-1) === 'string' && node.c.at(-1).endsWith(' ')) {
+        node.c[node.c.length - 1] = node.c.at(-1).slice(0, -1);
+        trail = ' ';
+      }
+      node.c = node.c.filter((c) => c !== '');
+      pushText(lead);
+      out.push(node);
+      pushText(trail);
+    } else {
+      out.push(node);
+    }
+  }
+  out.forEach((node, i) => {
+    if (typeof node !== 'string' && node.t === 'br') {
+      if (typeof out[i - 1] === 'string') out[i - 1] = out[i - 1].trimEnd();
+      if (typeof out[i + 1] === 'string') out[i + 1] = out[i + 1].trimStart();
+    }
+  });
+  children.splice(0, children.length, ...out);
+}
+
 /** Convert a parse5 node into a plain comparable tree. Text nodes become strings. */
 export function normaliseNode(node) {
   const children = [];
@@ -34,9 +78,12 @@ export function normaliseNode(node) {
   for (const { name, value } of (node.attrs ?? []).slice().sort((a, b) => a.name.localeCompare(b.name))) {
     if (!GENERATED_ATTRS.some((re) => re.test(name))) attrs[name] = normaliseValue(name === 'class' ? squash(value) : value);
   }
+  settleSpaces(children);
   // Spaces next to elements are kept (they render); spaces at the edges of an element are not.
-  if (typeof children[0] === 'string') children[0] = children[0].trimStart();
-  if (typeof children.at(-1) === 'string') children[children.length - 1] = children.at(-1).trimEnd();
+  if (!INLINE.has(node.nodeName)) {
+    if (typeof children[0] === 'string') children[0] = children[0].trimStart();
+    if (typeof children.at(-1) === 'string') children[children.length - 1] = children.at(-1).trimEnd();
+  }
   const kept = children.filter((c) => c !== '');
   children.length = 0;
   children.push(...kept);

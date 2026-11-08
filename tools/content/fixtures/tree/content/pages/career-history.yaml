@@ -4,3 +4,58 @@ title: Fixture career-history title
 description: Fixture career-history description.
 heading: Fixture career-history heading
 breadcrumb: Fixture career-history crumb
+labels:
+  positionDetails: Position Details
+  responsibilities: Responsibilities
+  reason: Reason for Leaving
+  references: References
+employers:
+  - id: examplecorp
+    names:
+      - Example Corp
+    location: Fixture City
+    positions:
+      - titles:
+          - Lead Engineer
+          - Architect
+        period: 01 January 2020 - 31 December 2022
+        columns: wide
+        responsibilities:
+          - group: Delivery
+            items:
+              - Ship things.
+              - Review things.
+          - group: People
+            items:
+              - Mentor people.
+        reason: Moved on
+        reasonLabel: "Reason for Leaving:"
+        referee:
+          name: Pat Referee
+          phone: +00 11 222 4444
+          email: pat@example.test
+      - titles:
+          - Engineer
+        period: 01 January 2018 - 31 December 2019
+        columns: narrow
+        responsibilities:
+          - Build things.
+          - Test things.
+        reason: ""
+        referee:
+          name: Sam Referee
+          phone: 011 222 5555
+          email: sam@example.test
+  - id: othercorp
+    names:
+      - Other Corp
+      - Partner Corp
+    location: Elsewhere
+    positions:
+      - titles:
+          - Developer
+        period: 01 January 2015 - 31 December 2017
+        columns: medium
+        responsibilities:
+          - Write code.
+        reason: Contract ended

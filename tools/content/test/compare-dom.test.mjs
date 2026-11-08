@@ -21,6 +21,17 @@ describe('normaliseHtml', () => {
     expect(same(page('<p>a <b>x</b> c</p>'), page('<p>a<b>x</b>c</p>')).length).toBeGreaterThan(0);
     expect(same(page('<p>a <i></i> <b>x</b></p>'), page('<p>a <i></i><b>x</b></p>')).length).toBeGreaterThan(0);
   });
+  it('treats a space at the edge of an inline element as the same as a space just outside it', () => {
+    expect(same(page('<h5>Engineer<sub>  Nov</sub></h5>'), page('<h5>Engineer <sub>Nov</sub></h5>'))).toEqual([]);
+    expect(same(page('<p>a <sub>x</sub> b</p>'), page('<p>a<sub> x </sub>b</p>'))).toEqual([]);
+    expect(same(page('<p><sub> x</sub></p>'), page('<p><sub>x</sub></p>'))).toEqual([]);
+    expect(same(page('<h5>Engineer<sub>Nov</sub></h5>'), page('<h5>Engineer <sub>Nov</sub></h5>')).length).toBeGreaterThan(0);
+  });
+  it('ignores spaces next to a line break', () => {
+    expect(same(page('<p>a <br /> b<br /> c</p>'), page('<p>a<br />b <br />c</p>'))).toEqual([]);
+    expect(same(page('<p>a<br>b</p>'), page('<p>ab</p>')).length).toBeGreaterThan(0);
+    expect(same(page('<p><b>x</b><br><i>y</i></p>'), page('<p><b>x</b><br><i>y</i></p>'))).toEqual([]);
+  });
   it('includes template content', () => {
     expect(same(page('<template><p>x</p></template>'), page('<template><p>y</p></template>')).length).toBeGreaterThan(0);
   });

@@ -8,12 +8,372 @@
     }
   ],
   "type": "object",
-  "required": [],
+  "required": [
+    "name",
+    "summary",
+    "contact",
+    "skills",
+    "experience",
+    "awards",
+    "organizations",
+    "volunteer",
+    "education",
+    "languages",
+    "interests"
+  ],
   "properties": {
     "title": true,
     "description": true,
     "heading": true,
-    "breadcrumb": true
+    "breadcrumb": true,
+    "name": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "summary": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Paragraphs"
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "email",
+        "location",
+        "phone",
+        "website"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "email": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Email",
+          "x-personal-data": true
+        },
+        "location": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "phone": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "display",
+            "e164"
+          ],
+          "properties": {
+            "display": {
+              "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText",
+              "x-personal-data": true
+            },
+            "e164": {
+              "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/E164",
+              "x-personal-data": true
+            }
+          }
+        },
+        "website": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "rows"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+            }
+          }
+        }
+      }
+    },
+    "experience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "employers"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "employers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "positions"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "positions": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "titles",
+                    "period"
+                  ],
+                  "properties": {
+                    "titles": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 4,
+                      "items": {
+                        "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+                      }
+                    },
+                    "period": {
+                      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+                    },
+                    "gap": {
+                      "const": "outside"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "awards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "items"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "flag": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "link": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "url"
+                ],
+                "properties": {
+                  "text": {
+                    "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+                  },
+                  "url": {
+                    "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+                  }
+                }
+              },
+              "note": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              }
+            }
+          }
+        }
+      }
+    },
+    "organizations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "items"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "url",
+              "roles",
+              "period",
+              "description"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "url": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+              },
+              "roles": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 4,
+                "items": {
+                  "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+                }
+              },
+              "period": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "description": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/LongText"
+              },
+              "bare": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "volunteer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        }
+      }
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "items"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "institution"
+            ],
+            "properties": {
+              "title": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "institution": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              }
+            }
+          }
+        }
+      }
+    },
+    "languages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "items"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "level"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              },
+              "level": {
+                "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+              }
+            }
+          }
+        }
+      }
+    },
+    "interests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading",
+        "rows"
+      ],
+      "properties": {
+        "heading": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "items": {
+              "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+            }
+          }
+        }
+      }
+    }
   },
   "unevaluatedProperties": false
 }
