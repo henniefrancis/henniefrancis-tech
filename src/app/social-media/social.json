@@ -20,6 +20,6 @@
     { "id": "tiktok", "name": "TikTok", "url": "https://www.tiktok.com/@dorkirsa", "image": "tiktok2.png", "order": 16 },
     { "id": "bmac", "name": "BMAC", "url": "https://www.buymeacoffee.com/henniefrancis", "image": "coffee.png", "order": 17 },
     { "id": "kofi", "name": "KoFi", "url": "https://ko-fi.com/henniefrancis", "image": "ko-fi.png", "order": 18 },
-    { "id": "dotcore-solutions", "name": "dotcore Solutions", "url": "https://www.dotcoresolutions.io", "image": "dotcoreSolutions.png", "order": 19 }
+    { "id": "dotcore-solutions", "name": "dotcore Solutions", "image": "dotcoreSolutions.png", "order": 19 }
   ]
 }

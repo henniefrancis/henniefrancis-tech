@@ -17,9 +17,13 @@
     @for (social of socials; track $index) {
       <div class="col-2">
         <div class="socials zoom">
-          <a [href]="social.url" [title]="social.name" target="_blank" rel="noopener noreferrer">
+          @if (social.url) {
+            <a [href]="social.url" [title]="social.name" target="_blank" rel="noopener noreferrer">
+              <img [src]="social.src" [alt]="social.name" loading="lazy">
+            </a>
+          } @else {
             <img [src]="social.src" [alt]="social.name" loading="lazy">
-          </a>
+          }
         </div>
       </div>
     }

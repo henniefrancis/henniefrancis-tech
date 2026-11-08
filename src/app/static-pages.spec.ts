@@ -20,6 +20,15 @@ async function render(component: Type<unknown>): Promise<HTMLElement> {
 const imgs = (el: HTMLElement) => Array.from(el.querySelectorAll('img'));
 
 describe('static pages', () => {
+  it('Home has one visually hidden h1 and every tile image has a name', async () => {
+    const el = await render(Home);
+    const h1 = el.querySelectorAll('h1');
+    expect(h1.length).toBe(1);
+    expect(h1[0].textContent).toBe('Hennie Francis');
+    expect(h1[0].classList.contains('visually-hidden')).toBe(true);
+    expect(imgs(el).every((i) => (i.getAttribute('alt') ?? '').length > 0)).toBe(true);
+  });
+
   it('Home renders the profile picture and one tile per section, in order', async () => {
     const el = await render(Home);
     const tiles = imgs(el).filter((i) => i.alt !== 'Profile Picture');

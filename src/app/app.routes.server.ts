@@ -28,6 +28,12 @@ export const serverRoutes: ServerRoute[] = [
     getPrerenderParams: async () => paramsFrom(CERT_DETAILS, 'type', 'id'),
   },
   {
+    // Not a real page: the unknown-path route renders the not-found page here, and the
+    // post-build step (tools/seo) moves the result to 404.html.
+    path: '404',
+    renderMode: RenderMode.Prerender,
+  },
+  {
     path: '**',
     renderMode: RenderMode.Prerender,
   },

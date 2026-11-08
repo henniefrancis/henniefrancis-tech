@@ -5,7 +5,8 @@ import raw from './social.json';
 
 export interface Social {
   name: string;
-  url: string;
+  /** Absent for an entry that is shown as an image only (no link). */
+  url?: string;
   src: string;
 }
 
@@ -15,7 +16,7 @@ export function buildSocials(data: any): Social[] {
   return (data.items ?? [])
     .slice()
     .sort(byOrder)
-    .map((i: any) => ({ name: i.name as string, url: i.url as string, src: base + i.image }));
+    .map((i: any) => ({ name: i.name as string, url: i.url as string | undefined, src: base + i.image }));
 }
 
 @Component({

@@ -22,6 +22,15 @@ describe('SocialMedia', () => {
     expect(Array.from(links).every((a) => a.getAttribute('rel') === 'noopener noreferrer')).toBe(true);
   });
 
+  it('shows an item without a url as an image only, not a link', async () => {
+    const el = await render(SocialMedia);
+    const unlinked = Array.from(el.querySelectorAll('.socials')).filter((d) => !d.querySelector('a'));
+    expect(unlinked.length).toBeGreaterThan(0);
+    expect(unlinked.every((d) => d.querySelector('img')?.getAttribute('alt'))).toBe(true);
+    expect(el.querySelector('img[alt="dotcore Solutions"]')?.closest('a')).toBeNull();
+    expect(buildSocials({ items: [{ name: 'N', image: 'n.png' }] })[0].url).toBeUndefined();
+  });
+
   it('buildSocials sorts by order (unordered last), prefixes the image base and tolerates empty data', () => {
     const out = buildSocials({
       imageBaseUrl: 'b/',
