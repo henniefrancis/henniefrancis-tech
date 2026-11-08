@@ -23,7 +23,8 @@
       <div class="row heading">
         <div class="col">
           <a [href]="d.header.url" target="_blank" rel="noopener noreferrer" [title]="d.header.image.alt">
-            <img [src]="d.header.image.src" class="eventheader" [alt]="d.header.image.alt">
+            @let header = imageViewOf(d.header.image, '(max-width: 600px) 100vw, 1000px');
+            <img [ngSrc]="header.ngSrc" [ngSrcset]="header.ngSrcset" [sizes]="header.sizes" [width]="header.width" [height]="header.height" [loaderParams]="header.loaderParams" class="eventheader" [alt]="header.alt" priority>
           </a>
         </div>
       </div>
@@ -45,11 +46,13 @@
             @if (link.label) { <h2 class="eventheaderlink">{{ link.label }}</h2> }
             @if (link.href) {
               <a [href]="link.href" [title]="link.title" target="_blank" rel="noopener noreferrer">
-                <img [src]="link.image.src" class="eventlink" [alt]="link.image.alt">
+                @let linkImage = imageViewOf(link.image);
+                <img [ngSrc]="linkImage.ngSrc" [ngSrcset]="linkImage.ngSrcset" [sizes]="linkImage.sizes" [width]="linkImage.width" [height]="linkImage.height" [loaderParams]="linkImage.loaderParams" class="eventlink" [alt]="linkImage.alt">
               </a>
             } @else {
               <a [routerLink]="link.route ?? null" [title]="link.title">
-                <img [src]="link.image.src" class="eventlink" [alt]="link.image.alt">
+                @let linkImage = imageViewOf(link.image);
+                <img [ngSrc]="linkImage.ngSrc" [ngSrcset]="linkImage.ngSrcset" [sizes]="linkImage.sizes" [width]="linkImage.width" [height]="linkImage.height" [loaderParams]="linkImage.loaderParams" class="eventlink" [alt]="linkImage.alt">
               </a>
             }
           </div>

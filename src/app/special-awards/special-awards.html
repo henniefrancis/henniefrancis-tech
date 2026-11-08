@@ -19,7 +19,7 @@
         <div class="carousel-inner">
           @for (slide of slides; track $index) {
             <div class="carousel-item" [class.active]="$first">
-              <img [ngSrc]="slide.image.ngSrc" [ngSrcset]="slide.image.ngSrcset" [sizes]="slide.image.sizes" [width]="slide.image.width" [height]="slide.image.height" [loaderParams]="slide.image.loaderParams" class="d-block w-45" [alt]="slide.alt" [priority]="$first">
+              <img [ngSrc]="slide.image.ngSrc" [ngSrcset]="slide.image.ngSrcset" [sizes]="slide.image.sizes" [width]="slide.image.width" [height]="slide.image.height" [loaderParams]="slide.image.loaderParams" class="d-block w-45" [alt]="slide.image.alt" [priority]="$first">
             </div>
           }
         </div>

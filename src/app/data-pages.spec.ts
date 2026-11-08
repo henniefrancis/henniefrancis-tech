@@ -1,6 +1,7 @@
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { IMAGE_LOADER_PROVIDER } from './content/image';
 import { SocialMedia } from './social-media/social-media';
 import { TechStack } from './tech-stack/tech-stack';
 import { PublicSpeaking } from './public-speaking/public-speaking';
@@ -15,7 +16,7 @@ import { TECH_STACK } from './content/generated/tech-stack';
 
 // These specs run against the synthetic fixture content (npm run content:fixtures).
 async function render(component: Type<unknown>): Promise<HTMLElement> {
-  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
   const fixture = TestBed.createComponent(component);
   await fixture.whenStable();
   return fixture.nativeElement as HTMLElement;
@@ -91,12 +92,13 @@ describe('Certifications', () => {
     expect(links.filter((a) => a.getAttribute('target') === '_blank').length).toBe(badges.filter((b) => b.href).length);
   });
 
-  it('shows a badge without a link as an image and a name only', async () => {
+  it('shows a badge without a link as an image and a label only', async () => {
     const el = await render(Certifications);
     const plain = CERT_CATEGORIES.flatMap((c) => c.badges).filter((b) => !b.href && !b.route);
     expect(plain.length).toBeGreaterThan(0);
     const anchors = Array.from(el.querySelectorAll('.certification a:not([href])'));
-    expect(anchors.map((a) => a.getAttribute('title'))).toEqual(plain.map((b) => b.name));
+    expect(anchors.length).toBe(plain.length);
+    expect(anchors.map((a) => a.querySelector('img')?.getAttribute('alt'))).toEqual(plain.map((b) => b.image.alt));
     expect(anchors.every((a) => a.querySelector('img') && a.querySelector('label'))).toBe(true);
   });
 

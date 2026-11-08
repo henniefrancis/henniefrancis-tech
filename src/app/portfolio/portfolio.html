@@ -18,7 +18,7 @@
       <div class="col-4">
         <div class="home-card zoom">
           <a [routerLink]="tile.route" [title]="tile.name">
-            <img [src]="tile.image.src" [alt]="tile.image.alt">
+            <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.image.alt" priority>
           </a>
         </div>
       </div>

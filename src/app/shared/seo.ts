@@ -4,7 +4,9 @@ import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, TitleStrategy } from '@angular/router';
 import { PAGES } from '../content/generated/pages';
 import { RECORDS } from '../content/generated/records';
+import { HOME } from '../content/generated/home';
 import { SITE } from '../content/generated/site';
+import { imageSrc } from '../content/image';
 
 export const SITE_URL = 'https://henniefrancis.tech';
 export const SITE_NAME = SITE.name;
@@ -13,8 +15,8 @@ export const SITE_NAME = SITE.name;
 const PAGE_DESCRIPTIONS: Record<string, string | undefined> = Object.fromEntries(Object.values(PAGES).map((p) => [p.route, p.description]));
 // The home page must have a description (the schema requires it), so it is the fallback for every page.
 export const DEFAULT_DESCRIPTION = PAGES.home.description!;
-/** Share image on our own origin until the optimised profile image is wired in. */
-export const SHARE_IMAGE = `${SITE_URL}/apple-touch-icon.png`;
+/** Share image: the largest variant of the profile photo, served from the site's own image path. */
+export const SHARE_IMAGE = `${SITE_URL}${imageSrc(HOME.profile)}`;
 
 /** Route path without query, fragment or trailing slash; the home page stays "/". */
 export function normalisePath(url: string): string {

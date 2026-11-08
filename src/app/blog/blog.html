@@ -22,10 +22,10 @@
   <br />
   <div class="row text-center">
     <div class="col-sm-4"></div>
-    @for (link of blog.links; track $index) {
+    @for (link of links; track $index) {
       <div class="col-sm-2">
         <a [href]="link.url" [title]="link.name" target="_blank" rel="noopener noreferrer">
-          <img [src]="link.image.src" class="blog" [alt]="link.image.alt">
+          <img [ngSrc]="link.image.ngSrc" [ngSrcset]="link.image.ngSrcset" [sizes]="link.image.sizes" [width]="link.image.width" [height]="link.image.height" [loaderParams]="link.image.loaderParams" class="blog" [alt]="link.image.alt">
         </a>
       </div>
     }

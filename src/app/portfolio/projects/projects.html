@@ -40,7 +40,7 @@
       </div>
       <div class="row text-center">
         <div class="col">
-          <img [src]="project.diagram.src" class="img-fluid" [alt]="project.diagram.alt">
+          <img [ngSrc]="project.diagram.ngSrc" [ngSrcset]="project.diagram.ngSrcset" [sizes]="project.diagram.sizes" [width]="project.diagram.width" [height]="project.diagram.height" [loaderParams]="project.diagram.loaderParams" class="img-fluid" [alt]="project.diagram.alt">
         </div>
       </div>
     }

@@ -27,18 +27,18 @@
             @if (badge.href) {
               <a [href]="badge.href" [title]="badge.name" target="_blank" rel="noopener noreferrer">
                 <label [class]="badge.status">{{ badge.statusText }}</label>
-                <img [src]="badge.image.src" [alt]="badge.image.alt" loading="lazy">
+                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.image.alt">
               </a>
             } @else if (badge.route) {
               <a [routerLink]="badge.route" [title]="badge.name">
                 <label [class]="badge.status">{{ badge.statusText }}</label>
-                <img [src]="badge.image.src" [alt]="badge.image.alt" loading="lazy">
+                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.image.alt">
               </a>
             } @else {
               <!-- No link (the badge page is gone): an anchor without href keeps the layout and styles. -->
-              <a [title]="badge.name">
+              <a>
                 <label [class]="badge.status">{{ badge.statusText }}</label>
-                <img [src]="badge.image.src" [alt]="badge.image.alt" loading="lazy">
+                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.image.alt">
               </a>
             }
           </div>

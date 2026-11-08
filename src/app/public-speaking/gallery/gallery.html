@@ -24,9 +24,9 @@
       <div class="col">
         <div id="carouselExample" class="carousel slide">
           <div class="carousel-inner">
-            @for (photo of d.photos; track $index) {
+            @for (photo of photos(); track $index) {
               <div class="carousel-item" [class.active]="$first">
-                <img [ngSrc]="photo.image.ngSrc" [ngSrcset]="photo.image.ngSrcset" [sizes]="photo.image.sizes" [width]="photo.image.width" [height]="photo.image.height" [loaderParams]="photo.image.loaderParams" class="d-block w-45" [alt]="photo.alt" [priority]="$first">
+                <img [ngSrc]="photo.image.ngSrc" [ngSrcset]="photo.image.ngSrcset" [sizes]="photo.image.sizes" [width]="photo.image.width" [height]="photo.image.height" [loaderParams]="photo.image.loaderParams" class="d-block w-45" [alt]="photo.image.alt" [priority]="$first">
               </div>
             }
           </div>

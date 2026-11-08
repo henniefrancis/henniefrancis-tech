@@ -50,6 +50,11 @@ export interface ImageView {
   loaderParams: ImageLoaderParams;
 }
 
+/** Bindings for NgOptimizedImage plus the alternative text from the content. */
+export interface ImageViewWithAlt extends ImageView {
+  alt: string;
+}
+
 /**
  * Bindings for NgOptimizedImage. Without an explicit `sizes`, the smallest variant is taken as the
  * displayed width (the tile, badge, icon and logo variants are made at 1x and 2x of it).
@@ -63,4 +68,9 @@ export function imageView(ref: ImageRef, sizes: string = `${Math.min(...ref.widt
     height: ref.h,
     loaderParams: { widths: ref.widths },
   };
+}
+
+/** The view of a content image: its NgOptimizedImage bindings and its alternative text. */
+export function imageViewOf(img: ImageRef & { alt: string }, sizes?: string): ImageViewWithAlt {
+  return { ...imageView(img, sizes), alt: img.alt };
 }

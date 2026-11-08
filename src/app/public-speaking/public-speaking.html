@@ -25,7 +25,7 @@
         <div class="col-4">
           <div class="publicspeaking zoom">
             <a [routerLink]="talk.route" [title]="talk.name">
-              <img [src]="talk.image.src" [alt]="talk.image.alt" loading="lazy">
+              <img [ngSrc]="talk.image.ngSrc" [ngSrcset]="talk.image.ngSrcset" [sizes]="talk.image.sizes" [width]="talk.image.width" [height]="talk.image.height" [loaderParams]="talk.image.loaderParams" [alt]="talk.image.alt" [priority]="$index < 3">
             </a>
           </div>
         </div>

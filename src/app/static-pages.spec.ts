@@ -1,6 +1,7 @@
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { IMAGE_LOADER_PROVIDER, imageSrc } from './content/image';
 import { Home } from './home/home';
 import { Biography } from './biography/biography';
 import { Blog } from './blog/blog';
@@ -24,7 +25,7 @@ import { SPECIAL_AWARDS } from './content/generated/special-awards';
 
 // These specs run against the synthetic fixture content (npm run content:fixtures).
 async function render(component: Type<unknown>): Promise<HTMLElement> {
-  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
   const fixture = TestBed.createComponent(component);
   await fixture.whenStable();
   return fixture.nativeElement as HTMLElement;
@@ -43,10 +44,23 @@ describe('static pages', () => {
     expect(imgs(el).every((i) => (i.getAttribute('alt') ?? '').length > 0)).toBe(true);
   });
 
+  it('Home images carry width, height and a srcset, and only the profile and the first row are loaded with priority', async () => {
+    const el = await render(Home);
+    const all = imgs(el);
+    for (const i of all) {
+      expect(Number(i.getAttribute('width'))).toBeGreaterThan(0);
+      expect(Number(i.getAttribute('height'))).toBeGreaterThan(0);
+      expect(i.getAttribute('srcset')).toMatch(/^\/img\/[0-9a-f]{16}\/\d+\.webp \d+w/);
+    }
+    const eager = all.filter((i) => i.getAttribute('fetchpriority') === 'high').map((i) => i.alt);
+    expect(eager).toEqual([HOME.profile.alt, ...HOME.tiles.slice(0, 3).map((t) => t.image.alt)]);
+    expect(all.slice(4).every((i) => i.getAttribute('loading') === 'lazy')).toBe(true);
+  });
+
   it('Home renders the name, profile picture, tagline with dividers, about paragraphs and tiles in order', async () => {
     const el = await render(Home);
     expect(text(el.querySelector('h3'))).toBe(HOME.name);
-    expect(el.querySelector('.about-card img')?.getAttribute('src')).toBe(HOME.profile.src);
+    expect(el.querySelector('.about-card img')?.getAttribute('src')).toBe(imageSrc(HOME.profile));
     expect(el.querySelector('.about-card img')?.getAttribute('alt')).toBe(HOME.profile.alt);
     const tagline = el.querySelector('.bio p');
     expect(tagline?.querySelectorAll('.devider').length).toBe(HOME.tagline.length - 1);
@@ -63,7 +77,7 @@ describe('static pages', () => {
     const el = await render(Biography);
     expect(text(el.querySelector('h1'))).toBe(PAGES['biography'].heading);
     expect(text(el.querySelector('.breadcrumb-item.current'))).toBe(PAGES['biography'].breadcrumb);
-    expect(el.querySelector('img')?.getAttribute('src')).toBe(BIOGRAPHY.portrait.src);
+    expect(el.querySelector('img')?.getAttribute('src')).toBe(imageSrc(BIOGRAPHY.portrait));
     expect(el.querySelector('img')?.getAttribute('alt')).toBe(BIOGRAPHY.portrait.alt);
     expect(Array.from(el.querySelectorAll('.biography p')).map((p) => p.textContent)).toEqual(BIOGRAPHY.paragraphs);
   });

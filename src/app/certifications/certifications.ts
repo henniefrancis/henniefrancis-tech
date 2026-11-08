@@ -1,8 +1,10 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { CertBadgeContent, CertCategory } from '../content/content.types';
 import { CERT_CATEGORIES } from '../content/generated/certifications';
 import { PAGES } from '../content/generated/pages';
+import { ImageViewWithAlt, imageViewOf } from '../content/image';
 
 const STATUS_TEXT: Record<string, string> = {
   active: 'active',
@@ -12,8 +14,9 @@ const STATUS_TEXT: Record<string, string> = {
   retired: 'retired',
 };
 
-export interface CertBadge extends CertBadgeContent {
+export interface CertBadge extends Omit<CertBadgeContent, 'image'> {
   statusText: string;
+  image: ImageViewWithAlt;
 }
 
 export interface CertGroup {
@@ -25,13 +28,17 @@ export interface CertGroup {
 export function buildCertGroups(categories: CertCategory[]): CertGroup[] {
   return categories.map((category) => ({
     name: category.name,
-    badges: category.badges.map((badge) => ({ ...badge, statusText: STATUS_TEXT[badge.status] })),
+    badges: category.badges.map((badge) => ({
+      ...badge,
+      statusText: STATUS_TEXT[badge.status],
+      image: imageViewOf(badge.image),
+    })),
   }));
 }
 
 @Component({
   selector: 'app-certifications',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './certifications.html',
 })
 export class Certifications {

@@ -6,7 +6,7 @@
         <div class="home-card about-card text-center">
           <div class="row">
             <div class="col-12">
-              <img [src]="home.profile.src" class="zoom" [alt]="home.profile.alt">
+              <img [ngSrc]="profile.ngSrc" [ngSrcset]="profile.ngSrcset" [sizes]="profile.sizes" [width]="profile.width" [height]="profile.height" [loaderParams]="profile.loaderParams" class="zoom" [alt]="profile.alt" priority>
               <br />
 
               <div class="bio">
@@ -23,11 +23,11 @@
       </div>
       <div class="col-9">
         <div class="row">
-          @for (tile of home.tiles; track $index) {
+          @for (tile of tiles; track $index) {
             <div class="col-4">
               <div class="home-card zoom">
                 <a [routerLink]="tile.route" [title]="tile.name">
-                  <img [src]="tile.image.src" [alt]="tile.image.alt" loading="lazy">
+                  <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.image.alt" [priority]="$index < 3">
                 </a>
               </div>
             </div>

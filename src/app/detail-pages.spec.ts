@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { IMAGE_LOADER_PROVIDER, imageSrc } from './content/image';
 import { CertDetail } from './certifications/cert-detail/cert-detail';
 import { EventDetail } from './public-speaking/event-detail/event-detail';
 import { Gallery, startCarousel } from './public-speaking/gallery/gallery';
@@ -9,7 +10,7 @@ import { EVENTS, GALLERIES } from './content/generated/speaking';
 
 // These specs run against the synthetic fixture content (npm run content:fixtures).
 async function renderWith(component: any, inputs: Record<string, string>): Promise<HTMLElement> {
-  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
   const fixture = TestBed.createComponent(component);
   for (const [k, v] of Object.entries(inputs)) fixture.componentRef.setInput(k, v);
   await fixture.whenStable();
@@ -25,7 +26,7 @@ describe('CertDetail', () => {
   it('renders the certificate title, image, type name and parent breadcrumb', async () => {
     const el = await renderWith(CertDetail, { type, id });
     expect(el.querySelector('h1')?.textContent).toBe(CERT_DETAILS[key].title);
-    expect(el.querySelector('.certificate img')?.getAttribute('src')).toBe(CERT_DETAILS[key].image.src);
+    expect(el.querySelector('.certificate img')?.getAttribute('src')).toBe(imageSrc(CERT_DETAILS[key].image));
     expect(el.querySelector('.certificate img')?.getAttribute('alt')).toBe(CERT_DETAILS[key].image.alt);
     expect(el.querySelector('.breadcrumb')?.textContent).toContain(CERT_DETAIL_TYPES[type]);
     expect(el.querySelector('.breadcrumb-item a[href="/certifications"]')?.textContent).toBe(PAGES['certifications'].breadcrumb);
@@ -37,7 +38,7 @@ describe('CertDetail', () => {
   });
 
   it('uses the generic Microsoft label when only the type is unknown but the record exists', async () => {
-    CERT_DETAILS['zzz/known'] = { type: 'zzz', title: 'T', image: { src: 'i.png', alt: 'T' } };
+    CERT_DETAILS['zzz/known'] = { type: 'zzz', title: 'T', image: { id: 'abcdef0123456789', w: 10, h: 10, widths: [10], alt: 'T' } };
     try {
       const el = await renderWith(CertDetail, { type: 'zzz', id: 'known' });
       const crumbs = Array.from(el.querySelectorAll('.breadcrumb-item')).map((c) => c.textContent?.trim());
@@ -56,7 +57,7 @@ describe('EventDetail', () => {
     expect(el.querySelector('h1')?.textContent).toContain(d.title);
     expect(el.querySelector('.breadcrumb-item.current')?.textContent).toBe(`${d.title} ${d.year}`);
     expect(el.querySelector('.breadcrumb-item a[href="/public-speaking"]')?.textContent).toBe(PAGES['public-speaking'].breadcrumb);
-    expect(el.querySelector('img.eventheader')?.getAttribute('src')).toBe(d.header!.image.src);
+    expect(el.querySelector('img.eventheader')?.getAttribute('src')).toBe(imageSrc(d.header!.image));
     expect(el.querySelector('a[title="' + d.header!.image.alt + '"]')?.getAttribute('href')).toBe(d.header!.url);
     expect(Array.from(el.querySelectorAll('p')).map((p) => p.textContent)).toEqual(d.body);
     expect(el.textContent).toContain(d.heading!);
@@ -105,6 +106,14 @@ describe('Gallery', () => {
     const el = await renderWith(Gallery, { event: 'nope', year: '1999' });
     expect(el.querySelector('.carousel-item')).toBeNull();
     expect(el.textContent).toContain('Gallery not found');
+  });
+
+  it('has no photo views for an unknown gallery', () => {
+    TestBed.configureTestingModule({ imports: [Gallery], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
+    const fixture = TestBed.createComponent(Gallery);
+    fixture.componentRef.setInput('event', 'nope');
+    fixture.componentRef.setInput('year', '1999');
+    expect((fixture.componentInstance as any).photos()).toEqual([]);
   });
 
   it('starts the Bootstrap carousel after render when Bootstrap is loaded', async () => {
