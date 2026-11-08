@@ -72,7 +72,11 @@ npm run content:test       # unit tests of the content tools, 100 percent covera
 
 Every pull request to `develop` or `main` runs one required check named `ci`. It installs dependencies, builds the site, runs the unit tests with a 100 percent coverage threshold, checks the build output against the size and content budgets, audits runtime dependencies, scans the pull request's commits for secrets, scans the file system for known vulnerabilities, lints the workflows, and, when Terraform files changed, validates the Terraform.
 
-Pushes to `main` build the site and deploy it. A weekly workflow repeats the security scans, and a manual workflow runs the browser tests against a URL of your choice. Dependency updates are grouped monthly.
+The build reads the content repository with a short-lived GitHub App token that can only read that repository. Settings for it: the repository variable `CONTENT_APP_CLIENT_ID` and the secret `CONTENT_APP_PRIVATE_KEY` (also add the secret as a Dependabot secret). Pull requests from forks have no secrets and build against the sample content only.
+
+A deploy starts on a push to `main`, or when the content repository starts it after a validated content change. A deploy compares the site commit and the content hash with the live `/version.json` and skips itself when both match. Every page carries a script policy that `tools/csp` writes after the build, because the Angular `autoCsp` option cannot be combined with prerendering. The other policy directives are sent as a response header by the host and must not contain `script-src` or `default-src`.
+
+A weekly workflow repeats the security scans, and a manual workflow runs the browser tests against a URL of your choice. Dependency updates are grouped monthly.
 
 ## Contributing
 

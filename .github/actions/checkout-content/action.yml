@@ -1,0 +1,83 @@
+name: Check out the private content config
+description: >
+  Mints a short-lived GitHub App installation token that can only read the
+  private config repository, then checks that repository out. The token
+  expires within an hour and is revoked when the job ends.
+
+inputs:
+  client-id:
+    description: Client ID of the GitHub App (from the CONTENT_APP_CLIENT_ID variable).
+    required: true
+  private-key:
+    description: Private key of the GitHub App (from the CONTENT_APP_PRIVATE_KEY secret).
+    required: true
+  ref:
+    description: The branch main or a full 40 character commit SHA of the config repository.
+    required: false
+    default: main
+  path:
+    description: Folder, relative to the workspace, that receives the config.
+    required: false
+    default: content-src
+
+outputs:
+  sha:
+    description: Full commit SHA of the config that was checked out.
+    value: ${{ steps.sha.outputs.sha }}
+
+runs:
+  using: composite
+  steps:
+    # Inputs reach the shell through env, never through the script text.
+    - name: Check the inputs
+      shell: bash
+      env:
+        APP_CLIENT_ID: ${{ inputs.client-id }}
+        APP_KEY_SET: ${{ inputs.private-key != '' }}
+        CONFIG_REF: ${{ inputs.ref }}
+        CONFIG_PATH: ${{ inputs.path }}
+      run: |
+        set -euo pipefail
+        if [ -z "$APP_CLIENT_ID" ] || [ "$APP_KEY_SET" != "true" ]; then
+          echo "::error::The variable CONTENT_APP_CLIENT_ID and the secret CONTENT_APP_PRIVATE_KEY must both be set."
+          exit 1
+        fi
+        if ! printf '%s' "$CONFIG_REF" | grep -Eq '^(main|[0-9a-f]{40})$'; then
+          echo "::error::The config ref must be main or a full commit SHA."
+          exit 1
+        fi
+        if ! printf '%s' "$CONFIG_PATH" | grep -Eq '^[A-Za-z0-9._-]{1,64}$'; then
+          echo "::error::The config path must be a plain folder name."
+          exit 1
+        fi
+
+    - name: Create the read-only App token
+      id: token
+      uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+      with:
+        client-id: ${{ inputs.client-id }}
+        private-key: ${{ inputs.private-key }}
+        owner: ${{ github.repository_owner }}
+        repositories: config
+        permission-contents: read
+
+    - name: Check out the config
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        repository: ${{ github.repository_owner }}/config
+        ref: ${{ inputs.ref }}
+        path: ${{ inputs.path }}
+        token: ${{ steps.token.outputs.token }}
+        persist-credentials: false
+        fetch-depth: 1
+
+    - name: Record the config commit
+      id: sha
+      shell: bash
+      env:
+        CONFIG_PATH: ${{ inputs.path }}
+      run: |
+        set -euo pipefail
+        sha="$(git -C "$CONFIG_PATH" rev-parse HEAD)"
+        printf '%s' "$sha" | grep -Eq '^[0-9a-f]{40}$'
+        echo "sha=$sha" >> "$GITHUB_OUTPUT"
