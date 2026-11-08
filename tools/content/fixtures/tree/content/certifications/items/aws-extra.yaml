@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/aws-extra.png
+  id: 982ee0203a08e81f
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: aws-extra
 name: AWS Extra Badge
 vendor: aws

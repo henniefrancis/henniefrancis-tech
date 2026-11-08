@@ -2,18 +2,24 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, mkdirSyn
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { ContentError, buildModules, main, resolveImages, stableStringify, writeModules } from '../src/generate.mjs';
+import { ContentError, buildModules, main, resolveStaticImages, stableStringify, writeModules } from '../src/generate.mjs';
 import { FIXTURE_ROOT, fixtureTree } from './helpers.mjs';
 
-const TYPES = readFileSync(join(import.meta.dirname, '..', '..', '..', 'src', 'app', 'content', 'content.types.ts'), 'utf8');
+const CONTENT_DIR = join(import.meta.dirname, '..', '..', '..', 'src', 'app', 'content');
+// The image reference fields are declared in image.ts, which content.types.ts extends.
+const TYPES = ['content.types.ts', 'image.ts'].map((f) => readFileSync(join(CONTENT_DIR, f), 'utf8')).join(' ');
 
-describe('stableStringify and resolveImages', () => {
+describe('stableStringify and resolveStaticImages', () => {
   it('sorts object keys and keeps array order', () => {
     expect(stableStringify({ b: [2, 1], a: { d: 1, c: null } }, 0)).toBe('{"a":{"c":null,"d":1},"b":[2,1]}');
   });
-  it('replaces image paths below the base and leaves other values alone', () => {
-    const out = resolveImages({ a: [{ src: 'images/x/y.png', alt: 'A', extra: 1 }], n: 3, src: 'images/not-an-image', z: null }, 'https://b.example.test/');
-    expect(out).toEqual({ a: [{ src: 'https://b.example.test/x/y.png', alt: 'A', extra: 1 }], n: 3, src: 'images/not-an-image', z: null });
+  it('keeps the image reference keys first, in a fixed order, then the other keys sorted', () => {
+    const ref = { widths: [1, 2], alt: 'A', h: 3, w: 2, id: '0123456789abcdef', extra: true };
+    expect(stableStringify({ ref }, 0)).toBe('{"ref":{"id":"0123456789abcdef","w":2,"h":3,"widths":[1,2],"alt":"A","extra":true}}');
+  });
+  it('gives a static image its site path and leaves other values alone', () => {
+    const out = resolveStaticImages({ a: [{ src: 'images/x/y.svg', alt: 'A', extra: 1 }], n: 3, src: 'images/not-an-image', z: null });
+    expect(out).toEqual({ a: [{ src: '/images/x/y.svg', alt: 'A', extra: 1 }], n: 3, src: 'images/not-an-image', z: null });
   });
 });
 
@@ -38,8 +44,9 @@ describe('buildModules', () => {
     for (const source of Object.values(result.modules)) expect(source).toContain('GENERATED');
     expect(result.modules['meta.ts']).toContain(result.hash);
   });
-  it('resolves images to full URLs and links to href or route', () => {
-    expect(moduleValue('home.ts', 'HOME').profile).toEqual({ alt: 'Fixture profile', src: 'https://img.example.test/base/fixture/profile.png' });
+  it('passes image references through, gives static images a site path and links an href or route', () => {
+    expect(moduleValue('home.ts', 'HOME').profile).toEqual({ alt: 'Fixture profile', id: 'e5393622926c6c39', w: 200, h: 100, widths: [100, 200] });
+    expect(moduleValue('current-role.ts', 'CURRENT_ROLE').logo.image).toEqual({ alt: 'Employer', src: '/images/fixture/employer.svg' });
     const cats = moduleValue('certifications.ts', 'CERT_CATEGORIES');
     expect(cats[0].badges[0].href).toBe('https://credly.example.test/a');
     expect(cats[3].badges[0].route).toBe('/certifications/microsoft/mcts/AAAAAAAA-0000-0000-0000-000000000001');

@@ -5,7 +5,10 @@ description: Fixture home description.
 heading: Fixture Person
 name: Fixture Person
 profile:
-  src: images/fixture/profile.png
+  id: e5393622926c6c39
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: Fixture profile
 tagline:
   - Builder
@@ -20,10 +23,16 @@ tiles:
   - name: Biography
     route: /biography
     image:
-      src: images/fixture/tile-bio.png
+      id: 2a9c6b1e6494724f
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Biography
   - name: Portfolio
     route: /portfolio
     image:
-      src: images/fixture/tile-portfolio.png
+      id: 67144c7b69ee9e82
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Portfolio

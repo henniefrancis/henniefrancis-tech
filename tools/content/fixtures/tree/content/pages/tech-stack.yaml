@@ -10,5 +10,8 @@ categories:
       - name: Lang
         url: https://lang.example.test/
         image:
-          src: images/fixture/lang.png
+          id: 84a8743db35b74ec
+          w: 200
+          h: 100
+          widths: [100, 200]
           alt: Lang

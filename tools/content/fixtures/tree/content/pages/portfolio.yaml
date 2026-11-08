@@ -8,10 +8,16 @@ tiles:
   - name: Curriculum Vitae
     route: /portfolio/cv
     image:
-      src: images/fixture/cv.png
+      id: b92e81d58e977616
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Curriculum Vitae
   - name: Projects
     route: /portfolio/projects
     image:
-      src: images/fixture/projects.png
+      id: 5a0900b3636d9ebf
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Projects

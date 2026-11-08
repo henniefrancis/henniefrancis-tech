@@ -3,7 +3,13 @@
 title: Conference One
 year: "2025"
 photos:
-  - src: images/fixture/photo-1.png
+  - id: 17d6551367f53191
+    w: 200
+    h: 100
+    widths: [100, 200]
     alt: Photo 1
-  - src: images/fixture/photo-2.png
+  - id: 9cc35d3601e8421b
+    w: 200
+    h: 100
+    widths: [100, 200]
     alt: Photo 2

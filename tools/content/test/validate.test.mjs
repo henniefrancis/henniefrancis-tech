@@ -79,12 +79,53 @@ describe('structure and schema errors', () => {
     tree.files['pages/blog.yaml'].links[0].url = 'https://www.a-b.example.test:8443/p?q=1#f';
     expect(validateTree(tree)).toEqual([]);
   });
-  it('requires image paths below images/ with no traversal', () => {
-    for (const bad of ['elsewhere/a.png', 'images/../a.png', 'images/./a.png', 'images/a b%.png']) {
+  it('requires an image reference with a 16 hex id, positive sizes and ascending widths', () => {
+    const bad = [
+      ['id', 'ABCDEF0123456789'],
+      ['id', 'short'],
+      ['w', 0],
+      ['h', 1.5],
+      ['w', 10001],
+      ['widths', []],
+      ['widths', [1, 2, 3, 4, 5, 6, 7]],
+      ['widths', [100, 100]],
+    ];
+    for (const [field, value] of bad) {
       const tree = fixtureTree();
-      tree.files['pages/biography.yaml'].portrait.src = bad;
-      expect(rules(validateTree(tree)).some((r) => r.startsWith('pages/biography.yaml /portrait/src'))).toBe(true);
+      tree.files['pages/biography.yaml'].portrait[field] = value;
+      expect(rules(validateTree(tree)).some((r) => r.startsWith(`pages/biography.yaml /portrait/${field}`))).toBe(true);
     }
+  });
+  it('refuses a plain path or URL where an image reference belongs', () => {
+    const tree = fixtureTree();
+    tree.files['pages/biography.yaml'].portrait = { src: 'images/a.png', alt: 'A' };
+    expect(rules(validateTree(tree)).some((r) => r.startsWith('pages/biography.yaml /portrait'))).toBe(true);
+    const withUrl = fixtureTree();
+    withUrl.files['pages/biography.yaml'].portrait.src = 'https://a.example.test/a.png';
+    has(withUrl, 'pages/biography.yaml /portrait/src additionalProperties');
+  });
+  it('checks that widths ascend and that the widest variant is the declared size', () => {
+    const unsorted = fixtureTree();
+    unsorted.files['pages/biography.yaml'].portrait.widths = [200, 100];
+    has(unsorted, 'pages/biography.yaml /portrait/widths image-widths-not-ascending');
+    const narrow = fixtureTree();
+    narrow.files['pages/biography.yaml'].portrait.w = 300;
+    has(narrow, 'pages/biography.yaml /portrait/widths image-widest-variant-differs-from-w');
+    const nested = fixtureTree();
+    nested.files['pages/home.yaml'].tiles[0].image.w = 999;
+    has(nested, 'pages/home.yaml /tiles/0/image/widths image-widest-variant-differs-from-w');
+  });
+  it('accepts a static image only as an svg below images/ with no traversal', () => {
+    for (const bad of ['elsewhere/a.svg', 'images/../a.svg', 'images/./a.svg', 'images/a b%.svg', 'images/a.png']) {
+      const tree = fixtureTree();
+      tree.files['pages/current-role.yaml'].logo.image.src = bad;
+      expect(rules(validateTree(tree)).some((r) => r.startsWith('pages/current-role.yaml /logo/image/src'))).toBe(true);
+    }
+  });
+  it('no longer accepts an image base URL in the site settings', () => {
+    const tree = fixtureTree();
+    tree.files['site.yaml'].imageBaseUrl = 'https://img.example.test/base/';
+    has(tree, 'site.yaml /imageBaseUrl additionalProperties');
   });
   it('requires alt text on images and a name and alt text on every certification', () => {
     const tree = fixtureTree();

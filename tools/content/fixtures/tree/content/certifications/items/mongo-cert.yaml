@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/mongo-cert.png
+  id: 848ebe607174a719
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: mongo-cert
 name: Mongo Cert
 vendor: mongodb

@@ -5,6 +5,9 @@ year: "2024"
 listing:
   name: Conference Two 2024
   image:
-    src: images/fixture/conf-two.png
+    id: 39caf486763c4929
+    w: 200
+    h: 100
+    widths: [100, 200]
     alt: Conference Two 2024
 links: []

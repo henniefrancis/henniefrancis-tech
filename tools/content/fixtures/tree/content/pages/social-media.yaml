@@ -10,10 +10,16 @@ categories:
       - name: Network
         url: https://network.example.test/me
         image:
-          src: images/fixture/network.png
+          id: bbdab349be7c6333
+          w: 200
+          h: 100
+          widths: [100, 200]
           alt: Network
   - items:
       - name: Image Only
         image:
-          src: images/fixture/image-only.png
+          id: f586c7374e05faa4
+          w: 200
+          h: 100
+          widths: [100, 200]
           alt: Image Only

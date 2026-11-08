@@ -6,8 +6,7 @@
   "additionalProperties": false,
   "required": [
     "name",
-    "copyright",
-    "imageBaseUrl"
+    "copyright"
   ],
   "properties": {
     "name": {
@@ -15,17 +14,6 @@
     },
     "copyright": {
       "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PlainText"
-    },
-    "imageBaseUrl": {
-      "allOf": [
-        {
-          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
-        },
-        {
-          "type": "string",
-          "pattern": "/$"
-        }
-      ]
     },
     "features": {
       "type": "object",

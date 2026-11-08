@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/other-cert.png
+  id: a596e57af9db7101
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: other-cert
 name: Other Cert
 vendor: other

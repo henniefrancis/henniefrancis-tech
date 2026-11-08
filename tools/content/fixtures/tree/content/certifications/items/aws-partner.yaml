@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/aws-partner.png
+  id: 1044803c5714c859
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: aws-partner
 name: AWS Partner Badge
 vendor: aws

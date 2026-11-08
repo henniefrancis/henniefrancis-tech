@@ -83,6 +83,49 @@
       }
     },
     "ImageField": {
+      "description": "An image in the site image store: the id (first 16 hex of the SHA-256 of the original), the size of the largest variant and the widths of every variant, plus the alternative text.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "w",
+        "h",
+        "widths",
+        "alt"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16}$"
+        },
+        "w": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "h": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "widths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          }
+        },
+        "alt": {
+          "$ref": "#/$defs/PlainText"
+        }
+      }
+    },
+    "StaticImageField": {
+      "description": "An SVG that the site serves as a static file, not through the image store.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -91,7 +134,15 @@
       ],
       "properties": {
         "src": {
-          "$ref": "#/$defs/ImagePath"
+          "allOf": [
+            {
+              "$ref": "#/$defs/ImagePath"
+            },
+            {
+              "type": "string",
+              "pattern": "[.]svg$"
+            }
+          ]
         },
         "alt": {
           "$ref": "#/$defs/PlainText"

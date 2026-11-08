@@ -2,5 +2,8 @@
 
 title: "Fixture Technology Specialist: Topic"
 image:
-  src: images/fixture/detail-1.png
+  id: 8945d4c1a12af96f
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: "Fixture Technology Specialist: Topic"

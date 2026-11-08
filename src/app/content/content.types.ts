@@ -1,8 +1,15 @@
 // Types of the generated content modules (src/app/content/generated/*, produced by tools/content).
-// They mirror the JSON Schemas in tools/content/schemas after the generator has resolved image paths to
-// URLs, count tokens to numbers, links to href or route, and paragraph blocks to string arrays.
+// They mirror the JSON Schemas in tools/content/schemas after the generator has resolved count tokens to
+// numbers, links to href or route, and paragraph blocks to string arrays.
+import type { ImageRef } from './image';
 
-export interface Img {
+/** An image in the site image store (see image.ts) with its alternative text. */
+export interface Img extends ImageRef {
+  alt: string;
+}
+
+/** An SVG that the site serves as a static file. */
+export interface StaticImg {
   src: string;
   alt: string;
 }
@@ -93,7 +100,7 @@ export interface BlogContent {
 export interface CurrentRoleContent {
   enabled: boolean;
   facts: { label: string; value: string }[];
-  logo?: { image: Img; url: string };
+  logo?: { image: StaticImg; url: string };
 }
 
 export interface SocialLink {

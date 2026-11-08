@@ -5,12 +5,18 @@ year: "2025"
 listing:
   name: Conference One 2025
   image:
-    src: images/fixture/conf-one.png
+    id: 2f05e03123f11d4d
+    w: 200
+    h: 100
+    widths: [100, 200]
     alt: Conference One 2025
 header:
   url: https://conf-one.example.test/
   image:
-    src: images/fixture/conf-one-header.png
+    id: c142012597a925fc
+    w: 200
+    h: 100
+    widths: [100, 200]
     alt: Conference One header
 heading: A talk title
 body: |-
@@ -20,16 +26,25 @@ body: |-
 links:
   - title: Session page
     image:
-      src: images/fixture/session.png
+      id: ef835b17bd7a3d29
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Session page
     url: https://sessions.example.test/talk
   - title: Event Photos
     image:
-      src: images/fixture/camera.png
+      id: d37127a39eb52002
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Event Photos
     gallery: true
   - title: Full Video
     label: Watch
     image:
-      src: images/fixture/video.png
+      id: 639b15b8f660ea9f
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Full Video

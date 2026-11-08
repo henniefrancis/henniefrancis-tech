@@ -9,5 +9,8 @@ links:
   - name: Blog Host
     url: https://blog.example.test/me
     image:
-      src: images/fixture/blog-host.png
+      id: 49655426d5ea8b5b
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Blog Host

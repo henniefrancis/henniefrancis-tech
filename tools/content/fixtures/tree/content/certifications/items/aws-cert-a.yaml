@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/aws-cert-a.png
+  id: c627286be0128a87
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: aws-cert-a
 name: AWS Cert A
 vendor: aws

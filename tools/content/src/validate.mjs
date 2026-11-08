@@ -121,6 +121,24 @@ function checkRoutes(files, add) {
   check('pages/portfolio.yaml', portfolioTiles);
 }
 
+const isImageRef = (value) => Array.isArray(value.widths) && 'id' in value && 'w' in value;
+
+/** Every image reference: widths ascending, and the widest variant is the declared size (w). */
+function checkImages(files, add) {
+  const visit = (value, file, pointer) => {
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => visit(item, file, `${pointer}/${index}`));
+    } else if (isObject(value) && isImageRef(value)) {
+      const widths = value.widths;
+      if (!widths.every((width, i) => i === 0 || width > widths[i - 1])) add(file, `${pointer}/widths`, 'image-widths-not-ascending');
+      else if (widths[widths.length - 1] !== value.w) add(file, `${pointer}/widths`, 'image-widest-variant-differs-from-w');
+    } else if (isObject(value)) {
+      for (const [key, item] of Object.entries(value)) visit(item, file, `${pointer}/${key}`);
+    }
+  };
+  for (const [file, data] of Object.entries(files)) visit(data, file, '');
+}
+
 function checkTokens(files, add) {
   for (const [file, data] of Object.entries(files)) {
     walkStrings(data, (text, pointer) => {
@@ -163,6 +181,7 @@ export function validateTree(tree) {
   checkCertifications(sound, tree.archive ?? [], add);
   checkSpeaking(sound, add);
   checkRoutes(sound, add);
+  checkImages(sound, add);
   checkTokens(sound, add);
   return errors.sort((a, b) => (a.file + a.pointer + a.rule).localeCompare(b.file + b.pointer + b.rule));
 }

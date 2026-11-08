@@ -10,7 +10,10 @@ projects:
     description: |-
       Describes project one.
     diagram:
-      src: images/fixture/diagram.png
+      id: 13cda0bc1129561a
+      w: 200
+      h: 100
+      widths: [100, 200]
       alt: Diagram
   - name: Project Two
     description: |-

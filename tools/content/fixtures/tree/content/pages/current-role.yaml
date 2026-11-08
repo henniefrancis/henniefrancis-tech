@@ -8,7 +8,7 @@ enabled: true
 logo:
   url: https://employer.example.test/
   image:
-    src: images/fixture/employer.png
+    src: images/fixture/employer.svg
     alt: Employer
 facts:
   - label: Employer

@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/aws-inprogress.png
+  id: 3ff3557af5b9731a
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: aws-inprogress
 name: AWS In Progress
 vendor: aws

@@ -1,7 +1,10 @@
 # Synthetic fixture content. Not real.
 
 image:
-  src: images/fixture/ms-cert-1.png
+  id: 17eb796a71273866
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: ms-cert-1
 name: MS Cert 1
 vendor: microsoft

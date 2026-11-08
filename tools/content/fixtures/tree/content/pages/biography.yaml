@@ -5,7 +5,10 @@ description: Fixture biography description.
 heading: Fixture biography heading
 breadcrumb: Fixture biography crumb
 portrait:
-  src: images/fixture/portrait.png
+  id: 8622d4e8a2c0accc
+  w: 200
+  h: 100
+  widths: [100, 200]
   alt: Portrait
 paragraphs: |-
   Paragraph one with ${aws-certifications} AWS Certifications.
