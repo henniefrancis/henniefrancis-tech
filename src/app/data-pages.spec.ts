@@ -142,6 +142,23 @@ describe('Certifications (items without a link and named items)', () => {
   });
 });
 
+describe('Certifications badge links', () => {
+  it('links every Credly badge to its own page', async () => {
+    const el = await render(Certifications);
+    const hrefs = Array.from(el.querySelectorAll('.certification a'))
+      .map((a) => a.getAttribute('href') ?? '')
+      .filter((href) => href.startsWith('https://www.credly.com/badges/'));
+    expect(hrefs.length).toBeGreaterThan(0);
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+  });
+
+  it('links the Business Value Realization badge to its own Credly page', async () => {
+    const el = await render(Certifications);
+    const img = el.querySelector('img[alt="AWS Partner: Business Value Realization (BVR) Essentials"]');
+    expect(img?.closest('a')?.getAttribute('href')).toBe('https://www.credly.com/badges/4a6121e9-fdca-439b-b1a6-4a4f0de0c8d4');
+  });
+});
+
 describe('Certifications', () => {
   it('renders a heading per category from the data file', async () => {
     const el = await render(Certifications);
