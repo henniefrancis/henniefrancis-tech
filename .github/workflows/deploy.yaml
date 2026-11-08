@@ -1,35 +1,65 @@
-name: Deploy — henniefrancis.tech
+name: Deploy to production
 
-# Pipeline: quality gates (security + lint, parallel) → build → deploy.
-# Deploys go S3 → EC2 via SSM Run Command (no SSH, no stored AWS keys —
-# OIDC only) → nginx validate+reload → CloudFront invalidation.
+# Pipeline: build (or pick a stored artifact) -> upload -> deploy over SSM ->
+# nginx config install and reload -> CloudFront invalidation -> smoke checks.
+# Deploys use GitHub OIDC only. No AWS keys are stored in GitHub.
 #
-# All environment-specific values come from repository VARIABLES so this
-# file is a reusable template (see terraform/README.md for the list):
-#   vars.AWS_DEPLOY_ROLE_ARN   IAM role assumed via OIDC
-#   vars.AWS_REGION            e.g. af-south-1
-#   vars.ARTIFACTS_BUCKET      deploy artifacts bucket
-#   vars.WEB_ROOT              e.g. /var/www/henniefrancis-tech/html
-# and one secret: CLOUDFRONT_DISTRIBUTION_ID.
+# Quality gates run in the `ci` workflow on the pull request, so they are not
+# repeated here.
 #
-# The TARGET INSTANCE is not a variable: it is discovered at deploy time
-# by its Name tag (*-<project>-ec2, running). Replacing the instance via
-# Terraform therefore never leaves this pipeline aiming at a dead id.
+# Environment-specific values come from repository variables:
+#   vars.AWS_DEPLOY_ROLE_ARN   IAM role assumed through OIDC
+#   vars.AWS_REGION            deployment region
+#   vars.ARTIFACTS_BUCKET      artifact store
+#   vars.WEB_ROOT              web root on the instance
+#   vars.SITE_URL              optional, public URL used for smoke checks
+# and one secret: CLOUDFRONT_DISTRIBUTION_ID (optional).
+#
+# The target instance is not a variable. It is discovered at deploy time from
+# its Name tag, so replacing the instance never leaves this pipeline aiming at
+# a dead id.
+#
+# Artifact layout (interface I-4), a zip with two top-level folders:
+#   site/    the web root (prerendered build output plus version.json)
+#   nginx/   copied from deploy/nginx/, installed on the instance
 
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'terraform/**'
+      - 'e2e/**'
+      - '**/*.md'
   workflow_dispatch:
+    inputs:
+      artifact_version:
+        description: 'Rollback: redeploy a stored artifact version (for example 20260101-120000-abc1234) without building. Leave empty to build from this commit.'
+        required: false
+        default: ''
+        type: string
+      reason:
+        description: 'Why this deploy was started (free text, shown in the run summary)'
+        required: false
+        default: ''
+        type: string
+      config_sha:
+        description: 'Content config commit to build with. Reserved for the content pipeline; not used yet.'
+        required: false
+        default: ''
+        type: string
+      force:
+        description: 'Reserved for the content pipeline: deploy even if the live build key already matches. Not used yet.'
+        required: false
+        default: false
+        type: boolean
 
-# Cancel any in-progress run on the same branch so a fast follow-up
-# commit doesn't queue behind a slow deploy.
+# One deploy queue for code and content. Running deploys are never cancelled
+# half way; a newer request waits for the current one to finish.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: deploy-production
+  cancel-in-progress: false
 
-# Minimal top-level permissions — each job adds only what it needs.
 permissions:
-  id-token: write   # OIDC → AWS credential exchange
   contents: read
 
 env:
@@ -37,107 +67,148 @@ env:
 
 jobs:
   # ───────────────────────────────────────────────────────────
-  # Stage 1 — Quality Gates (parallel, ALL must pass)
-  # ───────────────────────────────────────────────────────────
-
-  security:
-    name: Security Scan
-    uses: ./.github/workflows/security.yml
-    secrets: inherit
-
-  lint:
-    name: Lint
-    uses: ./.github/workflows/lint.yml
-    secrets: inherit
-
-  # ───────────────────────────────────────────────────────────
-  # Stage 2 — Build (package the static site)
+  # Stage 1: Build and package (skipped for a rollback)
   # ───────────────────────────────────────────────────────────
 
   build:
-    name: Build Application
-    needs: [security, lint]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    name: Build application
+    if: ${{ github.ref == 'refs/heads/main' && inputs.artifact_version == '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
+          persist-credentials: false
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
-          cache-dependency-path: src/package-lock.json
+          cache-dependency-path: package-lock.json
 
-      # The Angular workspace lives in src/. `npm run build` prerenders
-      # every route to static HTML in src/dist/<project>/browser — that
-      # folder is the web root (no Node server needed; nginx serves it).
-      - name: Install & build (Angular, prerendered SSG)
+      # TODO(content pipeline): when config_sha is set, check out the content
+      # repository at that commit into src/content and generate the data
+      # modules before the build. Never print the content in logs.
+
+      - name: Install and build (Angular, prerendered)
         run: |
-          cd src
           npm ci
           npm run build
 
-      # Zip from inside the prerendered browser output so the archive
-      # root is the site root (same shape the deploy step expects).
-      - name: Package artifact
+      # Written into the web root so the live site can report what it is
+      # running. TODO(content pipeline): add configSha and configTreeSha and
+      # compute buildKey from both.
+      - name: Write version.json
         run: |
-          cd "src/dist/${PROJECT_NAME}/browser"
-          zip -r "${GITHUB_WORKSPACE}/${PROJECT_NAME}.zip" . -x "*.DS_Store"
-          cd "${GITHUB_WORKSPACE}"
+          set -euo pipefail
+          site_dir="dist/${PROJECT_NAME}/browser"
+          jq -n \
+            --arg siteSha "$GITHUB_SHA" \
+            --arg builtAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            '{siteSha: $siteSha, buildKey: $siteSha, builtAt: $builtAt}' \
+            > "${site_dir}/version.json"
+
+      - name: Package artifact (site/ and nginx/)
+        run: |
+          set -euo pipefail
+          stage="${RUNNER_TEMP}/stage"
+          rm -rf "$stage"
+          mkdir -p "${stage}/site" "${stage}/nginx"
+          cp -a "dist/${PROJECT_NAME}/browser/." "${stage}/site/"
+          shopt -s nullglob
+          confs=(deploy/nginx/*.conf)
+          if [ "${#confs[@]}" -gt 0 ]; then
+            cp -a "${confs[@]}" "${stage}/nginx/"
+            # Rendered on the instance before nginx -t. The test script is not shipped.
+            cp -a deploy/nginx/render-origin-verify.sh "${stage}/nginx/"
+          else
+            echo "::warning::deploy/nginx/*.conf not found; the artifact carries no nginx config."
+          fi
+          (cd "$stage" && zip -qr "${GITHUB_WORKSPACE}/${PROJECT_NAME}.zip" . -x "*.DS_Store")
           unzip -l "${PROJECT_NAME}.zip" | tail -n 3
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ${{ env.PROJECT_NAME }}
           path: ${{ env.PROJECT_NAME }}.zip
           retention-days: 1
 
   # ───────────────────────────────────────────────────────────
-  # Stage 3 — Deploy (S3 upload → EC2 via SSM → nginx reload)
+  # Stage 2: Deploy (S3 upload, EC2 over SSM, nginx, CloudFront)
   # ───────────────────────────────────────────────────────────
 
   deployment:
-    name: Application Deployment
+    name: Application deployment
     needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    environment: production   # deployment protection rules + OIDC sub claim
+    # Run when the build succeeded or was skipped (rollback). Never after a
+    # failed or cancelled build, and only from main.
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.build.result == 'success' || needs.build.result == 'skipped') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: production   # deployment protection rules and OIDC subject claim
+    permissions:
+      contents: read
+      id-token: write         # OIDC credential exchange with AWS
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       ARTIFACTS_BUCKET: ${{ vars.ARTIFACTS_BUCKET }}
       WEB_ROOT: ${{ vars.WEB_ROOT }}
+      DEPLOY_ROLE_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://henniefrancis.tech' }}
+      ARTIFACT_VERSION: ${{ inputs.artifact_version }}
+      DEPLOY_REASON: ${{ inputs.reason }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
     steps:
-      - name: Preflight — required configuration present
+      - name: Checkout (deploy scripts only)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+
+      - name: Preflight, required configuration present
         run: |
           missing=0
-          for v in AWS_REGION ARTIFACTS_BUCKET WEB_ROOT; do
+          for v in AWS_REGION ARTIFACTS_BUCKET WEB_ROOT DEPLOY_ROLE_ARN; do
             if [ -z "${!v}" ]; then
-              echo "::error::Repository variable behind '$v' is not set (see terraform/README.md §4)."
+              echo "::error::Repository variable behind '$v' is not set."
               missing=1
             fi
           done
-          if [ -z "${{ vars.AWS_DEPLOY_ROLE_ARN }}" ]; then
-            echo "::error::Repository variable AWS_DEPLOY_ROLE_ARN is not set."
+          if [ -n "$ARTIFACT_VERSION" ] && ! [[ "$ARTIFACT_VERSION" =~ ^[0-9]{8}-[0-9]{6}-[0-9a-f]{7}$ ]]; then
+            echo "::error::artifact_version must look like 20260101-120000-abc1234."
             missing=1
           fi
           exit $missing
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6
+      - name: Run summary
+        run: |
+          {
+            echo "### Deploy request"
+            echo "- Commit: \`${GITHUB_SHA::7}\`"
+            if [ -n "$ARTIFACT_VERSION" ]; then
+              echo "- Mode: rollback to stored artifact \`${ARTIFACT_VERSION}\`"
+            else
+              echo "- Mode: build from this commit"
+            fi
+            if [ -n "$DEPLOY_REASON" ]; then
+              echo "- Reason: ${DEPLOY_REASON//[^A-Za-z0-9 ._,:;()-]/}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      # Discover the target instance by its Name tag rather than a pinned
-      # id: after a Terraform -replace the id changes, and a stale
-      # EC2_INSTANCE_ID variable would strand deploys (SSM answers
-      # "Undeliverable" or "InvalidInstanceId"). Needs the deploy role's
-      # DiscoverInstance statement (iam.tf).
+      # Discover the target instance by its Name tag rather than a pinned id:
+      # after a Terraform replace the id changes, and a stale id variable would
+      # strand deploys. Needs the deploy role's instance discovery statement.
       - name: Resolve target instance
         run: |
           INSTANCE_ID=$(aws ec2 describe-instances \
@@ -150,31 +221,50 @@ jobs:
             exit 1
           fi
           if [ "$(echo "$INSTANCE_ID" | wc -w)" -ne 1 ]; then
-            echo "::error::Expected exactly one running instance, found: $INSTANCE_ID"
+            echo "::error::Expected exactly one running instance."
             exit 1
           fi
-          echo "Deploying to instance: $INSTANCE_ID"
+          echo "Target instance resolved."
           echo "INSTANCE_ID=$INSTANCE_ID" >> "$GITHUB_ENV"
 
       - name: Download artifact
-        uses: actions/download-artifact@v8
+        if: ${{ inputs.artifact_version == '' }}
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: ${{ env.PROJECT_NAME }}
 
-      - name: Upload to S3
+      # Build mode: store the zip under a new version. Rollback mode: confirm
+      # the requested version exists. Either way the chosen key is exported.
+      - name: Select artifact in S3
         run: |
-          VERSION=$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}
-          aws s3 cp "${PROJECT_NAME}.zip" \
-            "s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/${VERSION}/${PROJECT_NAME}.zip"
-          aws s3 cp "${PROJECT_NAME}.zip" \
-            "s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip"
-          echo "Uploaded version: ${VERSION}"
+          set -euo pipefail
+          if [ -n "$ARTIFACT_VERSION" ]; then
+            VERSION="$ARTIFACT_VERSION"
+            aws s3api head-object \
+              --bucket "$ARTIFACTS_BUCKET" \
+              --key "${PROJECT_NAME}/${VERSION}/${PROJECT_NAME}.zip" > /dev/null
+            echo "Rolling back to stored version ${VERSION}"
+          else
+            VERSION="$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}"
+            aws s3 cp "${PROJECT_NAME}.zip" \
+              "s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/${VERSION}/${PROJECT_NAME}.zip"
+            aws s3 cp "${PROJECT_NAME}.zip" \
+              "s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip"
+            echo "Uploaded version ${VERSION}"
+          fi
+          echo "ARTIFACT_KEY=${PROJECT_NAME}/${VERSION}/${PROJECT_NAME}.zip" >> "$GITHUB_ENV"
+          echo "- Artifact version: \`${VERSION}\`" >> "$GITHUB_STEP_SUMMARY"
 
-      # Run a command on the instance via SSM and FAIL THE JOB unless it
-      # succeeds on the box (the old pipeline was fire-and-forget: the
-      # job went green even when the instance-side commands failed).
+      # Run commands on the instance via SSM and FAIL THE JOB unless they
+      # succeed on the box.
+      #
+      # The workdir is /var/tmp (disk backed), not /tmp, which is a small tmpfs
+      # on this instance size. The zip is fetched with curl from a presigned
+      # URL rather than the AWS CLI on the box: the CLI's memory footprint made
+      # the SSM command hang on a nano instance.
       - name: Deploy to EC2
         run: |
+          set -euo pipefail
           run_ssm() {
             local comment="$1"; shift
             local params
@@ -187,12 +277,10 @@ jobs:
               --parameters "$params" \
               --query "Command.CommandId" \
               --output text)
-            echo "SSM Command ID: $cmd_id ($comment)"
+            echo "SSM command id: $cmd_id ($comment)"
 
             # Poll until the command leaves Pending/InProgress (up to 10 min).
-            # `aws ssm wait command-executed` gives up after a fixed ~100 s,
-            # which a first full-site copy (~146 MB) on a t4g.nano exceeds —
-            # deploy #10 died with "Max attempts exceeded ... InProgress".
+            # `aws ssm wait command-executed` gives up after about 100 s.
             local status
             for _ in $(seq 1 60); do
               status=$(aws ssm get-command-invocation \
@@ -205,6 +293,11 @@ jobs:
             done
             echo "Status: $status"
             if [ "$status" != "Success" ]; then
+              echo "::group::Instance stdout"
+              aws ssm get-command-invocation \
+                --command-id "$cmd_id" --instance-id "$INSTANCE_ID" \
+                --query "StandardOutputContent" --output text
+              echo "::endgroup::"
               echo "::group::Instance stderr"
               aws ssm get-command-invocation \
                 --command-id "$cmd_id" --instance-id "$INSTANCE_ID" \
@@ -214,70 +307,70 @@ jobs:
             fi
           }
 
-          # NOTE: workdir is /var/tmp (DISK-backed), not /tmp. AL2023 mounts
-          # /tmp as tmpfs sized to ~half of RAM — ~256 MB on a t4g.nano —
-          # and the ~146 MB site zip + its unzipped copy blew straight
-          # through that ("write error (disk full?)", unzip exit 50).
-          #
-          # FETCH VIA PRESIGNED URL + curl — NOT `aws s3 cp` — on the box.
-          # aws-cli v2 carries a ~200 MB resident footprint; copying the
-          # ~142 MB artifact with it on a 512 MB t4g.nano swap-thrashed and
-          # hung the SSM command indefinitely (deploy #10 was still InProgress
-          # 15+ min in). The runner has creds + RAM, so it presigns the object;
-          # the box streams it to disk with curl (~a few MB of memory).
           PRESIGNED_URL=$(aws s3 presign \
-            "s3://${ARTIFACTS_BUCKET}/${PROJECT_NAME}/latest/${PROJECT_NAME}.zip" \
+            "s3://${ARTIFACTS_BUCKET}/${ARTIFACT_KEY}" \
             --expires-in 1800)
 
+          # Interface I-4: the nginx install script is shipped inline (base64)
+          # so the instance needs no repository checkout.
+          INSTALL_SCRIPT_B64=$(base64 -w0 .github/scripts/install-nginx-conf.sh)
+          DEPLOY_DIR="/var/tmp/${PROJECT_NAME}-deploy"
+
+          # Order: web files, then render the origin-verify include from the
+          # parameter store (instance role, secret never printed), then the
+          # nginx config. install-nginx-conf.sh runs `nginx -t` against the
+          # rendered file, restores the previous config if it fails, and
+          # reloads nginx when it passes.
           run_ssm "deploy ${PROJECT_NAME} ${GITHUB_SHA::7}" \
             "set -euo pipefail" \
             "curl -fsS \"${PRESIGNED_URL}\" -o /var/tmp/${PROJECT_NAME}.zip" \
-            "rm -rf /var/tmp/${PROJECT_NAME}-deploy" \
-            "unzip -o /var/tmp/${PROJECT_NAME}.zip -d /var/tmp/${PROJECT_NAME}-deploy" \
-            "rsync -a --delete /var/tmp/${PROJECT_NAME}-deploy/ ${WEB_ROOT}/" \
+            "rm -rf ${DEPLOY_DIR}" \
+            "unzip -o /var/tmp/${PROJECT_NAME}.zip -d ${DEPLOY_DIR}" \
+            "test -d ${DEPLOY_DIR}/site || { echo 'artifact has no site/ folder (built before the current layout)' >&2; exit 1; }" \
+            "rsync -a --delete ${DEPLOY_DIR}/site/ ${WEB_ROOT}/" \
             "chown -R nginx:nginx ${WEB_ROOT}" \
-            "rm -rf /var/tmp/${PROJECT_NAME}.zip /var/tmp/${PROJECT_NAME}-deploy"
+            "if [ -f ${DEPLOY_DIR}/nginx/render-origin-verify.sh ]; then AWS_REGION=${AWS_REGION} bash ${DEPLOY_DIR}/nginx/render-origin-verify.sh; fi"             "echo ${INSTALL_SCRIPT_B64} | base64 -d > ${DEPLOY_DIR}/install-nginx-conf.sh" \
+            "bash ${DEPLOY_DIR}/install-nginx-conf.sh ${DEPLOY_DIR}/nginx" \
+            "rm -rf /var/tmp/${PROJECT_NAME}.zip ${DEPLOY_DIR}"
 
-      - name: Reload Nginx
-        run: |
-          CMD_ID=$(aws ssm send-command \
-            --instance-ids "$INSTANCE_ID" \
-            --document-name "AWS-RunShellScript" \
-            --comment "nginx validate+reload" \
-            --parameters '{"commands":["nginx -t && systemctl reload nginx"]}' \
-            --query "Command.CommandId" \
-            --output text)
-
-          aws ssm wait command-executed \
-            --command-id "$CMD_ID" --instance-id "$INSTANCE_ID" || true
-
-          STATUS=$(aws ssm get-command-invocation \
-            --command-id "$CMD_ID" --instance-id "$INSTANCE_ID" \
-            --query "StatusDetails" --output text)
-          echo "Nginx reload status: $STATUS"
-          [ "$STATUS" = "Success" ] || exit 1
-
-      # Without this, CloudFront can keep serving cached HTML/CSS until
-      # the origin TTLs lapse. The nginx cache rules make HTML no-cache,
-      # so this is belt-and-braces — but it makes CSS/JS updates instant.
+      # Keeps CSS and JS updates instant; HTML is no-cache at the origin.
       - name: Invalidate CloudFront cache
         run: |
-          if [ -z "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
-            echo "No CLOUDFRONT_DISTRIBUTION_ID secret set — skipping (no CloudFront fronting the site yet)."
+          if [ -z "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+            echo "No CLOUDFRONT_DISTRIBUTION_ID secret set, skipping."
             exit 0
           fi
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
-            --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
             --paths "/*" \
             --query "Invalidation.Id" \
             --output text)
           echo "Created invalidation: $INVALIDATION_ID"
           aws cloudfront wait invalidation-completed \
-            --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
             --id "$INVALIDATION_ID"
           echo "CloudFront invalidation complete."
 
-      - name: Update Deployment Badge
+      # Redirects are followed so this also passes while the origin still
+      # redirects directory URLs; the final response must be 200.
+      - name: Post-deploy smoke check
+        run: |
+          set -euo pipefail
+          base="${SITE_URL%/}"
+          failed=0
+          for path in / /biography /public-speaking /certifications /version.json; do
+            code=000
+            for _ in 1 2 3; do
+              code=$(curl -sSL --max-redirs 3 --max-time 20 -o /dev/null -w '%{http_code}' "${base}${path}" || echo 000)
+              [ "$code" = "200" ] && break
+              sleep 5
+            done
+            echo "${path} -> ${code}"
+            [ "$code" = "200" ] || failed=1
+          done
+          exit $failed
+
+      - name: Update deployment badge
         if: always()
         continue-on-error: true
         env:
@@ -286,7 +379,7 @@ jobs:
           JOB_STATUS: ${{ job.status }}
         run: |
           if [ -z "$GIST_ID" ] || [ -z "$GIST_SECRET" ]; then
-            echo "Badge gist not configured — skipping."
+            echo "Badge gist not configured, skipping."
             exit 0
           fi
           python3 - << 'PYEOF'

@@ -1,84 +1,76 @@
-name: Security Scan — henniefrancis.tech
+name: security
+
+# Weekly sweep plus manual runs only. There is no push or PR trigger: the
+# per-PR security checks live in the `ci` workflow.
 
 on:
-  push:
-    branches: [main]
-  workflow_call:
   workflow_dispatch:
   schedule:
-    # Weekly sweep (Mon 03:00 UTC) so new CVEs surface even without pushes
+    # Mondays 03:00 UTC
     - cron: '0 3 * * 1'
 
 permissions:
   contents: read
 
 jobs:
-  # ── Secret Scanning ──────────────────────────────────────────
-  # Full git history scan — catches secrets in past commits too.
-  secrets:
-    name: Secret Scan (Gitleaks)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+  security:
+    name: security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
-      - name: Checkout (full history)
-        uses: actions/checkout@v6
+      - name: Checkout (full history for the date-bounded secret scan)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
-
-  # ── Dependency Vulnerability Check ───────────────────────────
-  # Audits the Angular app's runtime dependencies (src/) for
-  # high/critical CVEs. --omit=dev skips build-only tooling.
-  dependencies:
-    name: Dependency Audit (npm)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
-          cache-dependency-path: src/package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            tools/*/package-lock.json
 
-      - name: Install dependencies
-        working-directory: src
-        run: npm ci
+      - name: Install gitleaks (pinned release, checksum verified)
+        run: .github/scripts/install-tool.sh gitleaks
 
-      - name: Audit for high/critical CVEs
-        working-directory: src
-        run: npm audit --audit-level=high --omit=dev
+      # Only the last 8 days of commits: enough to cover the weekly cadence
+      # with overlap. The full-history scan is run locally at release time.
+      - name: Secret scan (gitleaks, last 8 days)
+        run: |
+          gitleaks git \
+            --config .gitleaks.toml \
+            --log-opts "--since=8.days" \
+            --redact \
+            --no-banner \
+            --exit-code 1 \
+            .
 
-  # ── Filesystem Vulnerability Scan ────────────────────────────
-  # Trivy scans the source tree (incl. lockfiles) for CRITICAL/HIGH
-  # CVEs. Ignores unfixed vulnerabilities so the gate doesn't block on
-  # issues with no patch available yet.
-  trivy:
-    name: Filesystem Scan (Trivy)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
+      - name: Dependency audit (runtime dependencies)
+        run: |
+          set -euo pipefail
+          npm ci
+          npm audit --omit=dev --audit-level=high
+          shopt -s nullglob
+          for f in tools/*/package.json; do
+            dir="$(dirname "$f")"
+            echo "::group::npm audit in ${dir}"
+            (cd "$dir" && npm ci && npm audit --omit=dev --audit-level=high)
+            echo "::endgroup::"
+          done
 
-      - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          exit-code: 1
-          format: table
+      - name: Install trivy (pinned release, checksum verified)
+        run: .github/scripts/install-tool.sh trivy
+
+      - name: Vulnerability scan (trivy fs)
+        run: |
+          trivy fs \
+            --scanners vuln \
+            --severity CRITICAL,HIGH \
+            --ignore-unfixed \
+            --skip-dirs node_modules \
+            --skip-dirs .angular \
+            --exit-code 1 \
+            .

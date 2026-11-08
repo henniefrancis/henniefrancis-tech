@@ -5,11 +5,11 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # ── Angular build output & cache ──────────────────────────────
-dist/
+/dist/
 tmp/
 out-tsc/
 bazel-out/
-.angular/cache/
+**/.angular/
 /connect.lock
 /libpeerconnection.log
 testem.log
@@ -44,7 +44,11 @@ playwright-report/
 test-results/
 blob-report/
 .playwright/
-/coverage
+/coverage/
+
+# Generated test and image outputs (never committed)
+e2e/visual/baseline/
+tools/images/out/
 
 # ── Editors / IDEs ────────────────────────────────────────────
 .vscode/*

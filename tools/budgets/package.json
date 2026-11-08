@@ -1,0 +1,18 @@
+{
+  "name": "hft-budgets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build output budget checks (image size, no amazonaws.com, no third-party CDN hosts).",
+  "type": "module",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "check": "node check-dist.mjs",
+    "test": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "5.1.0",
+    "vitest": "5.1.0"
+  }
+}
