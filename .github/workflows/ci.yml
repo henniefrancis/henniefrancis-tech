@@ -218,7 +218,7 @@ jobs:
 
       - name: CloudFront function tests
         if: steps.tf.outputs.changed == 'true'
-        run: node --test terraform/functions
+        run: node --test "terraform/functions/*.test.js"
 
       - name: Retained resources check
         if: steps.tf.outputs.changed == 'true'

@@ -7,7 +7,7 @@
 #   a 301 to the apex before the cache or the origin is involved.
 #
 # The code lives in functions/www-redirect.js, which has a Node unit
-# test (functions/www-redirect.test.js, run with `node --test`).
+# test (functions/www-redirect.test.js, run with `node --test "*.test.js"`).
 #
 # Docs:
 #   https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_function

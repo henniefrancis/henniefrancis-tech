@@ -139,7 +139,7 @@ terraform test          # plan-only, mock providers, no credentials
 tflint --init && tflint
 trivy config --ignorefile .trivyignore.yaml --severity MEDIUM,HIGH,CRITICAL --exit-code 1 .
 bash tests/retained-resources.sh
-node --test functions/   # CloudFront Function unit test
+node --test "functions/*.test.js"   # CloudFront Function unit test
 ```
 
 `terraform.yml` runs the static checks (no credentials needed) on every PR and push touching `terraform/`. The plan/apply runs are kicked off by HCP Terraform's own VCS connection: speculative plan on PRs, plan + auto-apply on merge to `main`. Runs execute remotely in the `henniefrancis-tech` workspace with the org's variable-set credentials and are fully visible in the HCP Terraform UI.

@@ -1,5 +1,5 @@
 // Unit tests for the www redirect CloudFront Function.
-// Run from terraform/functions with: node --test
+// Run from terraform/functions with: node --test "*.test.js"
 'use strict';
 
 const test = require('node:test');
