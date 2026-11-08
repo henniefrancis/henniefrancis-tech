@@ -70,8 +70,10 @@ resource "aws_instance" "web" {
 
   lifecycle {
     ignore_changes = [
-      ami,       # don't replace when Amazon publishes a newer AL2023 AMI
-      user_data, # covered by user_data_replace_on_change = false
+      ami,              # don't replace when Amazon publishes a newer AL2023 AMI
+      user_data,        # covered by user_data_replace_on_change = false
+      user_data_base64, # this resource sets user_data_base64, so it must be ignored too:
+      #                   otherwise a template edit would stop/start the instance in place.
     ]
   }
 
@@ -90,6 +92,12 @@ resource "aws_eip" "web" {
 
   tags = {
     Name = "${local.name_prefix}-eip"
+  }
+
+  # RETAINED: the origin A record points at this address; losing it
+  # means an owner DNS change.
+  lifecycle {
+    prevent_destroy = true
   }
 
   depends_on = [aws_internet_gateway.main]

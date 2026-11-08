@@ -21,6 +21,11 @@ resource "aws_s3_bucket" "artifacts" {
   tags = {
     Name = local.artifacts_bucket_name
   }
+
+  # RETAINED: holds the rollback zips.
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "artifacts" {
