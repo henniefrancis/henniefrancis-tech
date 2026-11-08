@@ -84,10 +84,20 @@ describe('Certifications', () => {
     const el = await render(Certifications);
     expect(Array.from(el.querySelectorAll('h4')).map((h) => h.textContent)).toEqual(CERT_CATEGORIES.map((c) => c.name));
     const badges = CERT_CATEGORIES.flatMap((c) => c.badges);
-    const links = Array.from(el.querySelectorAll('.certification a'));
-    expect(links.map((a) => a.getAttribute('title'))).toEqual(badges.map((b) => b.name));
-    expect(links.map((a) => a.getAttribute('href'))).toEqual(badges.map((b) => b.href ?? b.route));
+    const linked = badges.filter((b) => b.href ?? b.route);
+    const links = Array.from(el.querySelectorAll('.certification a[href]'));
+    expect(links.map((a) => a.getAttribute('title'))).toEqual(linked.map((b) => b.name));
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(linked.map((b) => b.href ?? b.route));
     expect(links.filter((a) => a.getAttribute('target') === '_blank').length).toBe(badges.filter((b) => b.href).length);
+  });
+
+  it('shows a badge without a link as an image and a name only', async () => {
+    const el = await render(Certifications);
+    const plain = CERT_CATEGORIES.flatMap((c) => c.badges).filter((b) => !b.href && !b.route);
+    expect(plain.length).toBeGreaterThan(0);
+    const anchors = Array.from(el.querySelectorAll('.certification a:not([href])'));
+    expect(anchors.map((a) => a.getAttribute('title'))).toEqual(plain.map((b) => b.name));
+    expect(anchors.every((a) => a.querySelector('img') && a.querySelector('label'))).toBe(true);
   });
 
   it('shows the label text for every status, including expired and retired', async () => {

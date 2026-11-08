@@ -86,19 +86,14 @@ describe('structure and schema errors', () => {
       expect(rules(validateTree(tree)).some((r) => r.startsWith('pages/biography.yaml /portrait/src'))).toBe(true);
     }
   });
-  it('requires alt text on images but allows an empty cert item name', () => {
+  it('requires alt text on images and a name and alt text on every certification', () => {
     const tree = fixtureTree();
     tree.files['pages/biography.yaml'].portrait.alt = '';
     tree.files['certifications/items/aws-cert-a.yaml'].name = '';
     tree.files['certifications/items/aws-cert-a.yaml'].image.alt = '';
     has(tree, 'pages/biography.yaml /portrait/alt minLength');
-    expect(rules(validateTree(tree)).filter((r) => r.includes('aws-cert-a'))).toEqual([]);
-    expect(rules(lintTree(tree))).toContain('certifications/items/aws-cert-a.yaml /name empty-name');
-  });
-  it('lints an empty image alt on a certification with a name', () => {
-    const tree = fixtureTree();
-    tree.files['certifications/items/aws-cert-a.yaml'].image.alt = '';
-    expect(rules(lintTree(tree))).toContain('certifications/items/aws-cert-a.yaml /image/alt empty-name');
+    has(tree, 'certifications/items/aws-cert-a.yaml /name minLength');
+    has(tree, 'certifications/items/aws-cert-a.yaml /image/alt minLength');
   });
   it('types the contact and referee fields', () => {
     const setters = [
@@ -112,10 +107,13 @@ describe('structure and schema errors', () => {
       expect(rules(validateTree(tree)).some((r) => r.startsWith(path) && r.endsWith('pattern'))).toBe(true);
     }
   });
-  it('requires exactly one of url and detail on a certification', () => {
+  it('allows a certification without a link and refuses one with both a url and a detail', () => {
     const tree = fixtureTree();
     delete tree.files['certifications/items/aws-cert-a.yaml'].url;
-    has(tree, 'certifications/items/aws-cert-a.yaml  oneOf');
+    expect(rules(validateTree(tree)).filter((r) => r.includes('aws-cert-a'))).toEqual([]);
+    tree.files['certifications/items/aws-cert-a.yaml'].url = 'https://x.example.test/a';
+    tree.files['certifications/items/aws-cert-a.yaml'].detail = { type: 'mcts', id: 'AAAAAAAA-0000-0000-0000-000000000001' };
+    has(tree, 'certifications/items/aws-cert-a.yaml  not');
   });
 });
 

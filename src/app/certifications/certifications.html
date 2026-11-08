@@ -29,8 +29,14 @@
                 <label [class]="badge.status">{{ badge.statusText }}</label>
                 <img [src]="badge.image.src" [alt]="badge.image.alt" loading="lazy">
               </a>
-            } @else {
+            } @else if (badge.route) {
               <a [routerLink]="badge.route" [title]="badge.name">
+                <label [class]="badge.status">{{ badge.statusText }}</label>
+                <img [src]="badge.image.src" [alt]="badge.image.alt" loading="lazy">
+              </a>
+            } @else {
+              <!-- No link (the badge page is gone): an anchor without href keeps the layout and styles. -->
+              <a [title]="badge.name">
                 <label [class]="badge.status">{{ badge.statusText }}</label>
                 <img [src]="badge.image.src" [alt]="badge.image.alt" loading="lazy">
               </a>

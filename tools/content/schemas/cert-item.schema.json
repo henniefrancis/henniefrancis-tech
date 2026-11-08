@@ -13,7 +13,7 @@
   ],
   "properties": {
     "name": {
-      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/TextOrEmpty"
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
     },
     "vendor": {
       "enum": [
@@ -59,7 +59,7 @@
       }
     },
     "image": {
-      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageFieldLoose"
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
     },
     "countAs": {
       "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Slug"
@@ -81,16 +81,10 @@
       }
     }
   },
-  "oneOf": [
-    {
-      "required": [
-        "url"
-      ]
-    },
-    {
-      "required": [
-        "detail"
-      ]
-    }
-  ]
+  "not": {
+    "required": [
+      "url",
+      "detail"
+    ]
+  }
 }

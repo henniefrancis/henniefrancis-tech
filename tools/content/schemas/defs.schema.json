@@ -79,23 +79,7 @@
       "type": "string",
       "maxLength": 200,
       "not": {
-        "pattern": "<[A-Za-z/!?]|[\\u0000-\\u001F\\u007F\\u202A-\\u202E\\u2066-\\u2069]"
-      }
-    },
-    "ImageFieldLoose": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "src",
-        "alt"
-      ],
-      "properties": {
-        "src": {
-          "$ref": "#/$defs/ImagePath"
-        },
-        "alt": {
-          "$ref": "#/$defs/TextOrEmpty"
-        }
+        "pattern": "<[A-Za-z/!?]|[\u0000-\u001F\u007F\u202A-\u202E\u2066-\u2069]"
       }
     },
     "ImageField": {

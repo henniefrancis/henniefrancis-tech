@@ -171,7 +171,6 @@ export function validateTree(tree) {
  * Findings that do not fail the build but that the owner should know about. Same shape as errors.
  * edition-year-mismatch: the edition id does not start with the year label.
  * gallery-link-without-gallery: an event links to photos that do not exist (the link falls back to home).
- * empty-name: a certification with an empty name or image alt text (no accessible name).
  */
 export function lintTree(tree) {
   const warnings = [];
@@ -187,9 +186,6 @@ export function lintTree(tree) {
       asArray(data.links).forEach((link, i) => {
         if (link?.gallery === true && !(gallery in files)) warnings.push({ file: path, pointer: `/links/${i}/gallery`, rule: 'gallery-link-without-gallery' });
       });
-    }
-    if (path.startsWith('certifications/items/') && (data.name === '' || data.image?.alt === '')) {
-      warnings.push({ file: path, pointer: data.name === '' ? '/name' : '/image/alt', rule: 'empty-name' });
     }
   }
   return warnings.sort((a, b) => (a.file + a.pointer).localeCompare(b.file + b.pointer));

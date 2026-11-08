@@ -62,7 +62,8 @@ function certificationModules(files) {
     const item = items[slug];
     const badge = { name: item.name, kind: item.kind, status: item.status, vendor: item.vendor, image: item.image };
     if (item.url) return { ...badge, href: item.url };
-    return { ...badge, route: `/certifications/microsoft/${item.detail.type}/${item.detail.id}` };
+    if (item.detail) return { ...badge, route: `/certifications/microsoft/${item.detail.type}/${item.detail.id}` };
+    return badge;
   };
   const categories = files['certifications/categories.yaml'].categories.map((c) => ({ name: c.name, badges: c.items.map(toBadge) }));
   const details = {};
