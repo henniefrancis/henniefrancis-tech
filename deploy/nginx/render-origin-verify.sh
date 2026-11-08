@@ -11,7 +11,8 @@
 #
 # Safety:
 #   - secret values are never printed and never leave the include file;
-#   - values must be alphanumeric, 32 to 128 characters, so nothing can
+#   - values must be alphanumeric, 32 to 64 characters (openssl rand -hex 32 is 64;
+#     nginx map keys must fit map_hash_bucket_size), so nothing can
 #     inject nginx syntax;
 #   - the file is written atomically, mode 0640, group nginx;
 #   - on any error the existing file is left untouched.
@@ -40,7 +41,7 @@ get_param() {
 }
 
 valid_secret() {
-  [[ "$1" =~ ^[A-Za-z0-9]{32,128}$ ]]
+  [[ "$1" =~ ^[A-Za-z0-9]{32,64}$ ]]
 }
 
 current="$(get_param current)"

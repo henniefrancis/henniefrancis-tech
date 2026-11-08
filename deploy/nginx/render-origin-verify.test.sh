@@ -72,6 +72,26 @@ else
   echo "ok: injection rejected"
 fi
 
+# 5b. length limits: 31 and 65 characters are refused, 32 and 64 are accepted
+before="$(cat "${work}/out/origin-verify.inc")"
+for bad in "${a:0:31}" "${a}a"; do
+  if STUB_CURRENT="${bad}" STUB_PREVIOUS="none" bash "${here}/render-origin-verify.sh" >/dev/null 2>&1; then
+    echo "FAIL: length ${#bad} accepted" >&2
+    fail=1
+  else
+    echo "ok: length ${#bad} rejected"
+  fi
+  if STUB_CURRENT="${a}" STUB_PREVIOUS="${bad}" bash "${here}/render-origin-verify.sh" >/dev/null 2>&1; then
+    echo "FAIL: previous length ${#bad} accepted" >&2
+    fail=1
+  else
+    echo "ok: previous length ${#bad} rejected"
+  fi
+done
+check "file untouched after length failures" "${before}" "$(cat "${work}/out/origin-verify.inc")"
+STUB_CURRENT="${a:0:32}" STUB_PREVIOUS="${b}" bash "${here}/render-origin-verify.sh" >/dev/null
+check "32 and 64 characters accepted" "2" "$(wc -l <"${work}/out/origin-verify.inc" | tr -d ' ')"
+
 # 6. the secret is never printed
 out="$(STUB_CURRENT="${a}" STUB_PREVIOUS="${b}" bash "${here}/render-origin-verify.sh" 2>&1)"
 if [[ "${out}" == *"${a}"* || "${out}" == *"${b}"* ]]; then
