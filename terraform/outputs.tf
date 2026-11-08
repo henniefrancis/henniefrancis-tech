@@ -31,6 +31,18 @@ output "artifacts_bucket" {
   value       = aws_s3_bucket.artifacts.bucket
 }
 
+# ── Images and content pipeline ──────────────────────────────
+
+output "image_bucket_name" {
+  description = "Private image bucket → IMAGE_BUCKET for the image upload and the config repo bot."
+  value       = aws_s3_bucket.images.bucket
+}
+
+output "config_bot_role_arn" {
+  description = "OIDC role for the config repo image bot → config repo variable AWS_ROLE_ARN."
+  value       = aws_iam_role.config_bot.arn
+}
+
 # ── CloudFront ───────────────────────────────────────────────
 
 output "cloudfront_distribution_id" {

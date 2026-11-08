@@ -145,18 +145,17 @@ variable "assign_ipv6_address" {
 
 variable "cloudfront_origin_protocol_policy" {
   description = <<-EOT
-    How CloudFront connects to the origin.
-      "https-only" (default, recommended): the box must present a valid TLS
-        certificate for origin_domain_name (run certbot for that hostname).
-      "http-only": simpler bootstrap, but the CloudFront<->origin hop is
-        unencrypted and the box must NOT 301-redirect :80 to https.
+    How CloudFront connects to the origin. Only "https-only" is allowed: the
+    origin must present a valid certificate for origin_domain_name (run
+    certbot for that hostname, see the Origin certificate runbook), and the
+    X-Origin-Verify secret must never cross the internet in clear text.
   EOT
   type        = string
   default     = "https-only"
 
   validation {
-    condition     = contains(["https-only", "http-only"], var.cloudfront_origin_protocol_policy)
-    error_message = "Must be https-only or http-only."
+    condition     = var.cloudfront_origin_protocol_policy == "https-only"
+    error_message = "Must be https-only: the origin verify secret must not travel over plain HTTP."
   }
 }
 
@@ -199,4 +198,57 @@ variable "artifact_retention_days" {
     condition     = var.artifact_retention_days >= 7 && var.artifact_retention_days <= 365
     error_message = "artifact_retention_days must be between 7 and 365."
   }
+}
+
+# ── Origin protection ──────────────────────────────
+
+variable "origin_verify_secret" {
+  description = "Shared secret CloudFront sends in the X-Origin-Verify header. Set as a sensitive HCP Terraform variable (generate with: openssl rand -hex 32). Never put a value in code."
+  type        = string
+  sensitive   = true
+
+  validation {
+    condition     = length(var.origin_verify_secret) >= 32 && length(var.origin_verify_secret) <= 64 && can(regex("^[A-Za-z0-9]+$", var.origin_verify_secret))
+    error_message = "origin_verify_secret must be 32 to 64 alphanumeric characters (for example the output of openssl rand -hex 32, which is 64)."
+  }
+}
+
+variable "origin_verify_secret_previous" {
+  description = "Previous X-Origin-Verify value, still accepted by nginx during a rotation. Leave empty when not rotating. Sensitive HCP Terraform variable."
+  type        = string
+  sensitive   = true
+  default     = ""
+
+  validation {
+    condition     = var.origin_verify_secret_previous == "" || (length(var.origin_verify_secret_previous) >= 32 && length(var.origin_verify_secret_previous) <= 64 && can(regex("^[A-Za-z0-9]+$", var.origin_verify_secret_previous)))
+    error_message = "origin_verify_secret_previous must be empty, or 32 to 64 alphanumeric characters."
+  }
+}
+
+variable "hsts_include_subdomains" {
+  description = "Add includeSubDomains to the HSTS header. Keep false until the owner confirms no subdomain serves plain HTTP (a documented design decision)."
+  type        = bool
+  default     = false
+}
+
+# ── Content pipeline and alarms ──────────────────────────────
+
+variable "config_repository" {
+  description = "GitHub <owner>/<repo> of the private content repo whose main branch may assume the image bot role via OIDC."
+  type        = string
+  default     = "henniefrancis/config"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9-]+/[A-Za-z0-9._-]+$", var.config_repository))
+    error_message = "config_repository must be in the form owner/repo."
+  }
+}
+
+# Consumed by the CloudFront 5xx alarm in a later change.
+# tflint-ignore: terraform_unused_declarations
+variable "alarm_email" {
+  description = "Email address for CloudFront 5xx alarms. Sensitive HCP Terraform variable; empty means an alarm without a subscriber."
+  type        = string
+  sensitive   = true
+  default     = ""
 }

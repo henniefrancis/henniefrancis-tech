@@ -6,7 +6,7 @@ import { VISUAL_DIR, loadRoutes, routeSlug } from '../lib/routes';
 import { waitForSettled } from '../lib/stabilise';
 
 /**
- * E5 (part): every generated route renders, has a title, does not scroll
+ * Every generated route renders, has a title, does not scroll
  * horizontally, logs no console errors or CSP violations, and loads every
  * resource. Resource failures are allowed only when the live-site baseline
  * already had the same failure (for example the certificate images) or the

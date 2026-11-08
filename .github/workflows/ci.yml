@@ -66,7 +66,7 @@ jobs:
       - name: Unit tests with coverage (site)
         run: npm test -- --no-watch --coverage
 
-      # Interface I-6: each tools/<name>/ is a standalone package whose
+      # Each tools/<name>/ is a standalone package whose
       # `npm test` enforces its own 100 percent coverage threshold.
       - name: Unit tests with coverage (tools)
         run: |
@@ -79,13 +79,13 @@ jobs:
             echo "::endgroup::"
           done
 
-      # Interface I-5 (delivered by the test harness workstream): fails on any
+      # The dist budget check fails on any
       # image over 250 kB, any amazonaws.com string or any CDN host.
       - name: Budget check on the build output
         run: |
           set -euo pipefail
           if [ ! -f tools/budgets/check-dist.mjs ]; then
-            echo "::error::tools/budgets/check-dist.mjs is missing (interface I-5)."
+            echo "::error::tools/budgets/check-dist.mjs is missing."
             exit 1
           fi
           # TEMPORARY: the amazonaws and cdn-host rules only warn for now.
@@ -204,21 +204,25 @@ jobs:
           tflint --chdir terraform --init
           tflint --chdir terraform --recursive --format compact
 
-      # MEDIUM and above. Accepted findings live in terraform/.trivyignore.yaml
-      # when that file exists; the step works with or without it.
+      # MEDIUM and above. The accepted-risk list is kept private and supplied
+      # through the TRIVY_IGNORE_YAML secret; without it every finding fails.
       - name: Terraform security scan (trivy config)
         if: steps.tf.outputs.changed == 'true'
+        env:
+          TRIVY_IGNORE_YAML: ${{ secrets.TRIVY_IGNORE_YAML }}
         run: |
           set -euo pipefail
           args=(--severity "MEDIUM,HIGH,CRITICAL" --exit-code 1)
-          if [ -f terraform/.trivyignore.yaml ]; then
-            args+=(--ignorefile terraform/.trivyignore.yaml)
+          if [ -n "${TRIVY_IGNORE_YAML:-}" ]; then
+            ignorefile="${RUNNER_TEMP}/trivyignore.yaml"
+            printf '%s\n' "$TRIVY_IGNORE_YAML" > "$ignorefile"
+            args+=(--ignorefile "$ignorefile")
           fi
           trivy config "${args[@]}" terraform
 
       - name: CloudFront function tests
         if: steps.tf.outputs.changed == 'true'
-        run: node --test terraform/functions
+        run: node --test "terraform/functions/*.test.js"
 
       - name: Retained resources check
         if: steps.tf.outputs.changed == 'true'

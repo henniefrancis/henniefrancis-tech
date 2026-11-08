@@ -1,7 +1,7 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { extname, join, relative, sep } from 'node:path';
 
-/** Interface I-5: no image over 250 kB (decimal), no amazonaws.com, no third-party CDN hosts. */
+/** Budget rules: no image over 250 kB (decimal), no amazonaws.com, no third-party CDN hosts. */
 export const MAX_IMAGE_BYTES = 250_000;
 export const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.avif', '.ico']);
 export const TEXT_EXTENSIONS = new Set([

@@ -77,9 +77,10 @@ dnf install -y nginx python3 augeas-libs jq rsync unzip
 
 # ── 3. Install Certbot (Let's Encrypt — free TLS) ─────────────
 # Isolated in a venv so it never conflicts with system Python.
-# certbot (run post-boot — see the command echoed at the end) covers the
-# apex, www and origin hostnames, so the box serves valid TLS for the
-# public site and, if used, the CloudFront origin.
+# Certbot issues ONE certificate, for the origin hostname only
+# (${domain_name}), with the webroot method so nginx is never edited by
+# certbot. CloudFront does not forward the viewer Host header, so the
+# public names need no certificate here. The command is echoed at the end.
 python3 -m venv /opt/certbot/
 /opt/certbot/bin/pip install --upgrade pip --quiet
 /opt/certbot/bin/pip install certbot certbot-nginx --quiet
@@ -92,7 +93,7 @@ Description=Certbot Renewal
 
 [Service]
 Type=oneshot
-ExecStart=/opt/certbot/bin/certbot renew --quiet --no-self-upgrade
+ExecStart=/opt/certbot/bin/certbot renew --quiet --no-self-upgrade --deploy-hook "systemctl reload nginx"
 __EOF__
 
 cat > /etc/systemd/system/certbot-renew.timer << '__EOF__'
@@ -214,33 +215,44 @@ http {
 }
 __NGINX_MAIN__
 
-# ── 6. Site config ────────────────────────────────────────────
-# HTTP-only initially. After the public DNS records propagate, run the
-# certbot command echoed at the end and it adds the HTTPS server blocks.
+# ── 6. Site config (bootstrap) ────────────────────────────────
+# HTTP-only bootstrap, so a rebuilt instance can answer the ACME
+# challenge and serve the placeholder page. The full config, with the
+# 443 server for the CloudFront origin, ships with every deploy from
+# deploy/nginx/henniefrancis-tech.conf in the site repo. That file is the
+# source of truth; the deploy installs it over this one after `nginx -t`.
+# Keep the caching and clean URL rules below in line with it.
 #
-# CANONICAL HOST: the bare apex (${public_domain}) serves the site;
-# ${www_domain} 301-redirects to it; ${domain_name} (the CloudFront
-# origin hostname) also serves the site so the CDN path still works.
+# ORDER FOR A REBUILD (see the origin certificate runbook):
+#   1. this bootstrap runs (port 80, ACME works)
+#   2. the owner runs certbot for ${domain_name} (webroot)
+#   3. the next deploy installs the full config and renders the origin
+#      verify include from SSM
 #
-# CACHING STRATEGY (multi-page static site — files are NOT content-
-# hashed, unlike an Angular/React build, so nothing may be "immutable"):
-#   *.html      no-cache  — revalidate every request; deploys land instantly
-#   *.css/*.js  1 hour    — short enough that a deploy + CloudFront
-#                           invalidation always wins
-#   images/fonts 7 days   — heavyweight, rarely change
-# CloudFront honours these via the UseOriginCacheControlHeaders policy,
-# and every deploy issues a /* invalidation as belt-and-braces.
+# CACHING:
+#   HTML                         no-cache, stale-if-error=86400
+#   hashed JS/CSS/fonts/images   public, max-age=31536000, immutable
+#   everything else              no-cache
+# CloudFront honours these through the site cache policy (origin
+# Cache-Control decides).
+mkdir -p /etc/nginx/origin-verify.d
+
 cat > /etc/nginx/conf.d/${project_name}.conf << '__NGINX_SITE__'
-# www -> apex canonical redirect. certbot adds the matching HTTPS (443)
-# block to this server on first run, so https://${www_domain} also
-# 301-redirects to the apex.
+map_hash_bucket_size 128;
+
+map $uri $hft_cache_control {
+    default "no-cache";
+    "~\.html$" "no-cache, stale-if-error=86400";
+    "~-[A-Z0-9]{8}\.(?:js|css|woff2?|svg|png|jpe?g|gif|webp|ico)$" "public, max-age=31536000, immutable";
+}
+
+# www -> apex.
 server {
     listen 80;
     listen [::]:80;
     server_name ${www_domain};
 
-    # Keep ACME validation working even though everything else redirects.
-    location /.well-known/acme-challenge/ {
+    location ^~ /.well-known/acme-challenge/ {
         alias /var/www/certbot/.well-known/acme-challenge/;
     }
 
@@ -249,8 +261,7 @@ server {
     }
 }
 
-# Canonical site — the apex serves content; the origin hostname is kept
-# so the CloudFront path still resolves if the CDN is put back in front.
+# Public names and the origin name, HTTP only until the full config arrives.
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -259,70 +270,39 @@ server {
     root /var/www/${project_name}/html;
     index index.html;
 
-    # Rate limiting
     limit_req zone=general burst=30 nodelay;
 
-    # Security headers
-    # HSTS is added by certbot after TLS is enabled.
-    add_header X-Frame-Options          "SAMEORIGIN"                       always;
-    add_header X-Content-Type-Options   "nosniff"                          always;
-    add_header Referrer-Policy          "strict-origin-when-cross-origin"  always;
-    add_header Permissions-Policy       "camera=(), microphone=(), geolocation=()" always;
+    add_header X-Frame-Options        "SAMEORIGIN"                              always;
+    add_header X-Content-Type-Options "nosniff"                                 always;
+    add_header Referrer-Policy        "strict-origin-when-cross-origin"         always;
+    add_header Permissions-Policy     "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()" always;
+    add_header Cache-Control          $hft_cache_control                        always;
 
-    # Let's Encrypt ACME challenge (webroot validation)
-    location /.well-known/acme-challenge/ {
+    # Location stays relative: behind CloudFront the Host header is the
+    # origin hostname, which must never leak into a redirect.
+    absolute_redirect off;
+
+    location ^~ /.well-known/acme-challenge/ {
         alias /var/www/certbot/.well-known/acme-challenge/;
     }
 
-    # Custom error pages (shipped with the site in the web root).
-    # NOT marked `internal`: CloudFront's custom_error_response fetches
-    # /50x.html directly from this origin when it needs to serve it.
     error_page 404 /404.html;
     location = /404.html {
-        expires -1;
     }
 
     error_page 500 502 503 504 /50x.html;
     location = /50x.html {
-        expires -1;
     }
 
-    # HTML never cached — pages reference un-hashed CSS/JS, so a cached
-    # page must never outlive its assets. `expires -1` sends
-    # "Cache-Control: no-cache" (revalidate every request) and, not
-    # being an add_header, keeps the inherited security headers intact.
-    location ~* \.html$ {
-        expires -1;
-        try_files $uri =404;
-    }
-
-    # Multi-page routing with clean URLs:
-    #   /pages/biography  ->  /pages/biography.html
-    # Unknown paths return a real 404 (this is not an SPA).
-    location / {
-        expires -1;
-        try_files $uri $uri/ $uri.html =404;
-    }
-
-    # CSS/JS — short cache; files are NOT content-hashed.
-    location ~* \.(css|js)$ {
-        expires 1h;
-        add_header Cache-Control "public, must-revalidate";
-        access_log off;
-    }
-
-    # Images and fonts — heavier, change rarely.
-    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp|avif)$ {
-        expires 7d;
-        add_header Cache-Control "public";
-        access_log off;
-    }
-
-    # Block hidden files (.git, .DS_Store, etc.)
     location ~ /\. {
         deny all;
         access_log off;
         log_not_found off;
+    }
+
+    # Clean URLs without a directory redirect.
+    location / {
+        try_files $uri $uri/index.html $uri.html =404;
     }
 }
 __NGINX_SITE__
@@ -332,7 +312,7 @@ nginx -t
 systemctl enable --now nginx
 
 echo "[bootstrap] === Done. nginx is running. ==="
-echo "[bootstrap] Canonical site: https://${public_domain} (${www_domain} redirects here)"
 echo "[bootstrap] Web root: /var/www/${project_name}/html"
-echo "[bootstrap] Next: point ${public_domain}, ${www_domain} and ${domain_name} DNS at this box, then:"
-echo "[bootstrap]   certbot --nginx -d ${public_domain} -d ${www_domain} -d ${domain_name} --redirect --non-interactive --agree-tos -m you@example.com"
+echo "[bootstrap] Next: point ${domain_name} (A and AAAA) at this box, then issue the origin certificate:"
+echo "[bootstrap]   certbot certonly --webroot -w /var/www/certbot -d ${domain_name} --deploy-hook 'systemctl reload nginx' --agree-tos -m <owner email>"
+echo "[bootstrap] Then run a deploy: it installs the full nginx config and renders the origin verify include."

@@ -18,14 +18,21 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 |---|---|
 | `versions.tf` | Terraform/provider pins + HCP Terraform workspace |
 | `vpc.tf` | Dual-stack VPC (IPv4 /16 + AWS IPv6 /56), 2 public subnets, IGW, routes |
-| `security_groups.tf` | 80/443 open v4+v6, SSH closed by default, rule resources (no inline) |
+| `security_groups.tf` | 80/443 open v4+v6 (443 is locked to CloudFront in the lockdown change), SSH closed by default, rule resources (no inline) |
 | `keypair.tf` | ED25519 emergency-SSH key pair; private key only in Secrets Manager |
 | `iam.tf` | GitHub OIDC deploy role + EC2 instance role — least-privilege, Terraform-managed |
 | `s3.tf` | Versioned, encrypted, TLS-only artifacts bucket with lifecycle expiry |
+| `s3_images.tf` | Private image bucket served at `/img/*` through CloudFront OAC; `archive/` is never served, never expires and cannot be deleted without a Terraform change |
+| `iam_config_bot.tf` | OIDC role for the private config repo image bot (PutObject on `img/*`, `originals/*` and `archive/*` only) |
+| `ssm.tf` | Origin verify secret (SecureString, current and previous) |
 | `ec2.tf` | t4g.nano AL2023 ARM64, IMDSv2, encrypted gp3, EIP, IPv6 |
 | `templates/user_data.sh.tftpl` | nginx (tuned for 512 MB) + certbot bootstrap |
-| `cloudfront.tf` | Distribution (http2and3, IPv6) + ACM cert in us-east-1 |
+| `cloudfront.tf` | Distribution (http2and3, IPv6, https-only origin with secret header, `/img/*` behaviour) + ACM cert in us-east-1 |
+| `cloudfront_policies.tf` | Site cache policy (empty key), origin request policy (forwards the query string, not keyed) and response headers policy |
+| `cloudfront_functions.tf`, `functions/` | www to apex 301 at the edge, with a Node unit test |
 | `tests/unit.tftest.hcl` | Plan-only tests with mock providers — no credentials needed |
+| `tests/retained-resources.sh` | Static check that retained resources keep `prevent_destroy` |
+| `.tflint.hcl` | Lint settings (the misconfiguration scan's accepted-risk list is kept private) |
 
 ## First-time rollout
 
@@ -66,10 +73,18 @@ The account already has the GitHub OIDC identity provider (created manually per 
 
    ```
    aws ssm start-session --target <instance_id> --region af-south-1
-   sudo certbot --nginx -d origin.henniefrancis.tech --non-interactive --agree-tos -m hennie@awscommunity.co.za
+   sudo certbot certonly --webroot -w /var/www/certbot -d origin.henniefrancis.tech --deploy-hook 'systemctl reload nginx' --agree-tos -m <owner email>
    ```
 
-   This is what lets CloudFront use `origin_protocol_policy = "https-only"`. Renewal is automatic (systemd timer, twice daily).
+   This is what lets CloudFront use `origin_protocol_policy = "https-only"`. Renewal is automatic (systemd timer, twice daily). The nginx config that uses the certificate ships with each deploy from `deploy/nginx/`.
+
+### 3b. Secrets set in HCP Terraform (sensitive variables, never in code)
+
+| Variable | Purpose |
+|---|---|
+| `origin_verify_secret` | Required. Value of the `X-Origin-Verify` header, 32 to 64 alphanumeric characters (generate with `openssl rand -hex 32`, which is 64). |
+| `origin_verify_secret_previous` | Leave empty except during a rotation. Same format and length limits. |
+| `alarm_email` | Optional, used by the alarm change. |
 
 ### 4. GitHub repository settings
 
@@ -101,7 +116,7 @@ Also create a **`production` environment** (Settings → Environments) — the d
 
 Only after the new stack serves production traffic:
 
-- Terminate old instance `i-0bf986b68f6b8ae16`, release its EIP.
+- Terminate the old instance, release its EIP.
 - Empty + delete `temp-deploy-hennie-francis-tech-bucket`.
 - Delete the manual `EC2SSM` role and its `S3Deployment`/`EC2SSM` policies (the Terraform-managed `henniefrancis-tech-github-deploy` role replaces them with tighter scoping).
 - Delete `.github/workflows/build-deploy.yaml` if it still exists anywhere.
@@ -121,6 +136,10 @@ terraform fmt -check -recursive
 terraform init -backend=false
 terraform validate
 terraform test          # plan-only, mock providers, no credentials
+tflint --init && tflint
+trivy config --ignorefile <private accepted-risk list> --severity MEDIUM,HIGH,CRITICAL --exit-code 1 .
+bash tests/retained-resources.sh
+node --test "functions/*.test.js"   # CloudFront Function unit test
 ```
 
 `terraform.yml` runs the static checks (no credentials needed) on every PR and push touching `terraform/`. The plan/apply runs are kicked off by HCP Terraform's own VCS connection: speculative plan on PRs, plan + auto-apply on merge to `main`. Runs execute remotely in the `henniefrancis-tech` workspace with the org's variable-set credentials and are fully visible in the HCP Terraform UI.

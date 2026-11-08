@@ -1,6 +1,6 @@
 import { extname } from 'node:path';
 
-/** Content-Security-Policy for the local report-only phase (build plan B3, no script-src or default-src). */
+/** Content-Security-Policy for the local report-only phase (no script-src or default-src yet). */
 export const CSP_DIRECTIVES = [
   "object-src 'none'",
   "base-uri 'self'",
