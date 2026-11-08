@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Interface I-5: node tools/budgets/check-dist.mjs <distDir>
+// Usage: node tools/budgets/check-dist.mjs <distDir>
 import { main } from './src/check.mjs';
 
 process.exitCode = await main(process.argv.slice(2), {

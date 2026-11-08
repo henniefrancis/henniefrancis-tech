@@ -19,7 +19,7 @@ name: Deploy to production
 # its Name tag, so replacing the instance never leaves this pipeline aiming at
 # a dead id.
 #
-# Artifact layout (interface I-4), a zip with two top-level folders:
+# Artifact layout: a zip with two top-level folders:
 #   site/    the web root (prerendered build output plus version.json)
 #   nginx/   copied from deploy/nginx/, installed on the instance
 
@@ -311,7 +311,7 @@ jobs:
             "s3://${ARTIFACTS_BUCKET}/${ARTIFACT_KEY}" \
             --expires-in 1800)
 
-          # Interface I-4: the nginx install script is shipped inline (base64)
+          # The nginx install script is shipped inline (base64)
           # so the instance needs no repository checkout.
           INSTALL_SCRIPT_B64=$(base64 -w0 .github/scripts/install-nginx-conf.sh)
           DEPLOY_DIR="/var/tmp/${PROJECT_NAME}-deploy"

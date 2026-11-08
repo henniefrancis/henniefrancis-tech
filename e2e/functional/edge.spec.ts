@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * E5 (part): behaviour of the serving layer. Runs against the local preview
+ * Behaviour of the serving layer. Runs against the local preview
  * (which mirrors nginx and sends the edge headers) and, with EXPECT_EDGE=1,
  * against a deployed BASE_URL. One project is enough: these are not layout tests.
  */

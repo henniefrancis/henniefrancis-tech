@@ -66,7 +66,7 @@ jobs:
       - name: Unit tests with coverage (site)
         run: npm test -- --no-watch --coverage
 
-      # Interface I-6: each tools/<name>/ is a standalone package whose
+      # Each tools/<name>/ is a standalone package whose
       # `npm test` enforces its own 100 percent coverage threshold.
       - name: Unit tests with coverage (tools)
         run: |
@@ -79,13 +79,13 @@ jobs:
             echo "::endgroup::"
           done
 
-      # Interface I-5 (delivered by the test harness workstream): fails on any
+      # The dist budget check fails on any
       # image over 250 kB, any amazonaws.com string or any CDN host.
       - name: Budget check on the build output
         run: |
           set -euo pipefail
           if [ ! -f tools/budgets/check-dist.mjs ]; then
-            echo "::error::tools/budgets/check-dist.mjs is missing (interface I-5)."
+            echo "::error::tools/budgets/check-dist.mjs is missing."
             exit 1
           fi
           # TEMPORARY: the amazonaws and cdn-host rules only warn for now.

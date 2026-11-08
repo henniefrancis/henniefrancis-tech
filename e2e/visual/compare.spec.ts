@@ -10,7 +10,7 @@ import { VISUAL_DIR, loadRoutes, routeSlug } from '../lib/routes';
 
 /**
  * Compare the current site (local preview by default, or BASE_URL) with
- * the E1 baseline of the live site. Text is exact, geometry is exact within
+ * the baseline captures of the live site. Text is exact, geometry is exact within
  * 1 px, text-region pixels are strict, image boxes allow 2% differing pixels.
  * Any diff not listed in approved-diffs.json fails the test.
  *   npm run test:visual   (playwright test --grep @visual)

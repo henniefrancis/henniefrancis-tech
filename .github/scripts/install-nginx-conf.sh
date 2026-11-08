@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs ON THE INSTANCE (as root, via SSM Run Command) during a deploy.
-# Installs the nginx site config shipped in the artifact (interface I-4),
+# Installs the nginx site config shipped in the artifact,
 # validates it with `nginx -t`, and reloads. If validation fails, the previous
 # config is restored so the running server is never left on a broken config.
 #
