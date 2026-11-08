@@ -208,8 +208,8 @@ variable "origin_verify_secret" {
   sensitive   = true
 
   validation {
-    condition     = length(var.origin_verify_secret) >= 32 && can(regex("^[A-Za-z0-9]+$", var.origin_verify_secret))
-    error_message = "origin_verify_secret must be at least 32 characters and alphanumeric only (for example the output of openssl rand -hex 32)."
+    condition     = length(var.origin_verify_secret) >= 32 && length(var.origin_verify_secret) <= 64 && can(regex("^[A-Za-z0-9]+$", var.origin_verify_secret))
+    error_message = "origin_verify_secret must be 32 to 64 alphanumeric characters (for example the output of openssl rand -hex 32, which is 64)."
   }
 }
 
@@ -220,8 +220,8 @@ variable "origin_verify_secret_previous" {
   default     = ""
 
   validation {
-    condition     = var.origin_verify_secret_previous == "" || (length(var.origin_verify_secret_previous) >= 32 && can(regex("^[A-Za-z0-9]+$", var.origin_verify_secret_previous)))
-    error_message = "origin_verify_secret_previous must be empty, or at least 32 alphanumeric characters."
+    condition     = var.origin_verify_secret_previous == "" || (length(var.origin_verify_secret_previous) >= 32 && length(var.origin_verify_secret_previous) <= 64 && can(regex("^[A-Za-z0-9]+$", var.origin_verify_secret_previous)))
+    error_message = "origin_verify_secret_previous must be empty, or 32 to 64 alphanumeric characters."
   }
 }
 

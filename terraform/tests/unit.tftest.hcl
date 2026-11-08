@@ -1,5 +1,5 @@
 # ============================================================
-# tests/unit.tftest.hcl — Native Terraform unit tests
+# tests/unit.tftest.hcl - Native Terraform unit tests
 #
 # Requires Terraform >= 1.7 (mock_provider support).
 # Run from the terraform/ directory:
@@ -46,7 +46,7 @@ override_resource {
   }
 }
 
-# Test-only fake value, 64 characters. The real secret is a sensitive HCP variable.
+# Test-only fake value, 64 characters (the length of openssl rand -hex 32). The real secret is a sensitive HCP variable.
 variables {
   origin_verify_secret = "fakefakefakefakefakefakefakefakefakefakefakefakefakefakefakefake"
 }
@@ -458,13 +458,76 @@ run "image_bucket_lifecycle" {
   command = plan
 
   assert {
-    condition     = one(one(aws_s3_bucket_lifecycle_configuration.images.rule).noncurrent_version_expiration).noncurrent_days == 30
+    condition     = length(aws_s3_bucket_lifecycle_configuration.images.rule) == 3
+    error_message = "The image bucket must have exactly three lifecycle rules (img, originals, multipart abort)."
+  }
+
+  assert {
+    condition     = alltrue([for r in aws_s3_bucket_lifecycle_configuration.images.rule : one(r.noncurrent_version_expiration).noncurrent_days == 30 if length(r.noncurrent_version_expiration) > 0])
     error_message = "Noncurrent image versions must expire after 30 days."
   }
 
   assert {
-    condition     = one(one(aws_s3_bucket_lifecycle_configuration.images.rule).abort_incomplete_multipart_upload).days_after_initiation == 7
+    condition     = one([for r in aws_s3_bucket_lifecycle_configuration.images.rule : one(r.abort_incomplete_multipart_upload).days_after_initiation if length(r.abort_incomplete_multipart_upload) > 0]) == 7
     error_message = "Incomplete multipart uploads must abort after 7 days."
+  }
+}
+
+# Nothing under archive/ may ever expire. S3 lifecycle filters cannot exclude a
+# prefix, so every rule that expires anything must name img/ or originals/.
+run "archive_objects_never_expire" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      for r in aws_s3_bucket_lifecycle_configuration.images.rule :
+      contains(["img/", "originals/"], one(r.filter).prefix)
+      if length(r.noncurrent_version_expiration) > 0 || length(r.expiration) > 0
+    ])
+    error_message = "Every expiring rule must be scoped to the img/ or originals/ prefix, never bucket wide."
+  }
+
+  assert {
+    condition = alltrue([
+      for r in aws_s3_bucket_lifecycle_configuration.images.rule :
+      !startswith("archive/", one(r.filter).prefix) || one(r.filter).prefix == ""
+      if length(r.noncurrent_version_expiration) > 0 || length(r.expiration) > 0 || length(r.transition) > 0 || length(r.noncurrent_version_transition) > 0
+    ])
+    error_message = "No rule with an expiration or transition action may cover archive/."
+  }
+
+  assert {
+    condition     = length([for r in aws_s3_bucket_lifecycle_configuration.images.rule : r if length(r.expiration) > 0]) == 0
+    error_message = "Current objects must never expire."
+  }
+}
+
+run "archive_delete_is_denied_for_everyone" {
+  command = plan
+
+  assert {
+    condition     = one([for s in data.aws_iam_policy_document.images_bucket.statement : s.effect if s.sid == "DenyArchiveDelete"]) == "Deny"
+    error_message = "DenyArchiveDelete must be an explicit Deny."
+  }
+
+  assert {
+    condition     = one([for s in data.aws_iam_policy_document.images_bucket.statement : s.actions if s.sid == "DenyArchiveDelete"]) == toset(["s3:DeleteObject", "s3:DeleteObjectVersion"])
+    error_message = "DenyArchiveDelete must cover DeleteObject and DeleteObjectVersion."
+  }
+
+  assert {
+    condition     = one([for s in data.aws_iam_policy_document.images_bucket.statement : s.resources if s.sid == "DenyArchiveDelete"]) == toset(["arn:aws:s3:::test-img-bucket/archive/*"])
+    error_message = "DenyArchiveDelete must apply to archive/* only."
+  }
+
+  assert {
+    condition     = one([for s in data.aws_iam_policy_document.images_bucket.statement : one(s.principals).identifiers if s.sid == "DenyArchiveDelete"]) == toset(["*"])
+    error_message = "DenyArchiveDelete must apply to every principal."
+  }
+
+  assert {
+    condition     = toset([for s in data.aws_iam_policy_document.images_bucket.statement : s.sid]) == toset(["AllowCloudFrontReadImg", "DenyInsecureTransport", "DenyArchiveDelete"])
+    error_message = "The bucket policy must contain exactly the three expected statements."
   }
 }
 
@@ -518,8 +581,13 @@ run "config_bot_is_oidc_main_branch_and_put_only" {
   }
 
   assert {
-    condition     = length(data.aws_iam_policy_document.config_bot.statement) == 1 && length(data.aws_iam_policy_document.config_bot.statement[0].resources) == 2
-    error_message = "The bot policy must have exactly one statement with two resources (img/* and originals/*)."
+    condition     = length(data.aws_iam_policy_document.config_bot.statement) == 1 && length(data.aws_iam_policy_document.config_bot.statement[0].resources) == 3
+    error_message = "The bot policy must have exactly one statement with three resources (img/*, originals/* and archive/*)."
+  }
+
+  assert {
+    condition     = contains(data.aws_iam_policy_document.config_bot.statement[0].resources, "arn:aws:s3:::test-img-bucket/archive/*")
+    error_message = "The bot must be able to put evidence under archive/*."
   }
 }
 
@@ -593,6 +661,16 @@ run "rejects_non_alphanumeric_origin_verify_secret" {
   expect_failures = [var.origin_verify_secret]
 }
 
+run "rejects_too_long_origin_verify_secret" {
+  command = plan
+
+  variables {
+    origin_verify_secret = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+
+  expect_failures = [var.origin_verify_secret]
+}
+
 run "rejects_short_previous_secret" {
   command = plan
 
@@ -601,6 +679,30 @@ run "rejects_short_previous_secret" {
   }
 
   expect_failures = [var.origin_verify_secret_previous]
+}
+
+run "rejects_too_long_previous_secret" {
+  command = plan
+
+  variables {
+    origin_verify_secret_previous = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+
+  expect_failures = [var.origin_verify_secret_previous]
+}
+
+run "accepts_secret_at_the_maximum_length" {
+  command = plan
+
+  variables {
+    origin_verify_secret          = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    origin_verify_secret_previous = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+
+  assert {
+    condition     = length(nonsensitive(aws_ssm_parameter.origin_verify_current.value)) == 64
+    error_message = "A 64 character secret must be accepted."
+  }
 }
 
 run "rejects_http_only_origin" {

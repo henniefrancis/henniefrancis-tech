@@ -3,7 +3,7 @@
 #
 # The bot uploads processed images from
 # a GitHub Actions run in var.config_repository. It can ONLY write new
-# objects under img/ and originals/. No read, list or delete: uploaded
+# objects under img/, originals/ and archive/. No read, list or delete: uploaded
 # objects are harmless until a merged record references them, and a
 # leaked token cannot enumerate or remove anything.
 #
@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "config_bot_trust" {
 
 resource "aws_iam_role" "config_bot" {
   name               = "${var.project_name}-config-bot"
-  description        = "Image upload bot for ${var.config_repository} (OIDC, main branch only, PutObject on img/ and originals/ only)."
+  description        = "Image upload bot for ${var.config_repository} (OIDC, main branch only, PutObject on img/, originals/ and archive/ only)."
   assume_role_policy = data.aws_iam_policy_document.config_bot_trust.json
 
   max_session_duration = 3600
@@ -55,6 +55,7 @@ data "aws_iam_policy_document" "config_bot" {
     resources = [
       "${aws_s3_bucket.images.arn}/img/*",
       "${aws_s3_bucket.images.arn}/originals/*",
+      "${aws_s3_bucket.images.arn}/archive/*",
     ]
   }
 }

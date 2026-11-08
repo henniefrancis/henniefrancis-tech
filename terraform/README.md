@@ -22,8 +22,8 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 | `keypair.tf` | ED25519 emergency-SSH key pair; private key only in Secrets Manager |
 | `iam.tf` | GitHub OIDC deploy role + EC2 instance role — least-privilege, Terraform-managed |
 | `s3.tf` | Versioned, encrypted, TLS-only artifacts bucket with lifecycle expiry |
-| `s3_images.tf` | Private image bucket served at `/img/*` through CloudFront OAC |
-| `iam_config_bot.tf` | OIDC role for the private config repo image bot (PutObject on `img/*` and `originals/*` only) |
+| `s3_images.tf` | Private image bucket served at `/img/*` through CloudFront OAC; `archive/` is never served, never expires and cannot be deleted without a Terraform change |
+| `iam_config_bot.tf` | OIDC role for the private config repo image bot (PutObject on `img/*`, `originals/*` and `archive/*` only) |
 | `ssm.tf` | Origin verify secret (SecureString, current and previous) |
 | `ec2.tf` | t4g.nano AL2023 ARM64, IMDSv2, encrypted gp3, EIP, IPv6 |
 | `templates/user_data.sh.tftpl` | nginx (tuned for 512 MB) + certbot bootstrap |
@@ -82,8 +82,8 @@ The account already has the GitHub OIDC identity provider (created manually per 
 
 | Variable | Purpose |
 |---|---|
-| `origin_verify_secret` | Required. Value of the `X-Origin-Verify` header (generate with `openssl rand -hex 32`). |
-| `origin_verify_secret_previous` | Leave empty except during a rotation. |
+| `origin_verify_secret` | Required. Value of the `X-Origin-Verify` header, 32 to 64 alphanumeric characters (generate with `openssl rand -hex 32`, which is 64). |
+| `origin_verify_secret_previous` | Leave empty except during a rotation. Same format and length limits. |
 | `alarm_email` | Optional, used by the alarm change. |
 
 ### 4. GitHub repository settings

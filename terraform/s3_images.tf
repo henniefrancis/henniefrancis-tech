@@ -9,6 +9,9 @@
 # Key layout:
 #   img/{id}/{width}.webp   served variants (immutable)
 #   originals/{id}.{ext}    private originals, never served
+#   archive/...             byte-exact evidence, never served, never
+#                           expires, and cannot be deleted without a
+#                           Terraform change (see DenyArchiveDelete below)
 #
 # RETAINED: prevent_destroy. The bucket holds every published image and
 # the originals; never recreate it.
@@ -75,8 +78,14 @@ resource "aws_s3_bucket_versioning" "images" {
   }
 }
 
-# Old versions of overwritten or deleted objects stay recoverable for 30
-# days. Current objects never expire.
+# Old versions of overwritten or deleted objects under img/ and originals/
+# stay recoverable for 30 days. Current objects never expire.
+#
+# Nothing under archive/ ever expires. S3 lifecycle filters cannot exclude a
+# prefix, so every rule that expires something carries an explicit prefix
+# (img/ or originals/). The only rule with an empty filter aborts incomplete
+# multipart uploads, which never touches stored objects. A test fails if an
+# expiring rule is not scoped to one of the two prefixes.
 resource "aws_s3_bucket_lifecycle_configuration" "images" {
   bucket = aws_s3_bucket.images.id
 
@@ -84,14 +93,36 @@ resource "aws_s3_bucket_lifecycle_configuration" "images" {
   depends_on = [aws_s3_bucket_versioning.images]
 
   rule {
-    id     = "expire-noncurrent-versions"
+    id     = "img-noncurrent-30d"
     status = "Enabled"
 
-    filter {}
+    filter {
+      prefix = "img/"
+    }
 
     noncurrent_version_expiration {
       noncurrent_days = 30
     }
+  }
+
+  rule {
+    id     = "originals-noncurrent-30d"
+    status = "Enabled"
+
+    filter {
+      prefix = "originals/"
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+  }
+
+  rule {
+    id     = "abort-multipart-7d"
+    status = "Enabled"
+
+    filter {}
 
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
@@ -113,6 +144,8 @@ resource "aws_cloudfront_origin_access_control" "images" {
 # 1. CloudFront (this distribution only) may read img/* and nothing else.
 #    Without s3:ListBucket, a missing key answers 403, not 404.
 # 2. Any non-TLS request is denied.
+# 3. Nobody can delete an object or an object version under archive/. The
+#    protection is removed only by a reviewed Terraform change to this policy.
 
 data "aws_iam_policy_document" "images_bucket" {
   statement {
@@ -151,6 +184,21 @@ data "aws_iam_policy_document" "images_bucket" {
       test     = "Bool"
       variable = "aws:SecureTransport"
       values   = ["false"]
+    }
+  }
+
+  statement {
+    sid    = "DenyArchiveDelete"
+    effect = "Deny"
+    actions = [
+      "s3:DeleteObject",
+      "s3:DeleteObjectVersion",
+    ]
+    resources = ["${aws_s3_bucket.images.arn}/archive/*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
     }
   }
 }
