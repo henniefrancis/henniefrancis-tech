@@ -32,7 +32,7 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 | `cloudfront_functions.tf`, `functions/` | www to apex 301 at the edge, with a Node unit test |
 | `tests/unit.tftest.hcl` | Plan-only tests with mock providers — no credentials needed |
 | `tests/retained-resources.sh` | Static check that retained resources keep `prevent_destroy` |
-| `.tflint.hcl`, `.trivyignore.yaml` | Lint and misconfiguration scan settings |
+| `.tflint.hcl` | Lint settings (the misconfiguration scan's accepted-risk list is kept private) |
 
 ## First-time rollout
 
@@ -137,7 +137,7 @@ terraform init -backend=false
 terraform validate
 terraform test          # plan-only, mock providers, no credentials
 tflint --init && tflint
-trivy config --ignorefile .trivyignore.yaml --severity MEDIUM,HIGH,CRITICAL --exit-code 1 .
+trivy config --ignorefile <private accepted-risk list> --severity MEDIUM,HIGH,CRITICAL --exit-code 1 .
 bash tests/retained-resources.sh
 node --test "functions/*.test.js"   # CloudFront Function unit test
 ```

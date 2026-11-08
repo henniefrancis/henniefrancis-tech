@@ -204,15 +204,19 @@ jobs:
           tflint --chdir terraform --init
           tflint --chdir terraform --recursive --format compact
 
-      # MEDIUM and above. Accepted findings live in terraform/.trivyignore.yaml
-      # when that file exists; the step works with or without it.
+      # MEDIUM and above. The accepted-risk list is kept private and supplied
+      # through the TRIVY_IGNORE_YAML secret; without it every finding fails.
       - name: Terraform security scan (trivy config)
         if: steps.tf.outputs.changed == 'true'
+        env:
+          TRIVY_IGNORE_YAML: ${{ secrets.TRIVY_IGNORE_YAML }}
         run: |
           set -euo pipefail
           args=(--severity "MEDIUM,HIGH,CRITICAL" --exit-code 1)
-          if [ -f terraform/.trivyignore.yaml ]; then
-            args+=(--ignorefile terraform/.trivyignore.yaml)
+          if [ -n "${TRIVY_IGNORE_YAML:-}" ]; then
+            ignorefile="${RUNNER_TEMP}/trivyignore.yaml"
+            printf '%s\n' "$TRIVY_IGNORE_YAML" > "$ignorefile"
+            args+=(--ignorefile "$ignorefile")
           fi
           trivy config "${args[@]}" terraform
 
