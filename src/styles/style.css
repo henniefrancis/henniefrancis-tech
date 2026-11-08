@@ -214,3 +214,15 @@ a:hover {
     text-decoration:dotted;
     font-weight: bolder;
 }
+
+/* Images carry width and height attributes (they reserve space and stop layout shift). Where a rule
+   below only sets one dimension, the other must stay automatic so the aspect ratio is kept. */
+:where(.eventlink) {
+    width: auto;
+}
+
+/* A tile link spans its whole column. Its width then no longer depends on the size the browser
+   assumes for an image that has not loaded yet. */
+:where(.publicspeaking a) {
+    width: 100%;
+}

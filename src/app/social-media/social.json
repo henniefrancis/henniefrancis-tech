@@ -11,7 +11,7 @@
     { "id": "dev", "name": "DEV", "url": "https://www.dev.to/henniefrancis", "image": { "id": "ebd74f08618e654a", "w": 700, "h": 210, "widths": [350, 700] }, "order": 8 },
     { "id": "stackoverflow", "name": "StackOverflow", "url": "https://www.stackoverflow.com/users/2230088/hennie-francis", "image": { "id": "32db461210962442", "w": 700, "h": 210, "widths": [350, 700] }, "order": 9 },
     { "id": "google-developer", "name": "Google Developer", "url": "https://developers.google.com/profile/u/henniefrancis", "image": { "id": "562b8b9d273c7268", "w": 700, "h": 210, "widths": [350, 700] }, "order": 10 },
-    { "id": "credly", "name": "Credly", "url": "https://www.credly.com/users/hennie-francis/badges", "image": { "id": "890a299a94f33270", "w": 700, "h": 210, "widths": [350, 700] }, "order": 11 },
+    { "id": "credly", "name": "Credly", "url": "https://www.credly.com/users/henniefrancis/badges", "image": { "id": "890a299a94f33270", "w": 700, "h": 210, "widths": [350, 700] }, "order": 11 },
     { "id": "sessionize", "name": "Sessionize", "url": "https://sessionize.com/henniefrancis", "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] }, "order": 12 },
     { "id": "discord", "name": "Discord", "url": "https://discord.com/users/dorki_rsa", "image": { "id": "d2f8ac243cc4b6cc", "w": 700, "h": 210, "widths": [350, 700] }, "order": 13 },
     { "id": "youtube", "name": "YouTube", "url": "https://www.youtube.com/@HennieFrancis", "image": { "id": "d74cfe59202d16b0", "w": 700, "h": 210, "widths": [350, 700] }, "order": 14 },

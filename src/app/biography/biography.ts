@@ -1,17 +1,19 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ImageRef, imageSrc } from '../content/image';
+import { ImageRef, imageView } from '../content/image';
 
 const PORTRAIT: ImageRef = { id: '6db0ec962ed38a7a', w: 787, h: 1000, widths: [394, 787] };
 
 @Component({
   selector: 'app-biography',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './biography.html',
   styleUrl: './biography.scss',
 })
 export class Biography {
-  protected readonly portrait = imageSrc(PORTRAIT);
+  // The page layout follows the portrait's natural size, so it is declared at its full width.
+  protected readonly portrait = imageView(PORTRAIT, `${PORTRAIT.w}px`);
 
   protected readonly paragraphs: string[] = [
     'Residing in the vibrant city of Cape Town, South Africa, Hennie Francis is a driving force in the world of technology.',

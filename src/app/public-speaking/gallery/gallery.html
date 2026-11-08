@@ -26,7 +26,7 @@
           <div class="carousel-inner">
             @for (photo of photos(); track $index) {
               <div class="carousel-item" [class.active]="$first">
-                <img [src]="photo.src" class="d-block w-45" [alt]="photo.alt">
+                <img [ngSrc]="photo.image.ngSrc" [ngSrcset]="photo.image.ngSrcset" [sizes]="photo.image.sizes" [width]="photo.image.width" [height]="photo.image.height" [loaderParams]="photo.image.loaderParams" class="d-block w-45" [alt]="photo.alt" [priority]="$first">
               </div>
             }
           </div>

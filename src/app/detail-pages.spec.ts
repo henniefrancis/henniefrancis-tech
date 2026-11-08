@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { imageSrc } from './content/image';
+import { IMAGE_LOADER_PROVIDER, imageSrc, imageView } from './content/image';
 import { CertDetail } from './certifications/cert-detail/cert-detail';
 import { CERT_DETAILS } from './certifications/cert-detail/cert-details.data';
 import { EventDetail, buildEventLinks } from './public-speaking/event-detail/event-detail';
@@ -11,7 +11,7 @@ import { GALLERIES } from './public-speaking/data/galleries.data';
 const ref = (id: string) => ({ id, w: 100, h: 50, widths: [100] });
 
 async function renderWith(component: any, inputs: Record<string, string>): Promise<HTMLElement> {
-  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
   const fixture = TestBed.createComponent(component);
   for (const [k, v] of Object.entries(inputs)) fixture.componentRef.setInput(k, v);
   await fixture.whenStable();
@@ -84,7 +84,7 @@ describe('EventDetail', () => {
       'aws-summit',
     );
     expect(out).toEqual([
-      { title: 'Ext', alt: 'Alt', label: 'Lbl', external: true, href: 'https://x.test/a', route: null, src: `/img/a/100.webp` },
+      { title: 'Ext', alt: 'Alt', label: 'Lbl', external: true, href: 'https://x.test/a', route: null, image: imageView(ref('a')) },
       {
         title: 'Photos',
         alt: 'Photos',
@@ -92,9 +92,9 @@ describe('EventDetail', () => {
         external: false,
         href: null,
         route: '/public-speaking/aws-summit/photos/2025-cl',
-        src: `/img/p/100.webp`,
+        image: imageView(ref('p')),
       },
-      { title: 'Plain', alt: 'Plain', label: null, external: false, href: null, route: null, src: `/img/o/100.webp` },
+      { title: 'Plain', alt: 'Plain', label: null, external: false, href: null, route: null, image: imageView(ref('o')) },
     ]);
   });
 });
@@ -132,7 +132,7 @@ describe('Gallery', () => {
     expect(buildPhotos(null)).toEqual([]);
     expect(buildPhotos({})).toEqual([]);
     expect(buildPhotos({ photos: [{ image: ref('one'), alt: 'One' }] })).toEqual([
-      { src: '/img/one/100.webp', alt: 'One' },
+      { image: imageView(ref('one'), '(max-width: 600px) 420px, 750px'), alt: 'One' },
     ]);
   });
 

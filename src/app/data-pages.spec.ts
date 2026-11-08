@@ -1,5 +1,6 @@
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { IMAGE_LOADER_PROVIDER, imageView } from './content/image';
 import { provideRouter } from '@angular/router';
 import { SocialMedia, buildSocials } from './social-media/social-media';
 import { TechStack, buildTechGroups } from './tech-stack/tech-stack';
@@ -8,10 +9,11 @@ import { Certifications, buildCertGroups, isExternal } from './certifications/ce
 import { CurrentRole, buildFacts, buildLogo } from './current-role/current-role';
 
 const ref = (id: string) => ({ id, w: 100, h: 50, widths: [100] });
-const url = (id: string) => `/img/${id}/100.webp`;
+const TILE = '(max-width: 499px) 100vw, (max-width: 699px) 50vw, 34vw';
+const view = (id: string) => imageView(ref(id));
 
 async function render(component: Type<unknown>): Promise<HTMLElement> {
-  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
   const fixture = TestBed.createComponent(component);
   await fixture.whenStable();
   return fixture.nativeElement as HTMLElement;
@@ -43,9 +45,9 @@ describe('SocialMedia', () => {
       ],
     });
     expect(out.map((s) => s.name)).toEqual(['A', 'B', 'C']);
-    expect(out[0]).toEqual({ name: 'A', url: 'u1', src: url('a') });
+    expect(out[0]).toEqual({ name: 'A', url: 'u1', image: view('a') });
     expect(buildSocials({})).toEqual([]);
-    expect(buildSocials({ items: [{ name: 'X', url: 'u', image: ref('x') }] })[0].src).toBe(url('x'));
+    expect(buildSocials({ items: [{ name: 'X', url: 'u', image: ref('x') }] })[0].image).toEqual(view('x'));
   });
 });
 
@@ -72,10 +74,10 @@ describe('TechStack', () => {
       ],
     });
     expect(out.map((g) => g.name)).toEqual(['G1', 'Empty', 'G2']);
-    expect(out[0].tools.map((t) => t.src)).toEqual([url('1'), url('2')]);
+    expect(out[0].tools.map((t) => t.image.ngSrc)).toEqual(['1', '2']);
     expect(out[1].tools).toEqual([]);
     expect(buildTechGroups({})).toEqual([]);
-    expect(buildTechGroups({ categories: [{ name: 'N', items: [{ name: 'a', url: 'u', image: ref('i') }] }] })[0].tools[0].src).toBe(url('i'));
+    expect(buildTechGroups({ categories: [{ name: 'N', items: [{ name: 'a', url: 'u', image: ref('i') }] }] })[0].tools[0].image).toEqual(view('i'));
   });
 });
 
@@ -109,12 +111,34 @@ describe('PublicSpeaking', () => {
     });
     expect(out.map((y) => y.name)).toEqual(['Y1', 'Empty', 'Y2']);
     expect(out[0].talks).toEqual([
-      { name: 'A', route: '/a/1', src: url('1') },
-      { name: 'B', route: '/a/2', src: url('2') },
+      { name: 'A', route: '/a/1', image: imageView(ref('1'), TILE) },
+      { name: 'B', route: '/a/2', image: imageView(ref('2'), TILE) },
     ]);
     expect(out[1].talks).toEqual([]);
     expect(buildYears({})).toEqual([]);
-    expect(buildYears({ categories: [{ name: 'N', items: [{ name: 'a', url: 'u', image: ref('i') }] }] })[0].talks[0].src).toBe(url('i'));
+    expect(buildYears({ categories: [{ name: 'N', items: [{ name: 'a', url: 'u', image: ref('i') }] }] })[0].talks[0].image).toEqual(imageView(ref('i'), TILE));
+  });
+});
+
+describe('Certifications (items without a link and named items)', () => {
+  it('shows the two badges whose pages were removed as an image and label without a link', async () => {
+    const el = await render(Certifications);
+    for (const name of ['AWS Educate Machine Learning - DeepRacer', 'AWS Knowledge: Storage Core']) {
+      const img = el.querySelector(`img[alt="${name}"]`);
+      expect(img).not.toBeNull();
+      const anchor = img!.closest('a');
+      expect(anchor?.hasAttribute('href')).toBe(false);
+      expect(anchor?.querySelector('label')?.textContent).toMatch(/in progress|to do/);
+    }
+  });
+
+  it('names every certification item', async () => {
+    const el = await render(Certifications);
+    const imgs = Array.from(el.querySelectorAll('.certification img'));
+    expect(imgs.length).toBeGreaterThan(0);
+    expect(imgs.every((i) => (i.getAttribute('alt') ?? '').length > 0)).toBe(true);
+    expect(el.querySelector('img[alt="Microsoft Certified IT Professional: Database Developer 2008"]')).not.toBeNull();
+    expect(el.querySelector('img[alt="Microsoft Certified IT Professional: Business Intelligence Developer 2008"]')).not.toBeNull();
   });
 });
 
@@ -153,15 +177,17 @@ describe('Certifications', () => {
     });
     expect(out.map((g) => g.name)).toEqual(['First', 'Empty', 'Late']);
     const [ext, int, odd] = out[0].badges;
-    expect(ext).toMatchObject({ external: true, href: 'https://c.test/2', route: null, statusText: 'active', src: url('e') });
+    expect(ext).toMatchObject({ external: true, href: 'https://c.test/2', route: null, statusText: 'active', image: view('e') });
     expect(int).toMatchObject({ external: false, href: null, route: '/certifications/microsoft/mcts/X', statusText: 'in progress' });
     expect(odd.statusText).toBe('weird');
     expect(out[1].badges).toEqual([]);
     expect(out[2].badges[0].statusText).toBe('to do');
+    const unlinked = buildCertGroups({ categories: [{ name: 'N', items: [{ name: 'a', image: ref('u'), status: 'todo' }] }] })[0].badges[0];
+    expect(unlinked).toMatchObject({ external: false, href: null, route: null, statusText: 'to do' });
     expect(buildCertGroups({})).toEqual([]);
     expect(
-      buildCertGroups({ categories: [{ name: 'N', items: [{ name: 'a', url: 'https://x.test', image: ref('i'), status: 'active' }] }] })[0].badges[0].src,
-    ).toBe(url('i'));
+      buildCertGroups({ categories: [{ name: 'N', items: [{ name: 'a', url: 'https://x.test', image: ref('i'), status: 'active' }] }] })[0].badges[0].image,
+    ).toEqual(view('i'));
   });
 });
 

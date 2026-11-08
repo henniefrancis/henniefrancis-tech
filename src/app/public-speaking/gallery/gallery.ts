@@ -1,16 +1,17 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, afterNextRender, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { imageSrc } from '../../content/image';
+import { ImageView, imageView } from '../../content/image';
 import { GALLERIES } from '../data/galleries.data';
 
 export interface Photo {
-  src: string;
+  image: ImageView;
   alt: string;
 }
 
 export function buildPhotos(d: any): Photo[] {
   if (!d) return [];
-  return (d.photos ?? []).map((p: any) => ({ src: imageSrc(p.image), alt: p.alt }));
+  return (d.photos ?? []).map((p: any) => ({ image: imageView(p.image, '(max-width: 600px) 420px, 750px'), alt: p.alt }));
 }
 
 /** Starts the Bootstrap carousel when the page has one and Bootstrap is loaded. */
@@ -24,7 +25,7 @@ export function startCarousel(doc: Document, win: any): void {
 
 @Component({
   selector: 'app-gallery',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './gallery.html',
 })
 export class Gallery {

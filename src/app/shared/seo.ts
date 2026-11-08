@@ -2,6 +2,8 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, TitleStrategy } from '@angular/router';
+import { imageSrc } from '../content/image';
+import home from '../home/home.data.json';
 import { CERT_DETAILS } from '../certifications/cert-detail/cert-details.data';
 import { EVENTS } from '../public-speaking/data/events.data';
 import { GALLERIES } from '../public-speaking/data/galleries.data';
@@ -9,8 +11,8 @@ import { DEFAULT_DESCRIPTION, PAGE_DESCRIPTIONS } from './page-descriptions';
 
 export const SITE_URL = 'https://henniefrancis.tech';
 export const SITE_NAME = 'Hennie Francis';
-/** Share image on our own origin until the optimised profile image is wired in. */
-export const SHARE_IMAGE = `${SITE_URL}/apple-touch-icon.png`;
+/** Share image: the largest variant of the profile photo, served from the site's own image path. */
+export const SHARE_IMAGE = `${SITE_URL}${imageSrc(home.profile.image)}`;
 
 /** Route path without query, fragment or trailing slash; the home page stays "/". */
 export function normalisePath(url: string): string {

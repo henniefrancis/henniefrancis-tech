@@ -290,7 +290,6 @@
         },
         {
           "name": "AWS Educate Machine Learning - DeepRacer",
-          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-educate-machine-learning-deepracer",
           "image": { "id": "3e7be42ff39fa382", "w": 300, "h": 300, "widths": [150, 300] },
           "status": "inprogress",
           "order": 5
@@ -429,7 +428,6 @@
         },
         {
           "name": "AWS Knowledge: Storage Core",
-          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-knowledge-storage-core",
           "image": { "id": "a8ea202b0f1c6b4b", "w": 300, "h": 300, "widths": [150, 300] },
           "status": "todo",
           "order": 13
@@ -660,14 +658,14 @@
       "order": 13,
       "items": [
         {
-          "name": "",
+          "name": "Microsoft Certified IT Professional: Business Intelligence Developer 2008",
           "url": "/pages/certifications/microsoft/mcitp/E8543828-EEB2-4CF6-BDDB-7758444577B2.html",
           "image": { "id": "43a8f22ec96b2ced", "w": 300, "h": 300, "widths": [150, 300] },
           "status": "active",
           "order": 1
         },
         {
-          "name": "",
+          "name": "Microsoft Certified IT Professional: Database Developer 2008",
           "url": "/pages/certifications/microsoft/mcitp/022356C3-0CDC-4D12-A343-27EECA3C5BBC.html",
           "image": { "id": "f92391d55ce22700", "w": 300, "h": 300, "widths": [150, 300] },
           "status": "active",

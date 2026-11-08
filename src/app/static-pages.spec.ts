@@ -1,5 +1,6 @@
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { IMAGE_LOADER_PROVIDER } from './content/image';
 import { provideRouter } from '@angular/router';
 import { Home } from './home/home';
 import { Biography } from './biography/biography';
@@ -11,7 +12,7 @@ import { CareerHistory } from './portfolio/career-history/career-history';
 import { Projects } from './portfolio/projects/projects';
 
 async function render(component: Type<unknown>): Promise<HTMLElement> {
-  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ imports: [component], providers: [provideRouter([]), IMAGE_LOADER_PROVIDER] });
   const fixture = TestBed.createComponent(component);
   await fixture.whenStable();
   return fixture.nativeElement as HTMLElement;
@@ -27,6 +28,19 @@ describe('static pages', () => {
     expect(h1[0].textContent).toBe('Hennie Francis');
     expect(h1[0].classList.contains('visually-hidden')).toBe(true);
     expect(imgs(el).every((i) => (i.getAttribute('alt') ?? '').length > 0)).toBe(true);
+  });
+
+  it('Home images carry width, height and a srcset, and only the first row is loaded with priority', async () => {
+    const el = await render(Home);
+    const all = imgs(el);
+    for (const i of all) {
+      expect(Number(i.getAttribute('width'))).toBeGreaterThan(0);
+      expect(Number(i.getAttribute('height'))).toBeGreaterThan(0);
+      expect(i.getAttribute('srcset')).toMatch(/^\/img\/[0-9a-f]{16}\/\d+\.webp \d+w/);
+    }
+    const eager = all.filter((i) => i.getAttribute('fetchpriority') === 'high').map((i) => i.alt);
+    expect(eager).toEqual(['Profile Picture', ...all.slice(1, 4).map((i) => i.alt)]);
+    expect(all.slice(4).every((i) => i.getAttribute('loading') === 'lazy')).toBe(true);
   });
 
   it('Home renders the profile picture and one tile per section, in order', async () => {

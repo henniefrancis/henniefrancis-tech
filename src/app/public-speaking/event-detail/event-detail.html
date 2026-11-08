@@ -23,7 +23,8 @@
       <div class="row heading">
         <div class="col">
           <a [href]="d.header.url" target="_blank" rel="noopener noreferrer" [title]="d.header.alt || d.title">
-            <img [src]="imageSrc(d.header.image)" class="eventheader" [alt]="d.header.alt || d.title">
+            @let header = imageView(d.header.image, '(max-width: 600px) 100vw, 1000px');
+            <img [ngSrc]="header.ngSrc" [ngSrcset]="header.ngSrcset" [sizes]="header.sizes" [width]="header.width" [height]="header.height" [loaderParams]="header.loaderParams" class="eventheader" [alt]="d.header.alt || d.title" priority>
           </a>
         </div>
       </div>
@@ -45,11 +46,11 @@
             @if (link.label) { <h2 class="eventheaderlink">{{ link.label }}</h2> }
             @if (link.external) {
               <a [href]="link.href" [title]="link.title" target="_blank" rel="noopener noreferrer">
-                <img [src]="link.src" class="eventlink" [alt]="link.alt">
+                <img [ngSrc]="link.image.ngSrc" [ngSrcset]="link.image.ngSrcset" [sizes]="link.image.sizes" [width]="link.image.width" [height]="link.image.height" [loaderParams]="link.image.loaderParams" class="eventlink" [alt]="link.alt">
               </a>
             } @else {
               <a [routerLink]="link.route" [title]="link.title">
-                <img [src]="link.src" class="eventlink" [alt]="link.alt">
+                <img [ngSrc]="link.image.ngSrc" [ngSrcset]="link.image.ngSrcset" [sizes]="link.image.sizes" [width]="link.image.width" [height]="link.image.height" [loaderParams]="link.image.loaderParams" class="eventlink" [alt]="link.alt">
               </a>
             }
           </div>

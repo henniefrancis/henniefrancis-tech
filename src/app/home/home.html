@@ -6,7 +6,7 @@
         <div class="home-card about-card text-center">
           <div class="row">
             <div class="col-12">
-              <img [src]="imageSrc(profile.image)" class="zoom" [alt]="profile.alt">
+              <img [ngSrc]="profile.image.ngSrc" [ngSrcset]="profile.image.ngSrcset" [sizes]="profile.image.sizes" [width]="profile.image.width" [height]="profile.image.height" [loaderParams]="profile.image.loaderParams" class="zoom" [alt]="profile.alt" priority>
               <br />
 
               <div class="bio">
@@ -29,7 +29,7 @@
             <div class="col-4">
               <div class="home-card zoom">
                 <a [routerLink]="tile.route" [title]="tile.name">
-                  <img [src]="imageSrc(tile.image)" [alt]="tile.name" loading="lazy">
+                  <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.name" [priority]="$index < 3">
                 </a>
               </div>
             </div>
