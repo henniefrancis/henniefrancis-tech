@@ -61,6 +61,7 @@ export function createPreviewServer(cfg, deps = {}) {
 
   const commonHeaders = () => {
     const h = cfg.edgeHeaders ? { ...EDGE_HEADERS } : {};
+    if (cfg.cspEnforce) h['content-security-policy'] = CSP_DIRECTIVES.join('; ');
     if (cfg.cspReportOnly) {
       h['content-security-policy-report-only'] = [...CSP_DIRECTIVES, `report-uri ${CSP_REPORT_PATH}`].join('; ');
     }

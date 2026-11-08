@@ -38,7 +38,7 @@ afterAll(async () => {
 });
 
 async function start(over = {}, deps = {}) {
-  const cfg = { dir: site, mode: 'v1', originSecret: '', cspReportOnly: false, edgeHeaders: false, ...over };
+  const cfg = { dir: site, mode: 'v1', originSecret: '', cspReportOnly: false, cspEnforce: false, edgeHeaders: false, ...over };
   const server = createPreviewServer(cfg, deps);
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   servers.push(server);
@@ -183,6 +183,17 @@ describe('headers', () => {
     expect(res.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
     expect(res.headers.get('permissions-policy')).toBe('camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()');
     expect((await (await start()).get('/')).headers.get('x-frame-options')).toBeNull();
+  });
+
+  it('sends the enforced CSP only when asked, without script-src or default-src', async () => {
+    const { get } = await start({ cspEnforce: true });
+    const csp = (await get('/')).headers.get('content-security-policy');
+    expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain('upgrade-insecure-requests');
+    expect(csp).not.toContain('script-src');
+    expect(csp).not.toContain('default-src');
+    expect(csp).not.toContain('report-uri');
+    expect((await (await start()).get('/')).headers.get('content-security-policy')).toBeNull();
   });
 
   it('sends the report-only CSP only when asked', async () => {
