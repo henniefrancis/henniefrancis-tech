@@ -13,7 +13,7 @@
     "prebuild": "npm run content:generate",
     "build": "ng build",
     "prewatch": "npm run content:generate",
-    "postbuild": "node tools/seo/cli.mjs dist/henniefrancis-tech/browser",
+    "postbuild": "node tools/seo/cli.mjs dist/henniefrancis-tech/browser && node tools/csp/cli.mjs dist/henniefrancis-tech/browser",
     "watch": "ng build --watch --configuration development",
     "pretest": "npm run content:fixtures",
     "test": "ng test",
