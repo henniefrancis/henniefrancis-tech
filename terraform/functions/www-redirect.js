@@ -21,16 +21,26 @@ function buildQuery(querystring) {
         })
       : [entry.value];
     values.forEach(function (value) {
-      parts.push(value === undefined || value === '' ? key : key + '=' + value);
+      // A missing value stays a bare key. An empty value keeps its equals sign, so ?a= is not turned into ?a.
+      parts.push(value === undefined ? key : key + '=' + value);
     });
   });
   return parts.length ? '?' + parts.join('&') : '';
 }
 
+// Lowercase, then drop an optional port and one trailing dot, so
+// WWW.Example.Tech., www.example.tech:443 and www.example.tech all match.
+function normaliseHost(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/:\d+$/, '')
+    .replace(/\.$/, '');
+}
+
 function handler(event) {
   var request = event.request;
   var hostHeader = request.headers && request.headers.host;
-  var host = hostHeader && hostHeader.value ? hostHeader.value.toLowerCase() : '';
+  var host = normaliseHost(hostHeader && hostHeader.value);
 
   if (host !== WWW) {
     return request;

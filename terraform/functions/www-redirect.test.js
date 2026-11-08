@@ -38,7 +38,7 @@ test('query string is preserved, including multi values and bare keys', () => {
     event('www.henniefrancis.tech', '/search', {
       a: { value: '1' },
       b: { value: '2', multiValue: [{ value: '2' }, { value: '3' }] },
-      flag: { value: '' },
+      flag: { value: undefined },
     }),
   );
   assert.equal(res.headers.location.value, `https://${APEX}/search?a=1&b=2&b=3&flag`);
@@ -64,4 +64,35 @@ test('missing host header passes through', () => {
 test('redirect target is always the apex origin', () => {
   const res = handler(event('www.henniefrancis.tech', '//evil.example/a'));
   assert.ok(res.headers.location.value.startsWith('https://henniefrancis.tech/'));
+});
+
+test('an empty value keeps its equals sign', () => {
+  const res = handler(event('www.henniefrancis.tech', '/x', { a: { value: '' } }));
+  assert.equal(res.headers.location.value, `https://${APEX}/x?a=`);
+});
+
+test('a trailing dot on the host is still redirected', () => {
+  const res = handler(event('www.henniefrancis.tech.', '/x'));
+  assert.equal(res.statusCode, 301);
+  assert.equal(res.headers.location.value, `https://${APEX}/x`);
+});
+
+test('a port on the host is still redirected, and the port is not carried over', () => {
+  for (const host of ['www.henniefrancis.tech:443', 'www.henniefrancis.tech:8443', 'WWW.henniefrancis.tech.:443']) {
+    const res = handler(event(host, '/x'));
+    assert.equal(res.statusCode, 301, host);
+    assert.equal(res.headers.location.value, `https://${APEX}/x`, host);
+  }
+});
+
+test('lookalike hosts with a dot or port suffix still pass through', () => {
+  for (const host of ['www.henniefrancis.tech.evil.example:443', 'evil.example.', 'www.henniefrancis.tech:abc', 'xwww.henniefrancis.tech.']) {
+    const ev = event(host, '/');
+    assert.equal(handler(ev), ev.request, host);
+  }
+});
+
+test('a double slash path stays on the apex origin', () => {
+  const res = handler(event('www.henniefrancis.tech', '//evil.example/'));
+  assert.equal(res.headers.location.value, `https://${APEX}//evil.example/`);
 });
