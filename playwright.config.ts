@@ -11,8 +11,8 @@ import { PROJECTS } from './e2e/lib/devices';
  *   other tools and must not be chosen.
  * - EXPECT_EDGE=1: with BASE_URL set, also run the edge header checks (production after cutover).
  * - E2E_CSP_ENFORCE=1: the local preview also sends the enforced Content-Security-Policy header (the policy the
- *   edge carries). Needs every image to come from the site origin, so it is off while images still load from the
- *   legacy bucket.
+ *   edge carries). Needs every image to come from the site origin, so it is off while images still load from
+ *   their old location.
  * - E2E_DIST: directory the preview serves (default: the Angular browser output).
  * - Suites are selected with tags: `--grep @visual`, `--grep @capture`, and
  *   `--grep-invert "@visual|@capture"` for the functional suite.

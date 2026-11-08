@@ -1,9 +1,9 @@
 name: Deploy to production
 
-# Pipeline: prepare (check out and validate the content, decide whether the
-# live site is already current) -> build (or pick a stored artifact) -> upload
-# -> deploy over SSM -> nginx config install and reload -> CloudFront
-# invalidation -> smoke checks.
+# Pipeline: build (or pick a stored artifact) -> upload -> deploy over SSM ->
+# nginx config install and reload -> CloudFront invalidation -> smoke checks.
+# A prepare job runs before the build: it checks out and validates the content
+# and decides whether the live site is already current.
 # Deploys use GitHub OIDC only. No AWS keys are stored in GitHub.
 #
 # Triggers: a push to main (site code), a manual run, and the content
@@ -30,7 +30,7 @@ name: Deploy to production
 #   vars.ARTIFACTS_BUCKET      artifact store
 #   vars.WEB_ROOT              web root on the instance
 #   vars.SITE_URL              optional, public URL used for smoke checks
-# and secrets: CLOUDFRONT_DISTRIBUTION_ID (optional).
+# and one secret: CLOUDFRONT_DISTRIBUTION_ID (optional).
 #
 # Content access (required for every build; set them as repository settings):
 #   vars.CONTENT_APP_CLIENT_ID        Client ID of the GitHub App
