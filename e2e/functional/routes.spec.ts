@@ -11,7 +11,7 @@ import { waitForSettled } from '../lib/stabilise';
  * resource. Resource failures are allowed only when the live-site baseline
  * already had the same failure (for example the certificate images) or the
  * failure is listed in e2e/known-issues.json (badges not uploaded yet).
- * Still to add: h1, canonical and description (once the pages have them), the link
+ * Still to add: h1, canonical and description, the link
  * checker over dist, and the production-only header and redirect checks.
  */
 const BASELINE = process.env['BASELINE_DIR'] ?? join(VISUAL_DIR, 'baseline');
