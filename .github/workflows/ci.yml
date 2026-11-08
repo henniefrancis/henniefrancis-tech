@@ -88,9 +88,7 @@ jobs:
             echo "::error::tools/budgets/check-dist.mjs is missing."
             exit 1
           fi
-          # TEMPORARY: the amazonaws and cdn-host rules only warn for now.
-          # Remove the --warn flag once images are served from the site domain.
-          node tools/budgets/check-dist.mjs "$DIST_DIR" --warn amazonaws,cdn-host
+          node tools/budgets/check-dist.mjs "$DIST_DIR"
 
       - name: Dependency audit (runtime dependencies)
         run: |
