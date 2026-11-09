@@ -974,3 +974,66 @@ run "rejects_bad_retained_validation_cname" {
 
   expect_failures = [var.retained_acm_validation_cnames]
 }
+
+# ── Domain registration (adopted after the transfer) ────────
+
+run "domain_registration_off_by_default" {
+  command = plan
+
+  assert {
+    condition     = length(aws_route53domains_registered_domain.site) == 0
+    error_message = "The registration must not be managed until the transfer has completed."
+  }
+}
+
+run "domain_registration_points_at_this_zone" {
+  command = plan
+
+  variables {
+    manage_domain_registration = true
+  }
+
+  override_resource {
+    target          = aws_route53_zone.frontend
+    override_during = plan
+    values = {
+      name_servers = ["ns-2.example.org", "ns-1.example.com"]
+    }
+  }
+
+  assert {
+    condition     = aws_route53domains_registered_domain.site[0].domain_name == var.frontend_primary_domain
+    error_message = "The registration must be for the primary domain."
+  }
+
+  assert {
+    condition     = [for ns in aws_route53domains_registered_domain.site[0].name_server : ns.name] == ["ns-1.example.com", "ns-2.example.org"]
+    error_message = "The registration must use this zone's name servers, sorted."
+  }
+
+  assert {
+    condition = (
+      aws_route53domains_registered_domain.site[0].transfer_lock &&
+      aws_route53domains_registered_domain.site[0].auto_renew
+    )
+    error_message = "Transfer lock and auto renew must stay on."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_route53domains_registered_domain.site[0].admin_privacy,
+      aws_route53domains_registered_domain.site[0].registrant_privacy,
+      aws_route53domains_registered_domain.site[0].tech_privacy,
+      aws_route53domains_registered_domain.site[0].billing_privacy,
+    ])
+    error_message = "WHOIS privacy must be on for every contact."
+  }
+
+  assert {
+    condition = (
+      length(aws_route53domains_registered_domain.site[0].registrant_contact) == 0 &&
+      length(aws_route53domains_registered_domain.site[0].admin_contact) == 0
+    )
+    error_message = "Contact details are personal data and must not be set in this public repo."
+  }
+}

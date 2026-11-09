@@ -30,6 +30,7 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 | `cloudfront.tf` | Distribution (http2and3, IPv6, https-only origin with secret header, `/img/*` behaviour) + ACM cert in us-east-1 |
 | `cloudfront_policies.tf` | Site cache policy (empty key), origin request policy (forwards the query string, not keyed) and response headers policy |
 | `cloudfront_functions.tf`, `functions/` | www to apex 301 at the edge, with a Node unit test |
+| `domain.tf` | Route 53 Domains registration (name servers, transfer lock, auto renew, WHOIS privacy); off until `manage_domain_registration` is true after the transfer |
 | `tests/unit.tftest.hcl` | Plan-only tests with mock providers — no credentials needed |
 | `tests/retained-resources.sh` | Static check that retained resources keep `prevent_destroy` |
 | `.tflint.hcl` | Lint settings (the misconfiguration scan's accepted-risk list is kept private) |
