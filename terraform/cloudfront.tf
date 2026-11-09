@@ -66,10 +66,12 @@ resource "aws_acm_certificate_validation" "frontend" {
 # ── Distribution ─────────────────────────────────────────────
 
 resource "aws_cloudfront_distribution" "frontend" {
-  enabled             = true
-  is_ipv6_enabled     = true
-  comment             = "${local.name_prefix} frontend CDN"
-  default_root_object = "index.html"
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "${local.name_prefix} frontend CDN"
+  # No default root object: the origin serves "/" itself and redirects
+  # "/index.html" to "/", so asking it for index.html would loop.
+  default_root_object = ""
   price_class         = var.cloudfront_price_class
   http_version        = "http2and3"
   aliases             = concat([var.frontend_primary_domain], var.frontend_alternate_domains)
