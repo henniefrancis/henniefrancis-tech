@@ -825,12 +825,12 @@ run "no_email_records" {
   }
 
   assert {
-    condition     = aws_route53_record.spf.records == toset(["\"v=spf1 -all\""])
+    condition     = aws_route53_record.spf.records == toset(["v=spf1 -all"])
     error_message = "The apex SPF must be v=spf1 -all."
   }
 
   assert {
-    condition     = aws_route53_record.dmarc.name == "_dmarc.henniefrancis.tech" && aws_route53_record.dmarc.records == toset(["\"v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s\""])
+    condition     = aws_route53_record.dmarc.name == "_dmarc.henniefrancis.tech" && aws_route53_record.dmarc.records == toset(["v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s"])
     error_message = "_dmarc must be the strict reject policy."
   }
 }
@@ -886,8 +886,19 @@ run "other_project_records_are_kept" {
   }
 
   assert {
-    condition     = one(aws_route53_record.other_project["demo-asuid"].records) == "\"6DC2FBAD3EC03CB4699320AF7AF7E1941247F53D78443120853FA976D97110EE\""
-    error_message = "asuid.demo TXT must be kept and quoted."
+    condition     = one(aws_route53_record.other_project["demo-asuid"].records) == "6DC2FBAD3EC03CB4699320AF7AF7E1941247F53D78443120853FA976D97110EE"
+    error_message = "asuid.demo TXT must be kept."
+  }
+
+  assert {
+    condition = alltrue([
+      for v in concat(
+        tolist(aws_route53_record.spf.records),
+        tolist(aws_route53_record.dmarc.records),
+        tolist(aws_route53_record.other_project["demo-asuid"].records),
+      ) : !strcontains(v, "\"")
+    ])
+    error_message = "TXT values must not contain quotes: the AWS provider adds them, and Route 53 rejects doubled quotes."
   }
 
   assert {

@@ -47,14 +47,14 @@ locals {
     }
   }
 
-  # TXT values must be double-quoted for Route 53.
+  # TXT values are written without quotes: the AWS provider adds them.
   other_project_records = {
     for key, r in var.other_project_records :
     key => {
       name    = "${r.name}.${local.zone_name}"
       type    = r.type
       ttl     = r.ttl
-      records = r.type == "TXT" ? [for v in r.records : "\"${v}\""] : r.records
+      records = r.records
     }
   }
 }
@@ -162,7 +162,7 @@ resource "aws_route53_record" "spf" {
   name    = local.zone_name
   type    = "TXT"
   ttl     = var.dns_default_ttl
-  records = ["\"v=spf1 -all\""]
+  records = ["v=spf1 -all"]
 }
 
 resource "aws_route53_record" "dmarc" {
@@ -170,6 +170,6 @@ resource "aws_route53_record" "dmarc" {
   name    = "_dmarc.${local.zone_name}"
   type    = "TXT"
   ttl     = var.dns_default_ttl
-  records = ["\"v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s\""]
+  records = ["v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s"]
 }
 
