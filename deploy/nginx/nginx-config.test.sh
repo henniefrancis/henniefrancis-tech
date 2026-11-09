@@ -9,9 +9,14 @@
 # Covers:
 #   - no redirect can ever produce a Location that starts with // or /\
 #   - the clean-URL redirects still work and keep the query string
-#   - the rate limit on port 80 answers 429
+#   - the rate limit on the ACME path of port 80 answers 429
 #   - nginx -t and a reload accept a current plus previous verify value of
 #     the documented 64 characters, and origin_ok follows both values
+#   - lockdown: port 443 answers 403 without a valid X-Origin-Verify header
+#     (missing, wrong, or an empty include) and 200 with one
+#   - lockdown: port 80 serves only the ACME challenge path; every other
+#     path and host gets no response (444)
+#   - a verify value is never written to the log
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,7 +63,9 @@ check() {
 
 # ── Fixtures ──────────────────────────────────────────────────
 
-mkdir -p "${work}/site/x" "${work}/site/pages" "${work}/certs" "${work}/verify" "${work}/bin"
+mkdir -p "${work}/site/x" "${work}/site/pages" "${work}/certs" "${work}/verify" "${work}/bin" \
+  "${work}/certbot/.well-known/acme-challenge"
+echo "acme-token-body" >"${work}/certbot/.well-known/acme-challenge/test-token"
 for f in index.html biography.html x/index.html pages/legacy.html; do
   echo "<p>${f}</p>" >"${work}/site/${f}"
 done
@@ -116,6 +123,7 @@ docker run -d --name "${name}" \
   -v "$(native "${work}/verify"):/etc/nginx/origin-verify.d:ro" \
   -v "$(native "${work}/certs"):/etc/letsencrypt/live/origin.henniefrancis.tech:ro" \
   -v "$(native "${work}/site"):/var/www/henniefrancis-tech/html:ro" \
+  -v "$(native "${work}/certbot"):/var/www/certbot:ro" \
   "${image}" >/dev/null
 
 p80="$(docker port "${name}" 80/tcp | head -n1 | sed 's/.*://')"
@@ -127,25 +135,29 @@ for _ in $(seq 1 40); do
 done
 
 # req <port-kind> <request-target> [extra curl args...]
-# prints "<status> <location>"
+# prints "<status> <location>". On 443 it sends the current verify value
+# (the lockdown answers 403 without it).
 req() {
   local kind="$1" target="$2"
   shift 2
   local url host
+  local -a verify=()
   if [[ "${kind}" == "80" ]]; then
     url="http://127.0.0.1:${p80}"
     host="henniefrancis.tech"
   else
     url="https://127.0.0.1:${p443}"
     host="origin.henniefrancis.tech"
+    verify=(-H "X-Origin-Verify: ${cur}")
   fi
-  { curl -sk --path-as-is -o /dev/null -D - -H "Host: ${host}" --request-target "${target}" "$@" "${url}" || true; } |
+  { curl -sk --path-as-is -o /dev/null -D - -H "Host: ${host}" "${verify[@]}" --request-target "${target}" "$@" "${url}" || true; } |
     awk 'BEGIN{s="";l=""} /^HTTP\//{s=$2} tolower($1)=="location:"{l=$2; sub(/\r$/,"",l)} END{print s " " l}'
 }
 
-# ── 1. No open redirect ──────────────────────────────────────
+# ── 1. No open redirect (port 443 serves the site; port 80 serves nothing) ──
 
-for kind in 80 443; do
+# shellcheck disable=SC2043  # port 80 serves no content any more; kept as a loop for the shared bodies
+for kind in 443; do
   for target in \
     '//evil.example/' '//evil.example/index.html' '//evil.example/x.html' '//evil.example/x/' \
     '//evil.example/pages/x.html' '///evil.example/' '////evil.example/x/' '/\evil.example/' \
@@ -184,7 +196,8 @@ done
 
 # ── 2. Clean URL redirects still work and keep the query ──────
 
-for kind in 80 443; do
+# shellcheck disable=SC2043  # port 80 serves no content any more; kept as a loop for the shared bodies
+for kind in 443; do
   check "port ${kind} trailing slash" "301 /biography" "$(req "${kind}" '/biography/')"
   check "port ${kind} .html" "301 /biography" "$(req "${kind}" '/biography.html')"
   check "port ${kind} nested index.html" "301 /x" "$(req "${kind}" '/x/index.html')"
@@ -201,19 +214,43 @@ for kind in 80 443; do
   check "port ${kind} 404 page itself is served" "200 " "$(req "${kind}" '/404.html')"
 done
 
-# ── 3. Rate limit answers 429 on port 80 only ─────────────────
+# ── 3. Rate limit answers 429 on the ACME path of port 80 only ──
 
-codes="$(for _ in $(seq 1 90); do curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: henniefrancis.tech' "http://127.0.0.1:${p80}/" || true; done || true)"
+acme_url="http://127.0.0.1:${p80}/.well-known/acme-challenge/test-token"
+# One curl process with a URL range reuses the connection, so the burst is fast.
+codes="$(curl -s -o /dev/null -w '%{http_code}
+' -H 'Host: origin.henniefrancis.tech' "${acme_url}?n=[1-100]" || true)"
 n429="$(grep -c '^429$' <<<"${codes}" || true)"
 n503="$(grep -c '^503$' <<<"${codes}" || true)"
 if [[ "${n429}" -ge 1 && "${n503}" -eq 0 ]]; then
-  echo "ok: burst on port 80 gave ${n429} x 429 and no 503"
+  echo "ok: burst on the ACME path gave ${n429} x 429 and no 503"
 else
-  echo "FAIL: burst on port 80 gave ${n429} x 429 and ${n503} x 503" >&2
+  echo "FAIL: burst on the ACME path gave ${n429} x 429 and ${n503} x 503" >&2
   fail=1
 fi
-codes443="$(for _ in $(seq 1 60); do curl -sk -o /dev/null -w '%{http_code}\n' -H 'Host: origin.henniefrancis.tech' "https://127.0.0.1:${p443}/" || true; done | tr -d '\r' | sort -u | tr '\n' ' ')"
+sleep 2
+codes443="$(for _ in $(seq 1 60); do curl -sk -o /dev/null -w '%{http_code}\n' -H 'Host: origin.henniefrancis.tech' -H "X-Origin-Verify: ${cur}" "https://127.0.0.1:${p443}/" || true; done | tr -d '\r' | sort -u | tr '\n' ' ')"
 check "port 443 has no rate limit" "200" "${codes443% }"
+
+# ── 3b. Lockdown on port 80: ACME only, everything else dropped ──
+
+# status <curl args>: the HTTP status, 000 when the server closed the connection
+status() { curl -s -o /dev/null -w '%{http_code}' "$@" 2>/dev/null || true; }
+
+check "port 80 serves an existing ACME token" "200" "$(status -H 'Host: origin.henniefrancis.tech' "${acme_url}")"
+check "port 80 ACME token body is intact" "acme-token-body" "$(curl -s -H 'Host: origin.henniefrancis.tech' "${acme_url}" || true)"
+check "port 80 ACME path needs no verify header and a missing token is 404" "404" \
+  "$(status -H 'Host: origin.henniefrancis.tech' "http://127.0.0.1:${p80}/.well-known/acme-challenge/none")"
+for host in henniefrancis.tech origin.henniefrancis.tech www.henniefrancis.tech other.example; do
+  for path in / /biography /index.html /404.html /50x.html /version.json /.well-known/other /.well-known/acme-challenge /robots.txt; do
+    check "port 80 ${host}${path} gets no response (444)" "000" "$(status -H "Host: ${host}" "http://127.0.0.1:${p80}${path}")"
+  done
+done
+check "port 80 with the verify header still gets no response" "000" \
+  "$(status -H 'Host: henniefrancis.tech' -H "X-Origin-Verify: ${cur}" "http://127.0.0.1:${p80}/")"
+check "port 80 POST gets no response" "000" "$(status -X POST -d x=1 -H 'Host: henniefrancis.tech' "http://127.0.0.1:${p80}/")"
+check "port 80 path traversal out of the ACME root is refused (400)" "400" \
+  "$(status --path-as-is -H 'Host: origin.henniefrancis.tech' "http://127.0.0.1:${p80}/.well-known/acme-challenge/../../../etc/passwd")"
 
 # ── 4. Verify values: 64 characters, current plus previous ────
 
@@ -230,10 +267,25 @@ hit() { # <secret or empty> -> origin_ok value of the last log line
   docker logs --tail 1 "${name}" 2>&1 | sed -n 's/.*origin_ok=\([01]\).*/\1/p'
 }
 
+# status code of the last log line
+logged_status() { docker logs --tail 1 "${name}" 2>&1 | sed -n 's/.*" \([0-9][0-9][0-9]\) .*/\1/p'; }
+
 check "current value matches" "1" "$(hit "${cur}")"
+check "current value is served (200)" "200" "$(logged_status)"
 check "previous value matches" "1" "$(hit "${prev}")"
+check "previous value is served (200)" "200" "$(logged_status)"
 check "another value does not match" "0" "$(hit "${other}")"
+check "another value is refused (403)" "403" "$(logged_status)"
 check "a missing header does not match" "0" "$(hit "")"
+check "a missing header is refused (403)" "403" "$(logged_status)"
+check "an empty header is refused (403)" "403" \
+  "$(curl -sk -o /dev/null -w '%{http_code}' -H 'Host: origin.henniefrancis.tech' -H 'X-Origin-Verify:' "https://127.0.0.1:${p443}/biography" || true)"
+check "a value of the right length but wrong is refused (403)" "403" \
+  "$(curl -sk -o /dev/null -w '%{http_code}' -H 'Host: origin.henniefrancis.tech' -H "X-Origin-Verify: ${cur:0:63}x" "https://127.0.0.1:${p443}/biography" || true)"
+for t in / /50x.html /biography/ /.well-known/acme-challenge/test-token; do
+  check "a missing header is refused for ${t} (403, before any redirect)" "403" \
+    "$(curl -sk -o /dev/null -w '%{http_code}' -H 'Host: origin.henniefrancis.tech' "https://127.0.0.1:${p443}${t}" || true)"
+done
 
 # The value is never logged.
 if docker logs "${name}" 2>&1 | grep -q -e "${cur}" -e "${prev}" -e "${other}"; then
@@ -257,5 +309,12 @@ render "${cur:0:32}" "none"
 run_ok "nginx -t with one 32 character value" docker exec "${name}" nginx -t
 : >"${work}/verify/origin-verify.inc"
 run_ok "nginx -t with an empty include" docker exec "${name}" nginx -t
+
+# Fail closed: an empty include (a failed render) means nobody gets content.
+run_ok "empty include config reloaded" docker exec "${name}" nginx -s reload
+sleep 1
+check "empty include refuses a request with a header (403)" "403"   "$(curl -sk -o /dev/null -w '%{http_code}' -H 'Host: origin.henniefrancis.tech' -H "X-Origin-Verify: ${cur}" "https://127.0.0.1:${p443}/biography" || true)"
+sleep 2
+check "empty include still serves the ACME path on port 80" "200" "$(status -H 'Host: origin.henniefrancis.tech' "${acme_url}")"
 
 exit "${fail}"
