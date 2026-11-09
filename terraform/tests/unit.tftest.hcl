@@ -76,6 +76,31 @@ override_resource {
   }
 }
 
+# Known group ids so the test can check which groups the instance carries.
+override_resource {
+  target          = aws_security_group.web
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000a"
+  }
+}
+
+override_resource {
+  target          = aws_security_group.cf_origin_v4
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000b"
+  }
+}
+
+override_resource {
+  target          = aws_security_group.cf_origin_v6
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000c"
+  }
+}
+
 override_resource {
   target          = aws_eip.web
   override_during = plan
@@ -90,6 +115,12 @@ variables {
 }
 
 mock_provider "aws" {
+  mock_data "aws_ec2_managed_prefix_list" {
+    defaults = {
+      id = "pl-0123456789abcdef0"
+    }
+  }
+
   mock_data "aws_ssm_parameter" {
     defaults = {
       value = "ami-0123456789abcdef0"
@@ -214,8 +245,8 @@ run "stack_is_dual_stack" {
   }
 
   assert {
-    condition     = aws_vpc_security_group_ingress_rule.https_ipv6.cidr_ipv6 == "::/0"
-    error_message = "HTTPS must be reachable over IPv6."
+    condition     = aws_vpc_security_group_ingress_rule.https_cloudfront_v6.ip_protocol == "tcp" && aws_vpc_security_group_ingress_rule.https_cloudfront_v6.to_port == 443
+    error_message = "HTTPS must be reachable over IPv6 (from the CloudFront IPv6 prefix list)."
   }
 }
 
@@ -1167,4 +1198,95 @@ run "csp_invalid_mode_is_rejected" {
   }
 
   expect_failures = [var.csp_header_mode]
+}
+
+# ── Origin lockdown: 443 only from CloudFront ────────────────
+
+run "https_is_not_open_to_the_world" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.cidr_ipv4 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.cidr_ipv6 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.cidr_ipv4 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.cidr_ipv6 == null,
+    ])
+    error_message = "The 443 rules must use a prefix list only, never 0.0.0.0/0 or ::/0 (or any CIDR)."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.http.from_port != 443,
+      aws_vpc_security_group_ingress_rule.http_ipv6.from_port != 443,
+      aws_vpc_security_group_ingress_rule.http.to_port != 443,
+      aws_vpc_security_group_ingress_rule.http_ipv6.to_port != 443,
+    ])
+    error_message = "The world-open rules on the web group must not cover port 443."
+  }
+
+  assert {
+    condition     = length(aws_vpc_security_group_ingress_rule.ssh) == 0
+    error_message = "SSH stays closed by default."
+  }
+}
+
+run "cloudfront_groups_use_the_two_prefix_lists" {
+  command = plan
+
+  assert {
+    condition     = data.aws_ec2_managed_prefix_list.cloudfront_origin_v4.name == "com.amazonaws.global.cloudfront.origin-facing"
+    error_message = "The IPv4 group must use the CloudFront origin-facing prefix list."
+  }
+
+  assert {
+    condition     = data.aws_ec2_managed_prefix_list.cloudfront_origin_v6.name == "com.amazonaws.global.ipv6.cloudfront.origin-facing"
+    error_message = "The IPv6 group must use the CloudFront IPv6 origin-facing prefix list."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.prefix_list_id == data.aws_ec2_managed_prefix_list.cloudfront_origin_v4.id,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.prefix_list_id == data.aws_ec2_managed_prefix_list.cloudfront_origin_v6.id,
+    ])
+    error_message = "Each group's rule must reference its own prefix list."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.from_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.to_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.ip_protocol == "tcp",
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.from_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.to_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.ip_protocol == "tcp",
+    ])
+    error_message = "The CloudFront rules must be TCP 443 only."
+  }
+
+  assert {
+    condition     = aws_security_group.cf_origin_v4.name != aws_security_group.cf_origin_v6.name && endswith(aws_security_group.cf_origin_v4.name, "-cf-origin-v4") && endswith(aws_security_group.cf_origin_v6.name, "-cf-origin-v6")
+    error_message = "Two separate groups, one per prefix list (each list counts 55 of the 60 rules per group)."
+  }
+
+  assert {
+    condition     = aws_instance.web.vpc_security_group_ids == toset([aws_security_group.web.id, aws_security_group.cf_origin_v4.id, aws_security_group.cf_origin_v6.id])
+    error_message = "The instance must carry the web group and both CloudFront groups."
+  }
+}
+
+run "port_80_stays_open_for_acme" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.http.from_port == 80,
+      aws_vpc_security_group_ingress_rule.http.to_port == 80,
+      aws_vpc_security_group_ingress_rule.http.cidr_ipv4 == "0.0.0.0/0",
+      aws_vpc_security_group_ingress_rule.http_ipv6.from_port == 80,
+      aws_vpc_security_group_ingress_rule.http_ipv6.to_port == 80,
+      aws_vpc_security_group_ingress_rule.http_ipv6.cidr_ipv6 == "::/0",
+    ])
+    error_message = "Port 80 must stay open to the world on IPv4 and IPv6 for the ACME HTTP-01 challenge."
+  }
 }
