@@ -306,6 +306,10 @@ for t in / /50x.html /biography/ /.well-known/acme-challenge/test-token; do
     "$(curl -sk -o /dev/null -w '%{http_code}' -H 'Host: origin.henniefrancis.tech' "https://127.0.0.1:${p443}${t}" || true)"
 done
 
+# The log line carries the port and the flag, so 80 and 443 can be told apart.
+check "log line names port 443" "1" "$(docker logs "${name}" 2>&1 | grep -c 'origin_ok=1 port=443$' | sed 's/^0$/0/; s/^[1-9][0-9]*$/1/')"
+check "log line names port 80" "1" "$(docker logs "${name}" 2>&1 | grep -c 'origin_ok=0 port=80$' | sed 's/^0$/0/; s/^[1-9][0-9]*$/1/')"
+
 # The value is never logged.
 if docker logs "${name}" 2>&1 | grep -q -e "${cur}" -e "${prev}" -e "${other}"; then
   echo "FAIL: a verify value appears in the log" >&2
