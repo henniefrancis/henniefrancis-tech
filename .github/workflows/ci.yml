@@ -277,12 +277,16 @@ jobs:
         if: steps.tf.outputs.changed == 'true'
         run: bash terraform/tests/retained-resources.sh
 
+      - name: No world-open 443 check
+        if: steps.tf.outputs.changed == 'true'
+        run: bash terraform/tests/no-world-443.sh
+
       - name: Shellcheck (deploy scripts)
         if: steps.tf.outputs.deploy == 'true'
         run: |
           set -euo pipefail
           shopt -s nullglob
-          shellcheck -x deploy/nginx/*.sh
+          shellcheck -x deploy/nginx/*.sh deploy/checks/*.sh
 
       - name: Origin verify render test
         if: steps.tf.outputs.deploy == 'true'
@@ -293,3 +297,7 @@ jobs:
       - name: Origin nginx config test
         if: steps.tf.outputs.deploy == 'true'
         run: bash deploy/nginx/nginx-config.test.sh
+
+      - name: Lockdown check script test
+        if: steps.tf.outputs.deploy == 'true'
+        run: bash deploy/checks/lockdown-check.test.sh
