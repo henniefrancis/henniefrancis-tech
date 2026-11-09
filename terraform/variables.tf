@@ -381,8 +381,7 @@ variable "config_repository" {
   }
 }
 
-# Consumed by the CloudFront 5xx alarm in a later change.
-# tflint-ignore: terraform_unused_declarations
+# Consumed by the CloudFront 5xx alarm (alarms.tf).
 variable "alarm_email" {
   description = "Email address for CloudFront 5xx alarms. Sensitive HCP Terraform variable; empty means an alarm without a subscriber."
   type        = string

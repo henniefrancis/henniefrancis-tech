@@ -76,6 +76,14 @@ override_resource {
   }
 }
 
+override_resource {
+  target          = aws_kms_key.alarms
+  override_during = plan
+  values = {
+    arn = "arn:aws:kms:us-east-1:123456789012:key/00000000-0000-0000-0000-000000000000"
+  }
+}
+
 # Known group ids so the test can check which groups the instance carries.
 override_resource {
   target          = aws_security_group.web
@@ -1288,5 +1296,91 @@ run "port_80_stays_open_for_acme" {
       aws_vpc_security_group_ingress_rule.http_ipv6.cidr_ipv6 == "::/0",
     ])
     error_message = "Port 80 must stay open to the world on IPv4 and IPv6 for the ACME HTTP-01 challenge."
+  }
+}
+
+# ── CloudFront 5xx alarm ─────────────────────────────────────
+
+run "cloudfront_5xx_alarm_thresholds" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.namespace == "AWS/CloudFront",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.metric_name == "5xxErrorRate",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.statistic == "Average",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.period == 300,
+    ])
+    error_message = "The alarm must watch the 5xxErrorRate average over five-minute periods."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.threshold == 5,
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.comparison_operator == "GreaterThanThreshold",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.evaluation_periods == 3,
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.datapoints_to_alarm == 2,
+    ])
+    error_message = "The alarm must fire above 5 percent for 2 of 3 periods."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.cloudfront_5xx.treat_missing_data == "notBreaching"
+    error_message = "Missing data must not count as a breach."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.cloudfront_5xx.dimensions["Region"] == "Global" && contains(keys(aws_cloudwatch_metric_alarm.cloudfront_5xx.dimensions), "DistributionId")
+    error_message = "The alarm needs the DistributionId and Region=Global dimensions."
+  }
+
+  assert {
+    condition     = length(aws_cloudwatch_metric_alarm.cloudfront_5xx.alarm_actions) == 1
+    error_message = "The alarm must notify the topic."
+  }
+}
+
+run "alarm_topic_is_encrypted" {
+  command = plan
+
+  assert {
+    condition     = aws_kms_key.alarms.enable_key_rotation == true
+    error_message = "The alarm topic key must rotate."
+  }
+
+  assert {
+    condition     = aws_sns_topic.alarms.kms_master_key_id != null
+    error_message = "The alarm topic must be encrypted."
+  }
+}
+
+run "no_alarm_subscription_without_an_email" {
+  command = plan
+
+  variables {
+    alarm_email = ""
+  }
+
+  assert {
+    condition     = length(aws_sns_topic_subscription.alarm_email) == 0
+    error_message = "No subscription may exist while alarm_email is empty."
+  }
+}
+
+run "alarm_subscription_with_an_email" {
+  command = plan
+
+  variables {
+    alarm_email = "alarms@example.test"
+  }
+
+  assert {
+    condition     = length(aws_sns_topic_subscription.alarm_email) == 1
+    error_message = "One subscription must exist when alarm_email is set."
+  }
+
+  assert {
+    condition     = aws_sns_topic_subscription.alarm_email[0].protocol == "email"
+    error_message = "The subscription must use the email protocol."
   }
 }
