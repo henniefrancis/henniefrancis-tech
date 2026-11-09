@@ -238,3 +238,9 @@ jobs:
       - name: Origin verify render test
         if: steps.tf.outputs.deploy == 'true'
         run: bash deploy/nginx/render-origin-verify.test.sh
+
+      # Real nginx in Docker: redirects cannot leave the site, queries are
+      # kept, the limit answers 429, and 64 character verify values load.
+      - name: Origin nginx config test
+        if: steps.tf.outputs.deploy == 'true'
+        run: bash deploy/nginx/nginx-config.test.sh
