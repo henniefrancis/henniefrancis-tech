@@ -71,8 +71,9 @@ for f in index.html biography.html x/index.html pages/legacy.html; do
 done
 echo "<p>404</p>" >"${work}/site/404.html"
 echo "<p>50x</p>" >"${work}/site/50x.html"
-for f in chunk-AbC12xYz.js chunk-ABCD1234.js chunk-q7Zk3mWp.js main-ABCD1234.js styles-ab3Cd9Ef.css \
-  img-A1B2C3D4.png app.js chunk-abcdefgh.js lazy-document.js my-document.png logo.png styles.css chunk-AbC12xY.js chunk-AbC12xYz9.js; do
+for f in chunk-BNxVV_zf.js chunk-BmH-7wXC.js chunk-Bs-9zVH8.js chunk-C7ga-4Cc.js chunk-Wuje_-av.js \
+  chunk-AbC12xYz.js chunk-ABCD1234.js chunk-q7Zk3mWp.js main-ABCD1234.js styles-ab3Cd9Ef.css \
+  img-A1B2C3D4.png chunk-abc-defg.js chunk-abcd_efg.js app.js chunk-abcdefgh.js lazy-document.js my-document.png logo.png styles.css chunk-AbC12xY.js chunk-AbC12xYz9.js; do
   echo "x" >"${work}/site/${f}"
 done
 
@@ -225,10 +226,11 @@ cache_control() { # <path> -> the Cache-Control value on 443
     awk 'tolower($1)=="cache-control:" { sub(/^[^:]*: */, ""); sub(/\r$/, ""); print }'
 }
 immutable="public, max-age=31536000, immutable"
-for f in chunk-AbC12xYz.js chunk-ABCD1234.js chunk-q7Zk3mWp.js main-ABCD1234.js styles-ab3Cd9Ef.css img-A1B2C3D4.png; do
+for f in chunk-BNxVV_zf.js chunk-BmH-7wXC.js chunk-Bs-9zVH8.js chunk-C7ga-4Cc.js chunk-Wuje_-av.js \
+  chunk-AbC12xYz.js chunk-ABCD1234.js chunk-q7Zk3mWp.js main-ABCD1234.js styles-ab3Cd9Ef.css img-A1B2C3D4.png; do
   check "hashed file ${f} is immutable" "${immutable}" "$(cache_control "/${f}")"
 done
-for f in app.js lazy-document.js my-document.png logo.png styles.css chunk-abcdefgh.js chunk-AbC12xY.js chunk-AbC12xYz9.js; do
+for f in chunk-abc-defg.js chunk-abcd_efg.js app.js lazy-document.js my-document.png logo.png styles.css chunk-abcdefgh.js chunk-AbC12xY.js chunk-AbC12xYz9.js; do
   check "unhashed or odd file ${f} is not immutable" "no-cache" "$(cache_control "/${f}")"
 done
 check "html is no-cache with stale-if-error" "no-cache, stale-if-error=86400" "$(cache_control "/404.html")"

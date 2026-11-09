@@ -48,12 +48,12 @@ export function mimeFor(file) {
 }
 
 /**
- * Angular output hashing: a dash, eight letters or digits, then the extension.
+ * Angular output hashing: a dash, eight base64url characters (letters, digits, _ or -), then the extension.
  * Main and styles hashes are upper case, lazy chunks are mixed case. The lookahead
  * wants a digit or an upper-case letter, so a plain lower-case word is not a hash.
  * Keep in line with the cache map in deploy/nginx/henniefrancis-tech.conf.
  */
-const HASHED = /-(?=[A-Za-z0-9]*[A-Z0-9])[A-Za-z0-9]{8}\.(?:js|css|woff2?|png|jpe?g|webp|svg|gif|ico)$/;
+const HASHED = /-(?=[A-Za-z0-9_-]*[A-Z0-9])[A-Za-z0-9_-]{8}\.(?:js|css|woff2?|png|jpe?g|webp|svg|gif|ico)$/;
 
 /** Cache-Control rules. `file` is the served file path, `urlPath` the request path. */
 export function cacheControlFor(urlPath, file) {
