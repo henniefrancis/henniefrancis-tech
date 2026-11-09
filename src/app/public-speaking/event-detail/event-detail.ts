@@ -1,5 +1,7 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ImageView, imageView } from '../../content/image';
 import { EVENTS } from '../data/events.data';
 
 export interface EventLink {
@@ -9,7 +11,7 @@ export interface EventLink {
   external: boolean;
   href: string | null;
   route: string | null;
-  src: string;
+  image: ImageView;
 }
 
 /** Visible links of an event record: external links keep their href, photos links become gallery routes. */
@@ -28,18 +30,20 @@ export function buildEventLinks(d: any, event: string): EventLink[] {
         external,
         href: external ? l.url : null,
         route: isPhotos ? `/public-speaking/${event}/photos/${photoYear}` : null,
-        src: d.assetBaseUrl + l.image,
+        image: imageView(l.image),
       };
     });
 }
 
 @Component({
   selector: 'app-event-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './event-detail.html',
 })
 export class EventDetail {
   // Bound from the route params via withComponentInputBinding().
+  protected readonly imageView = imageView;
+
   readonly event = input.required<string>();
   readonly year = input.required<string>();
 

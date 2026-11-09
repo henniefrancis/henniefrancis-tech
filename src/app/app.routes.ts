@@ -15,6 +15,9 @@ import { Cv } from './portfolio/cv/cv';
 import { CareerHistory } from './portfolio/career-history/career-history';
 import { Projects } from './portfolio/projects/projects';
 import { CertDetail } from './certifications/cert-detail/cert-detail';
+import { NotFound } from './not-found/not-found';
+
+const notFound = { component: NotFound, title: 'Page not found', data: { noindex: true } };
 
 export const routes: Routes = [
   { path: '', component: Home, title: 'Hennie Francis' },
@@ -38,6 +41,8 @@ export const routes: Routes = [
 
   { path: 'certifications/microsoft/:type/:id', component: CertDetail },
 
-  // Anything else falls back to home.
-  { path: '**', redirectTo: '' },
+  // Anything else shows the styled not-found page. The "404" path exists only so the
+  // build can prerender that page; tools/seo then moves it to 404.html.
+  { path: '404', ...notFound },
+  { path: '**', ...notFound },
 ];

@@ -1,11 +1,10 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": ".NET Conference",
   "year": "2025",
   "header": {
     "url": "https://cptmsdug.dev/dotnet-conf-2025.html",
-    "image": "public-speaking/dotnet_conf_2025.png",
+    "image": { "id": "1f82852ee5fe14d6", "w": 1035, "h": 400, "widths": [480, 960, 1035] },
     "alt": ".NET Conference 2025"
   },
   "heading": "Docs? I Hardly Know Her!",
@@ -15,7 +14,7 @@
   "links": [
     {
       "url": "https://sessionize.com/s/henniefrancis/docs-i-hardly-know-her/162368",
-      "image": "social-media/sessionize.png",
+      "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] },
       "title": "Sessionize",
       "alt": "Sessionize"
     }

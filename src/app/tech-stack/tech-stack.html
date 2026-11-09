@@ -24,7 +24,7 @@
       @for (tool of group.tools; track $index) {
         <div class="col-sm-1">
           <a [href]="tool.url" [title]="tool.name" target="_blank" rel="noopener noreferrer">
-            <img [src]="tool.src" [alt]="tool.name" class="techstack" loading="lazy">
+            <img [ngSrc]="tool.image.ngSrc" [ngSrcset]="tool.image.ngSrcset" [sizes]="tool.image.sizes" [width]="tool.image.width" [height]="tool.image.height" [loaderParams]="tool.image.loaderParams" [alt]="tool.name" class="techstack">
           </a>
         </div>
       }

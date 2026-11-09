@@ -1,11 +1,10 @@
 {
   "version": 1,
-  "assetBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/",
   "title": "Microsoft Season of AI",
   "year": "2024",
   "header": {
     "url": "https://cptmsdug.dev/seasonofai2024/",
-    "image": "public-speaking/season_of_ai.png",
+    "image": { "id": "77f4d090866b408f", "w": 1035, "h": 400, "widths": [480, 960, 1035] },
     "alt": "Microsoft Season of AI 2024"
   },
   "heading": "Navigating GitHub CoPilot: Piloting Your Code Safely",
@@ -15,20 +14,20 @@
   "links": [
     {
       "url": "https://sessionize.com/s/henniefrancis/navigating-github-copilot-piloting-your-code-safel/98259",
-      "image": "social-media/sessionize.png",
+      "image": { "id": "4cc65e20309c7e4c", "w": 700, "h": 210, "widths": [350, 700] },
       "title": "Sessionize",
       "alt": "Sessionize"
     },
     {
       "url": "https://www.youtube.com/watch?v=tL7au0hSOBY",
-      "image": "public-speaking/youtube.png",
+      "image": { "id": "c1f049d25803148e", "w": 478, "h": 203, "widths": [350, 478] },
       "title": "Full Video on YouTube",
       "alt": "Full Video on YouTube",
       "label": "Cape Town"
     },
     {
       "url": "https://www.youtube.com/watch?v=hlunhsEWPgE&t",
-      "image": "public-speaking/youtube.png",
+      "image": { "id": "c1f049d25803148e", "w": 478, "h": 203, "widths": [350, 478] },
       "title": "Full Video on YouTube",
       "alt": "Full Video on YouTube",
       "label": "Johannesburg"

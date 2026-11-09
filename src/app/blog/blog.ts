@@ -1,17 +1,19 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ImageRef, imageView } from '../content/image';
 
-const SOCIAL =
-  'https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/social-media/';
+const MEDIUM: ImageRef = { id: 'c5e2748eec32249d', w: 700, h: 210, widths: [350, 700] };
+const DEV: ImageRef = { id: 'ebd74f08618e654a', w: 700, h: 210, widths: [350, 700] };
 
 @Component({
   selector: 'app-blog',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './blog.html',
 })
 export class Blog {
   protected readonly links = [
-    { name: 'Medium', url: 'http://www.medium.com/@henniefrancis', src: SOCIAL + 'medium.png' },
-    { name: 'DEV', url: 'https://dev.to/henniefrancis', src: SOCIAL + 'dev.png' },
+    { name: 'Medium', url: 'http://www.medium.com/@henniefrancis', image: imageView(MEDIUM) },
+    { name: 'DEV', url: 'https://dev.to/henniefrancis', image: imageView(DEV) },
   ];
 }
