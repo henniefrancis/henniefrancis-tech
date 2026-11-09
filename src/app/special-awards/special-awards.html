@@ -5,13 +5,13 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Special Awards</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Special Awards</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <div class="row text-center">
     <div class="col">
@@ -19,7 +19,7 @@
         <div class="carousel-inner">
           @for (slide of slides; track $index) {
             <div class="carousel-item" [class.active]="$first">
-              <img [ngSrc]="slide.image.ngSrc" [ngSrcset]="slide.image.ngSrcset" [sizes]="slide.image.sizes" [width]="slide.image.width" [height]="slide.image.height" [loaderParams]="slide.image.loaderParams" class="d-block w-45" [alt]="slide.alt" [priority]="$first">
+              <img [ngSrc]="slide.image.ngSrc" [ngSrcset]="slide.image.ngSrcset" [sizes]="slide.image.sizes" [width]="slide.image.width" [height]="slide.image.height" [loaderParams]="slide.image.loaderParams" class="d-block w-45" [alt]="slide.image.alt" [priority]="$first">
             </div>
           }
         </div>

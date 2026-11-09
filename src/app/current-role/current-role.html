@@ -5,27 +5,27 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Current Role</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Current Role</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
 
-  @if (!true) {
-  @if (logo) {
+  @if (role.enabled) {
+  @if (role.logo; as logo) {
     <div class="row heading">
       <div class="col">
-        <a [href]="logo.href" target="_blank" rel="noopener noreferrer" [title]="logo.name">
-          <img [src]="logo.src" [class]="logo.className" [alt]="logo.name">
+        <a [href]="logo.url" target="_blank" rel="noopener noreferrer" [title]="logo.image.alt">
+          <img [src]="logo.image.src" class="current-role" [alt]="logo.image.alt">
         </a>
       </div>
     </div>
   }
 
-  @for (fact of facts; track $index) {
+  @for (fact of role.facts; track $index) {
     <div class="row">
       <div class="col-5"></div>
       <div class="col-1"><h5>{{ fact.label }}:</h5></div>

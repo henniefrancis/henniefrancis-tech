@@ -1,0 +1,17 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture tech-stack title
+description: Fixture tech-stack description.
+heading: Fixture tech-stack heading
+breadcrumb: Fixture tech-stack crumb
+categories:
+  - name: Languages
+    items:
+      - name: Lang
+        url: https://lang.example.test/
+        image:
+          id: 84a8743db35b74ec
+          w: 200
+          h: 100
+          widths: [100, 200]
+          alt: Lang

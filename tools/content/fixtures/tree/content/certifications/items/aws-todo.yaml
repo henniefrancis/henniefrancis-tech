@@ -1,0 +1,12 @@
+# Synthetic fixture content. Not real.
+
+image:
+  id: d89bfb8bd2b23f16
+  w: 200
+  h: 100
+  widths: [100, 200]
+  alt: aws-todo
+name: AWS Todo
+vendor: aws
+kind: certification
+status: todo

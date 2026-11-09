@@ -1,0 +1,26 @@
+{
+  "name": "hft-content",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Content pipeline: YAML loader, JSON Schema validator, token resolver and typed data generator for the site content.",
+  "type": "module",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "generate": "node generate.mjs",
+    "validate": "node validate.mjs",
+    "compare": "node compare-dom.mjs",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "parse5": "8.1.0",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "5.1.0",
+    "vitest": "5.1.0"
+  }
+}

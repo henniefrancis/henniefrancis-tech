@@ -71,10 +71,22 @@ export async function diffPngs(
       }
       let textTotal = 0;
       let textDiff = 0;
+      let minX = w;
+      let minY = h;
+      let maxX = -1;
+      let maxY = -1;
       for (let p = 0; p < w * h; p++) {
         if (inBox[p]) continue;
         textTotal++;
-        if (differs(p * 4)) textDiff++;
+        if (differs(p * 4)) {
+          textDiff++;
+          const x = p % w;
+          const y = Math.floor(p / w);
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
       }
       return {
         width: ia.naturalWidth,
@@ -82,6 +94,7 @@ export async function diffPngs(
         curWidth: ib.naturalWidth,
         curHeight: ib.naturalHeight,
         textRegionRatio: textTotal ? textDiff / textTotal : 0,
+        textRegionBounds: textDiff > 0 ? { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 } : null,
         imageRatios,
       };
     },

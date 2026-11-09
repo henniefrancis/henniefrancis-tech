@@ -30,7 +30,7 @@ src/                  Angular application source
 public/               Static assets copied as is into the build
 angular.json          Angular workspace configuration (the repo root is the workspace root)
 e2e/                  Playwright tests
-tools/                Standalone Node tooling packages (each has its own package.json)
+tools/                Standalone Node tooling packages (each has its own package.json), including tools/content
 terraform/            Infrastructure as code
 deploy/               Web server configuration shipped with each deploy
 .github/workflows/    CI/CD workflows
@@ -55,11 +55,28 @@ npm run test:e2e       # Playwright suite
 npm run test:visual    # visual comparison suite
 ```
 
+## Content
+
+The text, links and images the site shows are not in this repository. They are YAML files in a separate content repository. This repository holds the layout, the styles and the content contract in `tools/content/`: JSON Schemas, a loader, a validator and a generator that turns the content into typed modules in `src/app/content/generated/` (generated, not committed).
+
+```bash
+npm run content:generate   # reads CONTENT_SRC (default: content-src/), validates, writes the modules; fails on any error
+npm run content:fixtures   # same, from the synthetic sample content in tools/content/fixtures/tree
+npm run content:validate -- <folder>
+npm run content:test       # unit tests of the content tools, 100 percent coverage threshold
+```
+
+`npm run build` generates from `CONTENT_SRC` first. `npm test` and `npm run test:ci` generate from the sample content, so they need no access to the content repository.
+
 ## Continuous integration
 
 Every pull request to `develop` or `main` runs one required check named `ci`. It installs dependencies, builds the site, runs the unit tests with a 100 percent coverage threshold, checks the build output against the size and content budgets, audits runtime dependencies, scans the pull request's commits for secrets, scans the file system for known vulnerabilities, lints the workflows, and, when Terraform files changed, validates the Terraform.
 
-Pushes to `main` build the site and deploy it. A weekly workflow repeats the security scans, and a manual workflow runs the browser tests against a URL of your choice. Dependency updates are grouped monthly.
+The build reads the content repository with a short-lived GitHub App token that can only read that repository. Settings for it: the repository variable `CONTENT_APP_CLIENT_ID` and the secret `CONTENT_APP_PRIVATE_KEY` (also add the secret as a Dependabot secret). Pull requests from forks have no secrets and build against the sample content only.
+
+A deploy starts on a push to `main`, or when the content repository starts it after a validated content change. A deploy compares the site commit and the content hash with the live `/version.json` and skips itself when both match. Every page carries a script policy that `tools/csp` writes after the build, because the Angular `autoCsp` option cannot be combined with prerendering. The other policy directives are sent as a response header by the host and must not contain `script-src` or `default-src`.
+
+A weekly workflow repeats the security scans, and a manual workflow runs the browser tests against a URL of your choice. Dependency updates are grouped monthly.
 
 ## Contributing
 

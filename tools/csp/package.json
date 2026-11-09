@@ -1,0 +1,21 @@
+{
+  "name": "hft-csp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Post-build step: hashes the inline scripts of every prerendered page and writes the script policy into a meta tag (the Angular autoCsp output, which the builder refuses to produce together with prerendering).",
+  "type": "module",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "csp": "node cli.mjs",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "parse5": "8.1.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "5.1.0",
+    "vitest": "5.1.0"
+  }
+}

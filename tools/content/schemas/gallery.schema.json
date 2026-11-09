@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/gallery.schema.json",
+  "title": "speaking gallery",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "year",
+    "photos"
+  ],
+  "properties": {
+    "title": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "year": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "photos": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+      }
+    }
+  }
+}

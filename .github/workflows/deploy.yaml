@@ -2,7 +2,24 @@ name: Deploy to production
 
 # Pipeline: build (or pick a stored artifact) -> upload -> deploy over SSM ->
 # nginx config install and reload -> CloudFront invalidation -> smoke checks.
+# A prepare job runs before the build: it checks out and validates the content
+# and decides whether the live site is already current.
 # Deploys use GitHub OIDC only. No AWS keys are stored in GitHub.
+#
+# Triggers: a push to main (site code), a manual run, and the content
+# repository, which starts this workflow on main with workflow_dispatch after
+# a validated content change.
+#
+# Content: the page text lives in a private repository. A GitHub App
+# installation token that can only read that repository is minted for the
+# prepare and build jobs. The content is validated and turned into data modules
+# by tools/content; any error stops the run before anything is deployed.
+# Nothing from the content is ever printed to the log.
+#
+# Skip rule: /version.json on the live site records the site commit and the
+# content hash it was built from. When both equal what this run would build,
+# the build and deploy are skipped. A manual run with force set deploys anyway.
+# If the live file cannot be read, the run deploys.
 #
 # Quality gates run in the `ci` workflow on the pull request, so they are not
 # repeated here.
@@ -14,6 +31,10 @@ name: Deploy to production
 #   vars.WEB_ROOT              web root on the instance
 #   vars.SITE_URL              optional, public URL used for smoke checks
 # and one secret: CLOUDFRONT_DISTRIBUTION_ID (optional).
+#
+# Content access (required for every build; set them as repository settings):
+#   vars.CONTENT_APP_CLIENT_ID        Client ID of the GitHub App
+#   secrets.CONTENT_APP_PRIVATE_KEY   private key of that App
 #
 # The target instance is not a variable. It is discovered at deploy time from
 # its Name tag, so replacing the instance never leaves this pipeline aiming at
@@ -43,12 +64,12 @@ on:
         default: ''
         type: string
       config_sha:
-        description: 'Content config commit to build with. Reserved for the content pipeline; not used yet.'
+        description: 'Content commit (40 hex characters) to build with. Empty means the latest main of the content repository. Sent by the content repository.'
         required: false
         default: ''
         type: string
       force:
-        description: 'Reserved for the content pipeline: deploy even if the live build key already matches. Not used yet.'
+        description: 'Deploy even if the live site already reports the same site commit and content hash.'
         required: false
         default: false
         type: boolean
@@ -67,14 +88,126 @@ env:
 
 jobs:
   # ───────────────────────────────────────────────────────────
-  # Stage 1: Build and package (skipped for a rollback)
+  # Stage 0: Prepare (content check and skip decision; not run for a rollback)
+  # ───────────────────────────────────────────────────────────
+
+  prepare:
+    name: Check content and decide
+    if: ${{ github.ref == 'refs/heads/main' && inputs.artifact_version == '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      skip: ${{ steps.decide.outputs.skip }}
+      config_sha: ${{ steps.config.outputs.sha }}
+      content_hash: ${{ steps.generate.outputs.content_hash }}
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://henniefrancis.tech' }}
+      REQUESTED_CONFIG_SHA: ${{ inputs.config_sha }}
+      FORCE: ${{ inputs.force }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check the requested content commit
+        id: requested
+        run: |
+          set -euo pipefail
+          if [ -z "$REQUESTED_CONFIG_SHA" ]; then
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          elif printf '%s' "$REQUESTED_CONFIG_SHA" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "ref=$REQUESTED_CONFIG_SHA" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::config_sha must be empty or a full 40 character commit SHA."
+            exit 1
+          fi
+
+      - name: Check out the content
+        id: config
+        uses: ./.github/actions/checkout-content
+        with:
+          client-id: ${{ vars.CONTENT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_APP_PRIVATE_KEY }}
+          ref: ${{ steps.requested.outputs.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: tools/content/package-lock.json
+
+      # Validates the whole content tree against the schemas and writes the data
+      # modules. Fails closed: any problem stops the run. Only the number of
+      # routes, the certification counts and the hash are printed.
+      - name: Validate the content and compute its hash
+        id: generate
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund --prefix tools/content
+          node tools/content/generate.mjs
+          hash="$(cat src/app/content/generated/content-hash.txt)"
+          if ! printf '%s' "$hash" | grep -Eq '^[0-9a-f]{64}$'; then
+            echo "::error::The content hash is missing or malformed."
+            exit 1
+          fi
+          echo "content_hash=$hash" >> "$GITHUB_OUTPUT"
+
+      # Compares what this run would build with what the live site reports. Any
+      # doubt (no answer, not JSON, fields missing) means deploy.
+      - name: Compare with the live site
+        id: decide
+        env:
+          NEW_SITE_SHA: ${{ github.sha }}
+          NEW_CONTENT_HASH: ${{ steps.generate.outputs.content_hash }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -uo pipefail
+          skip=false
+          live_site_sha=""
+          live_hash=""
+          if live="$(curl -fsS --max-time 20 --max-redirs 3 -H 'Cache-Control: no-cache' "${SITE_URL%/}/version.json?run=${RUN_ID}")"; then
+            live_site_sha="$(jq -r '.siteSha // empty' <<< "$live" 2>/dev/null || true)"
+            live_hash="$(jq -r '.contentHash // empty' <<< "$live" 2>/dev/null || true)"
+          else
+            echo "The live version file could not be read; the run will deploy."
+          fi
+          if [ -n "$live_site_sha" ] && [ -n "$live_hash" ] \
+             && [ "$live_site_sha" = "$NEW_SITE_SHA" ] && [ "$live_hash" = "$NEW_CONTENT_HASH" ]; then
+            skip=true
+          fi
+          if [ "$FORCE" = "true" ]; then
+            skip=false
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Content check"
+            echo "- Site commit: \`${NEW_SITE_SHA::7}\`"
+            echo "- Content hash: \`${NEW_CONTENT_HASH::12}\`"
+            if [ "$skip" = "true" ]; then
+              echo "- Result: the live site already runs this commit and this content. Nothing to deploy."
+            else
+              echo "- Result: deploying."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # ───────────────────────────────────────────────────────────
+  # Stage 1: Build and package (skipped for a rollback and when nothing changed)
   # ───────────────────────────────────────────────────────────
 
   build:
     name: Build application
-    if: ${{ github.ref == 'refs/heads/main' && inputs.artifact_version == '' }}
+    needs: prepare
+    if: ${{ github.ref == 'refs/heads/main' && inputs.artifact_version == '' && needs.prepare.result == 'success' && needs.prepare.outputs.skip != 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      build_key: ${{ steps.version.outputs.build_key }}
+    env:
+      CONFIG_SHA: ${{ needs.prepare.outputs.config_sha }}
+      CONTENT_HASH: ${{ needs.prepare.outputs.content_hash }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -87,29 +220,66 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            tools/*/package-lock.json
 
-      # TODO(content pipeline): when config_sha is set, check out the content
-      # repository at that commit into src/content and generate the data
-      # modules before the build. Never print the content in logs.
-
-      - name: Install and build (Angular, prerendered)
+      # Dependencies first: install scripts run before the private content is
+      # on the runner. The content checkout follows, then the build.
+      - name: Install dependencies
         run: |
+          set -euo pipefail
           npm ci
+          shopt -s nullglob
+          for f in tools/*/package.json; do
+            (cd "$(dirname "$f")" && npm ci --ignore-scripts --no-audit --no-fund)
+          done
+
+      # The exact content commit that was validated in the prepare job.
+      - name: Check out the content
+        uses: ./.github/actions/checkout-content
+        with:
+          client-id: ${{ vars.CONTENT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_APP_PRIVATE_KEY }}
+          ref: ${{ needs.prepare.outputs.config_sha }}
+
+      # npm run build validates the content again and writes the data modules
+      # (prebuild), builds, prerenders and writes the script policy into every
+      # page (postbuild); the last line checks the policy.
+      - name: Build (Angular, prerendered)
+        run: |
+          set -euo pipefail
           npm run build
+          node tools/csp/cli.mjs --check "dist/${PROJECT_NAME}/browser"
+
+      # The build must have used the content that was checked in the prepare
+      # job. A mismatch means the config moved or the checkout is wrong.
+      - name: Check that the build used the validated content
+        run: |
+          set -euo pipefail
+          built="$(cat src/app/content/generated/content-hash.txt)"
+          if [ "$built" != "$CONTENT_HASH" ]; then
+            echo "::error::The built content does not match the content that was validated."
+            exit 1
+          fi
 
       # Written into the web root so the live site can report what it is
-      # running. TODO(content pipeline): add configSha and configTreeSha and
-      # compute buildKey from both.
+      # running. buildKey joins the site commit and the content hash.
       - name: Write version.json
+        id: version
         run: |
           set -euo pipefail
           site_dir="dist/${PROJECT_NAME}/browser"
+          build_key="${GITHUB_SHA}:${CONTENT_HASH}"
           jq -n \
             --arg siteSha "$GITHUB_SHA" \
+            --arg contentHash "$CONTENT_HASH" \
+            --arg configSha "$CONFIG_SHA" \
+            --arg buildKey "$build_key" \
             --arg builtAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            '{siteSha: $siteSha, buildKey: $siteSha, builtAt: $builtAt}' \
+            '{siteSha: $siteSha, contentHash: $contentHash, configSha: $configSha, buildKey: $buildKey, builtAt: $builtAt}' \
             > "${site_dir}/version.json"
+          echo "build_key=$build_key" >> "$GITHUB_OUTPUT"
 
       - name: Package artifact (site/ and nginx/)
         run: |
@@ -143,10 +313,12 @@ jobs:
 
   deployment:
     name: Application deployment
-    needs: build
-    # Run when the build succeeded or was skipped (rollback). Never after a
-    # failed or cancelled build, and only from main.
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.build.result == 'success' || needs.build.result == 'skipped') }}
+    needs: [prepare, build]
+    # Run after a successful build, or for a rollback (no build). Never after a
+    # failed or cancelled job, never when the prepare job found nothing to
+    # deploy (the build is skipped then and this is not a rollback), and only
+    # from main.
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.build.result == 'success' || (inputs.artifact_version != '' && needs.build.result == 'skipped')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     environment: production   # deployment protection rules and OIDC subject claim
@@ -160,6 +332,7 @@ jobs:
       DEPLOY_ROLE_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
       SITE_URL: ${{ vars.SITE_URL || 'https://henniefrancis.tech' }}
       ARTIFACT_VERSION: ${{ inputs.artifact_version }}
+      EXPECTED_BUILD_KEY: ${{ needs.build.outputs.build_key }}
       DEPLOY_REASON: ${{ inputs.reason }}
       CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
     steps:
@@ -368,6 +541,21 @@ jobs:
             echo "${path} -> ${code}"
             [ "$code" = "200" ] || failed=1
           done
+          # A build (not a rollback) must now be what the live site reports.
+          if [ -n "$EXPECTED_BUILD_KEY" ]; then
+            live_key=""
+            for _ in 1 2 3 4 5 6; do
+              live_key="$(curl -fsSL --max-time 20 "${base}/version.json?check=${GITHUB_RUN_ID}" | jq -r '.buildKey // empty' 2>/dev/null || true)"
+              [ "$live_key" = "$EXPECTED_BUILD_KEY" ] && break
+              sleep 10
+            done
+            if [ "$live_key" = "$EXPECTED_BUILD_KEY" ]; then
+              echo "version.json -> matches this build"
+            else
+              echo "::error::The live version.json does not report this build."
+              failed=1
+            fi
+          fi
           exit $failed
 
       - name: Update deployment badge

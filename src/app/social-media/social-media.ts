@@ -1,24 +1,9 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ImageView, imageView } from '../content/image';
-import { byOrder } from '../shared/by-order';
-import raw from './social.json';
-
-export interface Social {
-  name: string;
-  /** Absent for an entry that is shown as an image only (no link). */
-  url?: string;
-  image: ImageView;
-}
-
-/** Sorted social-media items with their full image URL. */
-export function buildSocials(data: any): Social[] {
-  return (data.items ?? [])
-    .slice()
-    .sort(byOrder)
-    .map((i: any) => ({ name: i.name as string, url: i.url as string | undefined, image: imageView(i.image) }));
-}
+import { PAGES } from '../content/generated/pages';
+import { SOCIAL } from '../content/generated/social';
+import { imageViewOf } from '../content/image';
 
 @Component({
   selector: 'app-social-media',
@@ -26,5 +11,9 @@ export function buildSocials(data: any): Social[] {
   templateUrl: './social-media.html',
 })
 export class SocialMedia {
-  protected readonly socials = buildSocials(raw);
+  protected readonly page = PAGES['social-media'];
+  /** All links in config order. Categories are content structure; the grid shows them as one list for now. */
+  protected readonly socials = SOCIAL.categories
+    .flatMap((category) => category.items)
+    .map((item) => ({ ...item, image: imageViewOf(item.image) }));
 }

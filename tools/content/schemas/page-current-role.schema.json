@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/page-current-role.schema.json",
+  "title": "current-role.yaml",
+  "allOf": [
+    {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PageHead"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "enabled",
+    "facts"
+  ],
+  "properties": {
+    "title": true,
+    "description": true,
+    "heading": true,
+    "breadcrumb": true,
+    "enabled": {
+      "type": "boolean"
+    },
+    "logo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "image"
+      ],
+      "properties": {
+        "url": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+        },
+        "image": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/StaticImageField"
+        }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "value"
+        ],
+        "properties": {
+          "label": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          },
+          "value": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PlainText"
+          }
+        }
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,23 +1,21 @@
 <div class="content">
-  <h1 class="visually-hidden">Hennie Francis</h1>
+  <h1 class="visually-hidden">{{ page.heading }}</h1>
   <div class="container-fluid px-4">
     <div class="row">
       <div class="col-3">
         <div class="home-card about-card text-center">
           <div class="row">
             <div class="col-12">
-              <img [ngSrc]="profile.image.ngSrc" [ngSrcset]="profile.image.ngSrcset" [sizes]="profile.image.sizes" [width]="profile.image.width" [height]="profile.image.height" [loaderParams]="profile.image.loaderParams" class="zoom" [alt]="profile.alt" priority>
+              <img [ngSrc]="profile.ngSrc" [ngSrcset]="profile.ngSrcset" [sizes]="profile.sizes" [width]="profile.width" [height]="profile.height" [loaderParams]="profile.loaderParams" class="zoom" [alt]="profile.alt" priority>
               <br />
 
               <div class="bio">
-                <h3>Hennie Francis</h3>
-                <p>Cloud &amp; Technology Strategist <span class="devider">●</span> AWS Community Builder <span class="devider">●</span> AWS User Group Leader <span class="devider">●</span> Technology Speaker <span class="devider">●</span> 4x AWS Certified <span class="devider">●</span> 19x Microsoft Certified <span class="devider">●</span> MCT <span class="devider">●</span> Aviation Enthusiast</p>
-                <hr />
-                <p>With more than 20 years’ experience in the industry. I believe if you have a passion for tech and a passion for what you do everyday, you will never ''work'' a day in your life.</p>
-                <hr />
-                <p>Currently my main stack is .NET, Java, IaC and Cloud Technologies. I always learn something new or explore a new technology.</p>
-                <hr />
-                <p>When I'm not coding or fiddle with tech, I'm extremely passionate about flying aircraft. I am a true nerd by heart, I am a content creator on Twitch and also love playing games with my wife. When we don't play games, we enjoy to travel, explore new places and eat good food.</p>
+                <h3>{{ home.name }}</h3>
+                <p>@for (item of home.tagline; track $index) {{{ item }}@if (!$last) {&ngsp;<span class="devider">●</span>&ngsp;}}</p>
+                @for (paragraph of home.about; track $index) {
+                  <hr />
+                  <p>{{ paragraph }}</p>
+                }
               </div>
             </div>
           </div>
@@ -25,11 +23,11 @@
       </div>
       <div class="col-9">
         <div class="row">
-          @for (tile of tiles; track tile.id) {
+          @for (tile of tiles; track $index) {
             <div class="col-4">
               <div class="home-card zoom">
                 <a [routerLink]="tile.route" [title]="tile.name">
-                  <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.name" [priority]="$index < 3">
+                  <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.image.alt" [priority]="$index < 3">
                 </a>
               </div>
             </div>

@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
 import { capturePage, writeCapture } from '../lib/capture';
 import type { Snapshot } from '../lib/collect';
-import { applyApprovals, compareDocument, compareGeometry, compareText, pixelDiffs } from '../lib/compare';
+import { applyApprovals, compareDocument, compareGeometry, compareText, locateRegion, pixelDiffs } from '../lib/compare';
 import type { ApprovedDiff, Diff } from '../lib/compare';
 import { diffPngs } from '../lib/pixeldiff';
 import { VISUAL_DIR, loadRoutes, routeSlug } from '../lib/routes';
@@ -51,7 +51,7 @@ test.describe('visual compare against live baseline', { tag: '@visual' }, () => 
         cur.png,
         [...baseSnap.images, ...cur.snapshot.images],
       );
-      diffs.push(...pixelDiffs(px));
+      diffs.push(...pixelDiffs(px, (region) => locateRegion(region, [...cur.snapshot.elements, ...baseSnap.elements])));
 
       const { approved: ok, unapproved } = applyApprovals(diffs, route, project, approved);
       mkdirSync(join(CURRENT, project, routeSlug(route)), { recursive: true });

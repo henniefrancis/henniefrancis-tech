@@ -1,0 +1,14 @@
+# Synthetic fixture content. Not real.
+
+image:
+  id: a743ca0724112b55
+  w: 200
+  h: 100
+  widths: [100, 200]
+  alt: ms-trainer-2022
+name: MS Trainer 2022
+vendor: microsoft
+kind: certification
+status: retired
+countAs: trainer
+url: https://learn.example.test/trainer-2022

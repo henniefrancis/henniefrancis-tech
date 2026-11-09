@@ -1,0 +1,17 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture special-awards title
+description: Fixture special-awards description.
+heading: Fixture special-awards heading
+breadcrumb: Fixture special-awards crumb
+slides:
+  - id: 9635616a64b6a163
+    w: 200
+    h: 100
+    widths: [100, 200]
+    alt: Award one
+  - id: de57913a36603644
+    w: 200
+    h: 100
+    widths: [100, 200]
+    alt: Award two

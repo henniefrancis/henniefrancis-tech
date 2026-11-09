@@ -1,0 +1,17 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture current-role title
+description: Fixture current-role description.
+heading: Fixture current-role heading
+breadcrumb: Fixture current-role crumb
+enabled: true
+logo:
+  url: https://employer.example.test/
+  image:
+    src: images/fixture/employer.svg
+    alt: Employer
+facts:
+  - label: Employer
+    value: Example Corp
+  - label: Title
+    value: Architect

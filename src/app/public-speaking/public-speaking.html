@@ -5,13 +5,13 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Public Speaking</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Public Speaking</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <hr />
 </div>
@@ -25,7 +25,7 @@
         <div class="col-4">
           <div class="publicspeaking zoom">
             <a [routerLink]="talk.route" [title]="talk.name">
-              <img [ngSrc]="talk.image.ngSrc" [ngSrcset]="talk.image.ngSrcset" [sizes]="talk.image.sizes" [width]="talk.image.width" [height]="talk.image.height" [loaderParams]="talk.image.loaderParams" [alt]="talk.name" [priority]="$index < 3">
+              <img [ngSrc]="talk.image.ngSrc" [ngSrcset]="talk.image.ngSrcset" [sizes]="talk.image.sizes" [width]="talk.image.width" [height]="talk.image.height" [loaderParams]="talk.image.loaderParams" [alt]="talk.image.alt" [priority]="$index < 3">
             </a>
           </div>
         </div>

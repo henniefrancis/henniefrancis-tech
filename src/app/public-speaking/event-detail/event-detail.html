@@ -6,7 +6,7 @@
           <ol class="breadcrumb">
             <a routerLink="/" title="Go Back" class="back">&#10531;</a>
             <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-            <li class="breadcrumb-item"><a routerLink="/public-speaking">Public Speaking</a></li>
+            <li class="breadcrumb-item"><a routerLink="/public-speaking">{{ pages['public-speaking'].breadcrumb }}</a></li>
             <li class="breadcrumb-item current" aria-current="page">{{ d.title }} {{ d.year }}</li>
           </ol>
         </nav>
@@ -22,9 +22,9 @@
     @if (d.header) {
       <div class="row heading">
         <div class="col">
-          <a [href]="d.header.url" target="_blank" rel="noopener noreferrer" [title]="d.header.alt || d.title">
-            @let header = imageView(d.header.image, '(max-width: 600px) 100vw, 1000px');
-            <img [ngSrc]="header.ngSrc" [ngSrcset]="header.ngSrcset" [sizes]="header.sizes" [width]="header.width" [height]="header.height" [loaderParams]="header.loaderParams" class="eventheader" [alt]="d.header.alt || d.title" priority>
+          <a [href]="d.header.url" target="_blank" rel="noopener noreferrer" [title]="d.header.image.alt">
+            @let header = imageViewOf(d.header.image, '(max-width: 600px) 100vw, 1000px');
+            <img [ngSrc]="header.ngSrc" [ngSrcset]="header.ngSrcset" [sizes]="header.sizes" [width]="header.width" [height]="header.height" [loaderParams]="header.loaderParams" class="eventheader" [alt]="header.alt" priority>
           </a>
         </div>
       </div>
@@ -39,18 +39,20 @@
       <div class="col-2"></div>
     </div>
 
-    @if (links().length) {
+    @if (d.links.length) {
       <div class="row heading">
-        @for (link of links(); track $index) {
+        @for (link of d.links; track $index) {
           <div class="col">
             @if (link.label) { <h2 class="eventheaderlink">{{ link.label }}</h2> }
-            @if (link.external) {
+            @if (link.href) {
               <a [href]="link.href" [title]="link.title" target="_blank" rel="noopener noreferrer">
-                <img [ngSrc]="link.image.ngSrc" [ngSrcset]="link.image.ngSrcset" [sizes]="link.image.sizes" [width]="link.image.width" [height]="link.image.height" [loaderParams]="link.image.loaderParams" class="eventlink" [alt]="link.alt">
+                @let linkImage = imageViewOf(link.image);
+                <img [ngSrc]="linkImage.ngSrc" [ngSrcset]="linkImage.ngSrcset" [sizes]="linkImage.sizes" [width]="linkImage.width" [height]="linkImage.height" [loaderParams]="linkImage.loaderParams" class="eventlink" [alt]="linkImage.alt">
               </a>
             } @else {
-              <a [routerLink]="link.route" [title]="link.title">
-                <img [ngSrc]="link.image.ngSrc" [ngSrcset]="link.image.ngSrcset" [sizes]="link.image.sizes" [width]="link.image.width" [height]="link.image.height" [loaderParams]="link.image.loaderParams" class="eventlink" [alt]="link.alt">
+              <a [routerLink]="link.route ?? null" [title]="link.title">
+                @let linkImage = imageViewOf(link.image);
+                <img [ngSrc]="linkImage.ngSrc" [ngSrcset]="linkImage.ngSrcset" [sizes]="linkImage.sizes" [width]="linkImage.width" [height]="linkImage.height" [loaderParams]="linkImage.loaderParams" class="eventlink" [alt]="linkImage.alt">
               </a>
             }
           </div>

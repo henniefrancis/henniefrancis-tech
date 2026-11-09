@@ -1,0 +1,38 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture Person
+description: Fixture home description.
+heading: Fixture Person
+name: Fixture Person
+profile:
+  id: e5393622926c6c39
+  w: 200
+  h: 100
+  widths: [100, 200]
+  alt: Fixture profile
+tagline:
+  - Builder
+  - ${aws-certifications}x AWS Certified
+  - ${microsoft-certifications}x Microsoft Certified
+  - Pilot
+about: |-
+  First about paragraph.
+
+  Second about paragraph.
+tiles:
+  - name: Biography
+    route: /biography
+    image:
+      id: 2a9c6b1e6494724f
+      w: 200
+      h: 100
+      widths: [100, 200]
+      alt: Biography
+  - name: Portfolio
+    route: /portfolio
+    image:
+      id: 67144c7b69ee9e82
+      w: 200
+      h: 100
+      widths: [100, 200]
+      alt: Portfolio

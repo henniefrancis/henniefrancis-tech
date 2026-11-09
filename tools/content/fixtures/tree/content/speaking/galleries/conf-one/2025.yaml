@@ -1,0 +1,15 @@
+# Synthetic fixture content. Not real.
+
+title: Conference One
+year: "2025"
+photos:
+  - id: 17d6551367f53191
+    w: 200
+    h: 100
+    widths: [100, 200]
+    alt: Photo 1
+  - id: 9cc35d3601e8421b
+    w: 200
+    h: 100
+    widths: [100, 200]
+    alt: Photo 2

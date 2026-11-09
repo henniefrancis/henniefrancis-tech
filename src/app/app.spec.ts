@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { App } from './app';
+import { SITE } from './content/generated/site';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -20,7 +21,7 @@ describe('App', () => {
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('canvas#flowfield')).toBeTruthy();
     expect(el.querySelector('router-outlet')).toBeTruthy();
-    expect(el.querySelector('footer')?.textContent).toContain('Hennie Francis - All rights reserved');
+    expect(el.querySelector('footer')?.textContent).toContain(SITE.copyright);
   });
 
   it('loads the flow-field scripts in order, without async, after the first render', async () => {
