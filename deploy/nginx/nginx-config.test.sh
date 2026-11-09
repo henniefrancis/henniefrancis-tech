@@ -71,6 +71,10 @@ for f in index.html biography.html x/index.html pages/legacy.html; do
 done
 echo "<p>404</p>" >"${work}/site/404.html"
 echo "<p>50x</p>" >"${work}/site/50x.html"
+for f in chunk-AbC12xYz.js chunk-ABCD1234.js chunk-q7Zk3mWp.js main-ABCD1234.js styles-ab3Cd9Ef.css \
+  img-A1B2C3D4.png app.js chunk-abcdefgh.js lazy-document.js my-document.png logo.png styles.css chunk-AbC12xY.js chunk-AbC12xYz9.js; do
+  echo "x" >"${work}/site/${f}"
+done
 
 # Relative file names keep native Windows openssl happy under Git Bash.
 (cd "${work}/certs" && openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
@@ -213,6 +217,21 @@ for kind in 443; do
   check "port ${kind} unknown path is a 404" "404 " "$(req "${kind}" '/nope')"
   check "port ${kind} 404 page itself is served" "200 " "$(req "${kind}" '/404.html')"
 done
+
+# ── 2b. Hashed build files are immutable, everything else is not ──
+
+cache_control() { # <path> -> the Cache-Control value on 443
+  curl -sk -o /dev/null -D - -H 'Host: origin.henniefrancis.tech' -H "X-Origin-Verify: ${cur}" "https://127.0.0.1:${p443}$1" |
+    awk 'tolower($1)=="cache-control:" { sub(/^[^:]*: */, ""); sub(/\r$/, ""); print }'
+}
+immutable="public, max-age=31536000, immutable"
+for f in chunk-AbC12xYz.js chunk-ABCD1234.js chunk-q7Zk3mWp.js main-ABCD1234.js styles-ab3Cd9Ef.css img-A1B2C3D4.png; do
+  check "hashed file ${f} is immutable" "${immutable}" "$(cache_control "/${f}")"
+done
+for f in app.js lazy-document.js my-document.png logo.png styles.css chunk-abcdefgh.js chunk-AbC12xY.js chunk-AbC12xYz9.js; do
+  check "unhashed or odd file ${f} is not immutable" "no-cache" "$(cache_control "/${f}")"
+done
+check "html is no-cache with stale-if-error" "no-cache, stale-if-error=86400" "$(cache_control "/404.html")"
 
 # ── 3. Rate limit answers 429 on the ACME path of port 80 only ──
 
