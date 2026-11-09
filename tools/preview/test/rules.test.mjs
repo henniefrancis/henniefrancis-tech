@@ -28,6 +28,14 @@ describe('cacheControlFor', () => {
     expect(cacheControlFor('/main-ABCD1234.js', '/s/main-ABCD1234.js')).toBe(IMMUTABLE);
     expect(cacheControlFor('/media/font-Z6A7XZ4N.woff2', '/s/media/font-Z6A7XZ4N.woff2')).toBe(IMMUTABLE);
   });
+  it('treats mixed-case lazy chunks as immutable but not plain words', () => {
+    expect(cacheControlFor('/chunk-AbC12xYz.js', '/s/chunk-AbC12xYz.js')).toBe(IMMUTABLE);
+    expect(cacheControlFor('/chunk-q7Zk3mWp.js', '/s/chunk-q7Zk3mWp.js')).toBe(IMMUTABLE);
+    expect(cacheControlFor('/lazy-document.js', '/s/lazy-document.js')).toBe('no-cache');
+    expect(cacheControlFor('/chunk-abcdefgh.js', '/s/chunk-abcdefgh.js')).toBe('no-cache');
+    expect(cacheControlFor('/chunk-AbC12xY.js', '/s/chunk-AbC12xY.js')).toBe('no-cache');
+    expect(cacheControlFor('/app.js', '/s/app.js')).toBe('no-cache');
+  });
   it('gives HTML no-cache with stale-if-error', () => {
     expect(cacheControlFor('/biography', '/s/biography.html')).toBe(HTML_CACHE);
     expect(HTML_CACHE).toContain('stale-if-error=86400');
