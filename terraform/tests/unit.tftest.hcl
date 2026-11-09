@@ -1384,3 +1384,96 @@ run "alarm_subscription_with_an_email" {
     error_message = "The subscription must use the email protocol."
   }
 }
+
+# ── Uptime health check and alarm ────────────────────────────
+
+run "site_health_check_is_https_with_sni" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_route53_health_check.site.type == "HTTPS",
+      aws_route53_health_check.site.fqdn == var.frontend_primary_domain,
+      aws_route53_health_check.site.port == 443,
+      aws_route53_health_check.site.resource_path == "/",
+      aws_route53_health_check.site.enable_sni == true,
+    ])
+    error_message = "The health check must be HTTPS on port 443 for the primary domain, path /, with SNI."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_route53_health_check.site.request_interval == 30,
+      aws_route53_health_check.site.failure_threshold == 3,
+    ])
+    error_message = "The health check must use a 30 second interval and three failures."
+  }
+
+  assert {
+    condition     = length(aws_route53_health_check.site.regions) == 3
+    error_message = "Use the minimum of three checking regions to keep the load low."
+  }
+}
+
+run "site_uptime_alarm_follows_the_aws_guidance" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.site_uptime.namespace == "AWS/Route53",
+      aws_cloudwatch_metric_alarm.site_uptime.metric_name == "HealthCheckStatus",
+      aws_cloudwatch_metric_alarm.site_uptime.statistic == "Minimum",
+      aws_cloudwatch_metric_alarm.site_uptime.period == 60,
+    ])
+    error_message = "The alarm must watch the Minimum of HealthCheckStatus over one-minute periods."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.site_uptime.threshold == 1,
+      aws_cloudwatch_metric_alarm.site_uptime.comparison_operator == "LessThanThreshold",
+      aws_cloudwatch_metric_alarm.site_uptime.evaluation_periods == 2,
+      aws_cloudwatch_metric_alarm.site_uptime.datapoints_to_alarm == 2,
+    ])
+    error_message = "The alarm must fire below 1 for 2 consecutive periods."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.site_uptime.treat_missing_data == "breaching"
+    error_message = "A health check that stops reporting must count as a breach."
+  }
+
+  assert {
+    condition     = length(aws_cloudwatch_metric_alarm.site_uptime.alarm_actions) == 1 && length(aws_cloudwatch_metric_alarm.site_uptime.ok_actions) == 1
+    error_message = "The alarm must notify the same topic on alarm and on recovery."
+  }
+
+  assert {
+    condition     = contains(keys(aws_cloudwatch_metric_alarm.site_uptime.dimensions), "HealthCheckId")
+    error_message = "The alarm needs the HealthCheckId dimension."
+  }
+}
+
+run "alarm_key_policy_is_scoped_to_alarms_in_this_account" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for s in data.aws_iam_policy_document.alarm_key.statement : anytrue([
+        for c in s.condition :
+        c.test == "ArnLike" && c.variable == "aws:SourceArn" && contains(c.values, "arn:aws:cloudwatch:us-east-1:123456789012:alarm:*")
+      ]) if s.sid == "CloudWatchAlarmsPublish"
+    ])
+    error_message = "The CloudWatch statement must carry an ArnLike aws:SourceArn condition for alarms in this account in us-east-1."
+  }
+
+  assert {
+    condition = anytrue([
+      for s in data.aws_iam_policy_document.alarm_key.statement : anytrue([
+        for c in s.condition :
+        c.test == "StringEquals" && c.variable == "aws:SourceAccount"
+      ]) if s.sid == "CloudWatchAlarmsPublish"
+    ])
+    error_message = "The aws:SourceAccount condition must stay next to the SourceArn one."
+  }
+}
