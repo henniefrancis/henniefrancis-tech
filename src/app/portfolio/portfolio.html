@@ -5,20 +5,20 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Portfolio of Evidence</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Portfolio</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <div class="row">
     @for (tile of tiles; track $index) {
       <div class="col-4">
         <div class="home-card zoom">
           <a [routerLink]="tile.route" [title]="tile.name">
-            <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.name" priority>
+            <img [ngSrc]="tile.image.ngSrc" [ngSrcset]="tile.image.ngSrcset" [sizes]="tile.image.sizes" [width]="tile.image.width" [height]="tile.image.height" [loaderParams]="tile.image.loaderParams" [alt]="tile.image.alt" priority>
           </a>
         </div>
       </div>

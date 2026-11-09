@@ -1,5 +1,6 @@
 import { Component, afterNextRender, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SITE } from './content/generated/site';
 import { Seo } from './shared/seo';
 
 @Component({
@@ -9,6 +10,8 @@ import { Seo } from './shared/seo';
   styleUrl: './app.scss',
 })
 export class App {
+  protected readonly site = SITE;
+
   constructor() {
     inject(Seo).start();
 

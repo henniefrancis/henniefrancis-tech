@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { Router, provideRouter } from '@angular/router';
-import { EVENTS } from '../public-speaking/data/events.data';
-import { GALLERIES } from '../public-speaking/data/galleries.data';
-import { CERT_DETAILS } from '../certifications/cert-detail/cert-details.data';
-import { PAGE_DESCRIPTIONS } from './page-descriptions';
-import { Seo, SHARE_IMAGE, SITE_URL, canonicalUrl, descriptionFor, normalisePath } from './seo';
+import { PAGES } from '../content/generated/pages';
+import { RECORDS } from '../content/generated/records';
+import { SITE } from '../content/generated/site';
+import { DEFAULT_DESCRIPTION, SITE_NAME, Seo, SHARE_IMAGE, SITE_URL, canonicalUrl, descriptionFor, normalisePath } from './seo';
 
 @Component({ selector: 'app-stub', template: '' })
 class Stub {}
@@ -29,45 +28,33 @@ describe('seo helpers', () => {
     expect(canonicalUrl('/blog')).toBe(`${SITE_URL}/blog`);
   });
 
-  it('has a plain-text description for every static page, none using dashes', () => {
-    for (const [path, text] of Object.entries(PAGE_DESCRIPTIONS)) {
-      expect(descriptionFor(path)).toBe(text);
-      expect(DASHES.test(text)).toBe(false);
-      expect(text.length).toBeLessThanOrEqual(200);
+  it('takes the site name from the content', () => {
+    expect(SITE_NAME).toBe(SITE.name);
+  });
+
+  it('has a plain-text description for every static page that defines one, none using dashes', () => {
+    const described = Object.values(PAGES).filter((p) => p.description);
+    expect(described.length).toBeGreaterThan(0);
+    for (const page of described) {
+      expect(descriptionFor(page.route)).toBe(page.description);
+      expect(DASHES.test(page.description!)).toBe(false);
     }
   });
 
-  it('derives descriptions for events, galleries and certificates from their records', () => {
-    const [eKey, e] = Object.entries(EVENTS)[0];
-    expect(descriptionFor(`/public-speaking/${eKey}`)).toContain(`${e.title} ${e.year}`);
-    const [gKey, g] = Object.entries(GALLERIES)[0];
-    const [ge, gy] = gKey.split('/');
-    expect(descriptionFor(`/public-speaking/${ge}/photos/${gy}`)).toBe(
-      `Photos of Hennie Francis at ${g.title} ${g.year}.`,
-    );
-    const [cKey, c] = Object.entries(CERT_DETAILS)[0];
-    expect(descriptionFor(`/certifications/microsoft/${cKey}`)).toBe(`${c.title}, earned by Hennie Francis.`);
-  });
-
-  it('uses the heading when an event has one and falls back when it does not', () => {
-    const key = 'aws-reinvent-recap/2025';
-    const original = EVENTS[key];
-    try {
-      EVENTS[key] = { title: 'T', year: '1', heading: 'H' };
-      expect(descriptionFor(`/public-speaking/${key}`)).toBe('H: Hennie Francis at T 1.');
-      EVENTS[key] = { title: 'T', year: '1' };
-      expect(descriptionFor(`/public-speaking/${key}`)).toBe('Hennie Francis at T 1.');
-    } finally {
-      EVENTS[key] = original;
-    }
+  it('derives descriptions for events, galleries and certificates from their record summaries', () => {
+    expect(descriptionFor('/public-speaking/conf-one/2025')).toBe(`A talk title: ${SITE.name} at Conference One 2025.`);
+    expect(descriptionFor('/public-speaking/conf-two/2024')).toBe(`${SITE.name} at Conference Two 2024.`);
+    expect(descriptionFor('/public-speaking/conf-one/photos/2025')).toBe(`Photos of ${SITE.name} at Conference One 2025.`);
+    const cert = Object.entries(RECORDS).find(([, r]) => r.kind === 'certificate')!;
+    expect(descriptionFor(cert[0])).toBe(`${(cert[1] as { title: string }).title}, earned by ${SITE.name}.`);
   });
 
   it('falls back to the home description for unknown records and paths', () => {
-    const home = PAGE_DESCRIPTIONS['/'];
-    expect(descriptionFor('/public-speaking/nope/1999')).toBe(home);
-    expect(descriptionFor('/public-speaking/nope/photos/1999')).toBe(home);
-    expect(descriptionFor('/certifications/microsoft/x/y')).toBe(home);
-    expect(descriptionFor('/something-else')).toBe(home);
+    expect(DEFAULT_DESCRIPTION).toBe(PAGES['home'].description);
+    expect(descriptionFor('/public-speaking/nope/1999')).toBe(DEFAULT_DESCRIPTION);
+    expect(descriptionFor('/public-speaking/nope/photos/1999')).toBe(DEFAULT_DESCRIPTION);
+    expect(descriptionFor('/certifications/microsoft/x/y')).toBe(DEFAULT_DESCRIPTION);
+    expect(descriptionFor('/something-else')).toBe(DEFAULT_DESCRIPTION);
   });
 });
 
@@ -94,7 +81,7 @@ describe('Seo service', () => {
   it('sets description, canonical, Open Graph and Twitter tags for a page', () => {
     TestBed.inject(Title).setTitle('Blog');
     seo.update('/blog/');
-    expect(tag('meta[name="description"]')).toBe(PAGE_DESCRIPTIONS['/blog']);
+    expect(tag('meta[name="description"]')).toBe(PAGES['blog'].description);
     expect(canonical()).toBe(`${SITE_URL}/blog`);
     expect(tag('meta[property="og:url"]')).toBe(`${SITE_URL}/blog`);
     expect(tag('meta[property="og:title"]')).toBe('Blog');
@@ -102,7 +89,7 @@ describe('Seo service', () => {
     expect(tag('meta[property="og:image"]')).toBe(SHARE_IMAGE);
     expect(tag('meta[name="twitter:card"]')).toBe('summary');
     expect(tag('meta[name="twitter:title"]')).toBe('Blog');
-    expect(tag('meta[name="twitter:description"]')).toBe(PAGE_DESCRIPTIONS['/blog']);
+    expect(tag('meta[name="twitter:description"]')).toBe(PAGES['blog'].description);
     expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
   });
 
@@ -120,7 +107,7 @@ describe('Seo service', () => {
     expect(tag('meta[name="robots"]')).toBe('noindex');
     expect(canonical()).toBeUndefined();
     expect(document.head.querySelector('meta[property="og:url"]')).toBeNull();
-    expect(tag('meta[name="description"]')).toBe(PAGE_DESCRIPTIONS['/']);
+    expect(tag('meta[name="description"]')).toBe(PAGES['home'].description);
     seo.update('/blog');
     expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
   });

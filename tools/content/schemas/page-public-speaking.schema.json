@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/page-public-speaking.schema.json",
+  "title": "public-speaking.yaml",
+  "allOf": [
+    {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PageHead"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "years"
+  ],
+  "properties": {
+    "title": true,
+    "description": true,
+    "heading": true,
+    "breadcrumb": true,
+    "years": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "events"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          },
+          "events": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 60,
+            "items": {
+              "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/EventRef"
+            }
+          }
+        }
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

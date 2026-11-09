@@ -3,9 +3,17 @@ name: ci
 # The one required pull request check. Everything that used to live in the
 # separate lint and terraform workflows runs here, once per PR.
 #
+# Content: the page text lives in a private repository. For pull requests from
+# this repository the check reads it with a GitHub App token that can only read
+# that repository (variable CONTENT_APP_CLIENT_ID, secret CONTENT_APP_PRIVATE_KEY;
+# Dependabot needs the same secret under Dependabot secrets). Pull requests from
+# forks get no secrets: they build against the synthetic content in
+# tools/content/fixtures/tree and stop there.
+#
 # Security rules for this file:
 #   - trigger is pull_request only (never pull_request_target)
-#   - read-only token, no secrets, no cloud credentials
+#   - read-only token, no cloud credentials; the only secret is the content
+#     App key, and the token made from it can read one private repository
 #   - every action is pinned to a full commit SHA
 #   - PR-controlled values (SHAs, branch names) are passed through env, never
 #     interpolated into scripts
@@ -60,8 +68,51 @@ jobs:
             (cd "$(dirname "$f")" && npm ci)
           done
 
+      # The private content is checked out only AFTER the install above, so no
+      # package install script ever runs with the content on disk.
+      - name: Check out the content (same repository pull requests)
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: ./.github/actions/checkout-content
+        with:
+          client-id: ${{ vars.CONTENT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_APP_PRIVATE_KEY }}
+
+      # The build below reads this folder. A fork gets the synthetic fixtures.
+      - name: Select the content source
+        env:
+          IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+        run: |
+          set -euo pipefail
+          if [ "$IS_FORK" = "true" ]; then
+            echo "::notice::Fork pull request: building against the synthetic fixtures only."
+            echo "CONTENT_SRC=${GITHUB_WORKSPACE}/tools/content/fixtures/tree" >> "$GITHUB_ENV"
+          else
+            echo "CONTENT_SRC=${GITHUB_WORKSPACE}/content-src" >> "$GITHUB_ENV"
+          fi
+
+      # prebuild validates the content and fails closed; postbuild writes the
+      # script policy into every prerendered page.
       - name: Production build
         run: npm run build
+
+      # Every page has one policy, every inline script is hashed in it and no
+      # external script tag or inline event handler is left.
+      - name: Script policy check on the build output
+        run: node tools/csp/cli.mjs --check "$DIST_DIR"
+
+      # Template output must never be built from strings of HTML, and the
+      # generated content modules are a build product, never committed.
+      - name: Unsafe HTML APIs and generated files
+        run: |
+          set -euo pipefail
+          if git grep -nE 'innerHTML|outerHTML|bypassSecurityTrust|DomSanitizer|insertAdjacentHTML|\[innerHtml\]|\[outerHTML\]' -- src/app ':!*.spec.ts'; then
+            echo "::error::Unsafe HTML APIs found under src/app."
+            exit 1
+          fi
+          if [ -n "$(git ls-files src/app/content/generated)" ]; then
+            echo "::error::Generated content modules must not be committed."
+            exit 1
+          fi
 
       - name: Unit tests with coverage (site)
         run: npm test -- --no-watch --coverage

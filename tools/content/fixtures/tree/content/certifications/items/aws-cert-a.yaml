@@ -1,0 +1,15 @@
+# Synthetic fixture content. Not real.
+
+image:
+  id: c627286be0128a87
+  w: 200
+  h: 100
+  widths: [100, 200]
+  alt: aws-cert-a
+name: AWS Cert A
+vendor: aws
+kind: certification
+status: active
+url: https://credly.example.test/a
+issuedOn: 2024-01-15
+expiresOn: 2027-01-15

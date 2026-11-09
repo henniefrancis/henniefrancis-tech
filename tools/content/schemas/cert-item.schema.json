@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/cert-item.schema.json",
+  "title": "certification item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "vendor",
+    "kind",
+    "status",
+    "image"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "vendor": {
+      "enum": [
+        "aws",
+        "microsoft",
+        "mongodb",
+        "other"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "certification",
+        "extra-badge",
+        "partner-badge"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "expired",
+        "retired",
+        "inprogress",
+        "todo"
+      ]
+    },
+    "url": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+    },
+    "detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Slug"
+        },
+        "id": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/DetailId"
+        }
+      }
+    },
+    "image": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+    },
+    "countAs": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Slug"
+    },
+    "issuedOn": {
+      "type": "string",
+      "format": "date"
+    },
+    "expiresOn": {
+      "type": "string",
+      "format": "date"
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ArchivePath"
+      }
+    }
+  },
+  "not": {
+    "required": [
+      "url",
+      "detail"
+    ]
+  }
+}

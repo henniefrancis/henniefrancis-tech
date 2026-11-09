@@ -1,0 +1,14 @@
+# Synthetic fixture content. Not real.
+
+image:
+  id: 6ccb5dd7384974be
+  w: 200
+  h: 100
+  widths: [100, 200]
+  alt: ms-trainer-2023
+name: MS Trainer 2023
+vendor: microsoft
+kind: certification
+status: active
+countAs: trainer
+url: https://learn.example.test/trainer-2023

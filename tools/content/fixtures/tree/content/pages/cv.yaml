@@ -1,0 +1,103 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture cv title
+description: Fixture cv description.
+heading: Fixture cv heading
+breadcrumb: Fixture cv crumb
+name: Fixture Person
+summary: |-
+  Fixture summary paragraph.
+contact:
+  heading: CONTACT
+  email: person@example.test
+  location: Fixture City
+  phone:
+    display: +1 212 555 0100
+    e164: "+12125550100"
+  website: https://person.example.test
+skills:
+  heading: SKILLS
+  rows:
+    - - One
+      - Two
+      - Three
+      - Four
+    - - Five
+      - Six
+      - Seven
+experience:
+  heading: WORK EXPERIENCE
+  employers:
+    - name: Example Corp
+      positions:
+        - titles:
+            - Lead Engineer
+            - Architect
+          period: 2020 - 2022
+        - titles:
+            - "Engineer:"
+          period: 2018 - 2020
+          gap: outside
+    - name: Other Corp
+      positions:
+        - titles:
+            - Developer
+          period: 2015 - 2018
+awards:
+  heading: AWARDS
+  items:
+    - name: First Award
+      flag: pending
+      link:
+        text: Info
+        url: https://award.example.test/info
+    - name: Second Award
+      note: Various
+organizations:
+  heading: ORGANIZATIONS
+  items:
+    - name: Group One
+      url: https://group-one.example.test
+      roles:
+        - Leader
+        - Organiser
+      period: Jan 2024 - Present
+      description: Group one is a fixture.
+    - name: Group Two
+      url: https://group-two.example.test
+      roles:
+        - Member
+      period: Feb 2024 - Present
+      description: Group two is a fixture.
+      bare: true
+    - name: Group Three
+      url: https://group-three.example.test
+      roles:
+        - Founder
+      period: Mar 2024 - Present
+      description: Group three is a fixture.
+volunteer:
+  heading: VOLUNTEER EXPERIENCE
+education:
+  heading: EDUCATION
+  items:
+    - title: Course A
+      institution: School A
+    - title: Course B
+      institution: School B
+    - title: Course C
+      institution: School C
+languages:
+  heading: LANGUAGES
+  items:
+    - name: Alpha
+      level: Native
+    - name: Beta
+      level: Fluent
+interests:
+  heading: INTERESTS
+  rows:
+    - - Flying
+      - Travel
+    - - Fishing
+      - Gaming

@@ -1,0 +1,13 @@
+# Synthetic fixture content. Not real.
+
+image:
+  id: 3ff3557af5b9731a
+  w: 200
+  h: 100
+  widths: [100, 200]
+  alt: aws-inprogress
+name: AWS In Progress
+vendor: aws
+kind: certification
+status: inprogress
+url: https://credly.example.test/inprogress

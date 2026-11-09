@@ -1,0 +1,14 @@
+# Synthetic fixture content. Not real.
+
+title: Fixture public-speaking title
+description: Fixture public-speaking description.
+heading: Fixture public-speaking heading
+breadcrumb: Fixture public-speaking crumb
+years:
+  - name: "2025"
+    events:
+      - conf-one/2025
+      - conf-one/2025-lounge
+  - name: "2024"
+    events:
+      - conf-two/2024

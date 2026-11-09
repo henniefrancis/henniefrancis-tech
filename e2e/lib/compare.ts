@@ -14,6 +14,8 @@ export interface Diff {
   /** Short, value-free description. Never contains personal data beyond what is on the public page. */
   detail: string;
   path?: string;
+  /** Text diffs: the line that was added or changed (its new text), or removed (its old text). */
+  text?: string;
 }
 
 export interface ApprovedDiff {
@@ -23,6 +25,11 @@ export interface ApprovedDiff {
   kinds: DiffKind[];
   /** Optional: only diffs whose element path contains this substring. */
   pathContains?: string;
+  /** Optional: only diffs whose element path (or, for pixel regions, the smallest element containing the change) contains this substring. */
+  /** Optional (text diffs): only added, changed or removed lines whose text is exactly one of these. */
+  texts?: string[];
+  /** Optional (page diffs): only diffs whose detail contains one of these substrings. */
+  detailContains?: string[];
   /** Optional: only these projects. */
   projects?: string[];
   reason: string;
@@ -30,16 +37,54 @@ export interface ApprovedDiff {
 
 const boxDelta = (a: Box, b: Box) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y), Math.abs(a.w - b.w), Math.abs(a.h - b.h));
 
+export interface LinePair {
+  kind: 'same' | 'changed' | 'added' | 'removed';
+  /** Index in the baseline lines (absent for an added line). */
+  base?: number;
+  /** Index in the current lines (absent for a removed line). */
+  cur?: number;
+}
+
+/**
+ * Aligns two lists of lines (longest common subsequence), so one inserted line is one difference instead
+ * of a shift of every later line. A removed and an added line at the same spot pair up as "changed".
+ */
+export function alignLines(base: string[], cur: string[]): LinePair[] {
+  const n = base.length;
+  const m = cur.length;
+  const lcs: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) {
+    for (let j = m - 1; j >= 0; j--) {
+      lcs[i][j] = base[i] === cur[j] ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+    }
+  }
+  const out: LinePair[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < n || j < m) {
+    if (i < n && j < m && base[i] === cur[j]) {
+      out.push({ kind: 'same', base: i++, cur: j++ });
+    } else if (i < n && j < m && lcs[i + 1][j + 1] >= Math.max(lcs[i + 1][j], lcs[i][j + 1])) {
+      out.push({ kind: 'changed', base: i++, cur: j++ });
+    } else if (j < m && (i >= n || lcs[i][j + 1] >= lcs[i + 1][j])) {
+      out.push({ kind: 'added', cur: j++ });
+    } else {
+      out.push({ kind: 'removed', base: i++ });
+    }
+  }
+  return out;
+}
+
 /** Exact comparison of the normalised visible text lines. */
 export function compareText(base: string[], cur: string[]): Diff[] {
   const out: Diff[] = [];
-  if (base.length !== cur.length) {
-    out.push({ kind: 'text', detail: `text node count ${base.length} -> ${cur.length}` });
-  }
-  const n = Math.min(base.length, cur.length);
-  for (let i = 0; i < n; i++) {
-    if (base[i] !== cur[i]) {
-      out.push({ kind: 'text', detail: `line ${i + 1} differs (${base[i].length} -> ${cur[i].length} chars)` });
+  for (const p of alignLines(base, cur)) {
+    if (p.kind === 'changed') {
+      out.push({ kind: 'text', text: cur[p.cur!], detail: `line ${p.cur! + 1} changed (${base[p.base!].length} -> ${cur[p.cur!].length} chars)` });
+    } else if (p.kind === 'added') {
+      out.push({ kind: 'text', text: cur[p.cur!], detail: `line ${p.cur! + 1} added (${cur[p.cur!].length} chars)` });
+    } else if (p.kind === 'removed') {
+      out.push({ kind: 'text', text: base[p.base!], detail: `line ${p.base! + 1} removed (${base[p.base!].length} chars)` });
     }
   }
   return out;
@@ -72,10 +117,11 @@ export function compareGeometry(base: Snapshot, cur: Snapshot, tolerance = GEOME
   for (const c of cur.elements) {
     if (!baseByPath.has(c.path)) out.push({ kind: 'geometry', path: c.path, detail: `new element <${c.tag}>` });
   }
-  const n = Math.min(base.texts.length, cur.texts.length);
-  for (let i = 0; i < n; i++) {
-    const b = base.texts[i];
-    const c = cur.texts[i];
+  // Text nodes are paired by their text, so an added or removed line does not shift every later comparison.
+  for (const pair of alignLines(base.texts.map((t) => t.text), cur.texts.map((t) => t.text))) {
+    if (pair.kind === 'added' || pair.kind === 'removed') continue;
+    const b = base.texts[pair.base!];
+    const c = cur.texts[pair.cur!];
     const keys = Object.keys(b.style) as (keyof typeof b.style)[];
     const changed = keys.filter((k) => b.style[k] !== c.style[k]);
     if (changed.length > 0) {
@@ -103,10 +149,28 @@ export interface PixelResult {
   curWidth: number;
   curHeight: number;
   textRegionRatio: number;
+  /** Bounding box of every differing pixel outside the image boxes, or null when none differ. */
+  textRegionBounds?: Box | null;
   imageRatios: { path: string; ratio: number }[];
 }
 
-export function pixelDiffs(result: PixelResult): Diff[] {
+/**
+ * Path of the smallest element whose box contains the region (1 px slack), so a pixel difference can be
+ * approved for one part of the page. Falls back to the body.
+ */
+export function locateRegion(region: Box, elements: { path: string; box: Box }[]): string {
+  const slack = 1;
+  let best: { path: string; area: number } | undefined;
+  for (const e of elements) {
+    const b = e.box;
+    const contains = b.x - slack <= region.x && b.y - slack <= region.y && b.x + b.w + slack >= region.x + region.w && b.y + b.h + slack >= region.y + region.h;
+    const area = b.w * b.h;
+    if (contains && (!best || area < best.area)) best = { path: e.path, area };
+  }
+  return best?.path ?? 'body[1]';
+}
+
+export function pixelDiffs(result: PixelResult, locate?: (region: Box) => string): Diff[] {
   const out: Diff[] = [];
   if (result.width !== result.curWidth || result.height !== result.curHeight) {
     out.push({
@@ -115,8 +179,10 @@ export function pixelDiffs(result: PixelResult): Diff[] {
     });
   }
   if (result.textRegionRatio > TEXT_REGION_MAX_RATIO) {
+    const bounds = result.textRegionBounds;
     out.push({
       kind: 'pixels',
+      ...(bounds && locate ? { path: locate(bounds) } : {}),
       detail: `text region differs in ${(result.textRegionRatio * 100).toFixed(4)}% of pixels (max ${TEXT_REGION_MAX_RATIO * 100}%)`,
     });
   }
@@ -147,7 +213,9 @@ export function applyApprovals(
         routeMatches(a.route, route) &&
         a.kinds.includes(d.kind) &&
         (!a.projects || a.projects.includes(project)) &&
-        (!a.pathContains || (d.path ?? '').includes(a.pathContains)),
+        (!a.pathContains || (d.path ?? '').includes(a.pathContains)) &&
+        (!a.texts || (d.text !== undefined && a.texts.includes(d.text))) &&
+        (!a.detailContains || a.detailContains.some((s) => d.detail.includes(s))),
     );
     (hit ? ok : bad).push(d);
   }

@@ -5,13 +5,13 @@
         <ol class="breadcrumb">
           <a routerLink="/" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item current" aria-current="page">Certifications</li>
+          <li class="breadcrumb-item current" aria-current="page">{{ page.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Certifications</h1></div>
+    <div class="col"><h1>{{ page.heading }}</h1></div>
   </div>
   <hr />
 </div>
@@ -24,21 +24,21 @@
       @for (badge of group.badges; track $index) {
         <div class="col-sm-1">
           <div class="certification zoom">
-            @if (badge.external) {
+            @if (badge.href) {
               <a [href]="badge.href" [title]="badge.name" target="_blank" rel="noopener noreferrer">
                 <label [class]="badge.status">{{ badge.statusText }}</label>
-                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.name">
+                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.image.alt">
               </a>
-            } @else if (badge.route === null) {
-              <!-- No link: the page for this badge no longer exists. An anchor without href keeps the layout. -->
-              <a>
-                <label [class]="badge.status">{{ badge.statusText }}</label>
-                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.name">
-              </a>
-            } @else {
+            } @else if (badge.route) {
               <a [routerLink]="badge.route" [title]="badge.name">
                 <label [class]="badge.status">{{ badge.statusText }}</label>
-                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.name">
+                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.image.alt">
+              </a>
+            } @else {
+              <!-- No link (the badge page is gone): an anchor without href keeps the layout and styles. -->
+              <a>
+                <label [class]="badge.status">{{ badge.statusText }}</label>
+                <img [ngSrc]="badge.image.ngSrc" [ngSrcset]="badge.image.ngSrcset" [sizes]="badge.image.sizes" [width]="badge.image.width" [height]="badge.image.height" [loaderParams]="badge.image.loaderParams" [alt]="badge.image.alt">
               </a>
             }
           </div>

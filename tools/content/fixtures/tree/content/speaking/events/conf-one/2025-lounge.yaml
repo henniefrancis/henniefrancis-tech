@@ -1,0 +1,21 @@
+# Synthetic fixture content. Not real.
+
+title: Conference One
+year: 2025 - Lounge
+listing:
+  name: Conference One Lounge
+  image:
+    id: 61cdc4a6b314d2b3
+    w: 200
+    h: 100
+    widths: [100, 200]
+    alt: Conference One Lounge
+links:
+  - title: Event Photos
+    image:
+      id: d37127a39eb52002
+      w: 200
+      h: 100
+      widths: [100, 200]
+      alt: Event Photos
+    gallery: true

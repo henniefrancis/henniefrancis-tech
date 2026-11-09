@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/cert-detail.schema.json",
+  "title": "certification detail",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "image"
+  ],
+  "properties": {
+    "title": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "image": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+    }
+  }
+}

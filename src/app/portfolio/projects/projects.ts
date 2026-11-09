@@ -1,9 +1,9 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ImageRef, imageView } from '../../content/image';
-
-const DIAGRAM: ImageRef = { id: 'fe0cd335fa340b63', w: 1461, h: 1480, widths: [480, 960, 1461] };
+import { PAGES } from '../../content/generated/pages';
+import { PROJECTS } from '../../content/generated/projects';
+import { imageViewOf } from '../../content/image';
 
 @Component({
   selector: 'app-projects',
@@ -11,5 +11,9 @@ const DIAGRAM: ImageRef = { id: 'fe0cd335fa340b63', w: 1461, h: 1480, widths: [4
   templateUrl: './projects.html',
 })
 export class Projects {
-  protected readonly diagram = imageView(DIAGRAM, '(max-width: 600px) 100vw, 960px');
+  protected readonly pages = PAGES;
+  protected readonly projects = PROJECTS.projects.map((p) => ({
+    ...p,
+    diagram: p.diagram && imageViewOf(p.diagram, '(max-width: 600px) 100vw, 960px'),
+  }));
 }

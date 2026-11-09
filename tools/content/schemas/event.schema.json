@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://henniefrancis.tech/schemas/event.schema.json",
+  "title": "speaking event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "year",
+    "listing",
+    "links"
+  ],
+  "properties": {
+    "title": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "year": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+    },
+    "listing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "image"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+        },
+        "image": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "image"
+      ],
+      "properties": {
+        "url": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+        },
+        "image": {
+          "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+        }
+      }
+    },
+    "heading": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/PlainText"
+    },
+    "body": {
+      "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/Paragraphs"
+    },
+    "links": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "image"
+        ],
+        "properties": {
+          "title": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          },
+          "label": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ShortText"
+          },
+          "image": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/ImageField"
+          },
+          "url": {
+            "$ref": "https://henniefrancis.tech/schemas/defs.schema.json#/$defs/HttpsUrl"
+          },
+          "gallery": {
+            "const": true
+          }
+        },
+        "not": {
+          "required": [
+            "url",
+            "gallery"
+          ]
+        }
+      }
+    }
+  }
+}

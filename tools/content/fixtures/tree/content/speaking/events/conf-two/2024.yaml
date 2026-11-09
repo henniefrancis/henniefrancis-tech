@@ -1,0 +1,13 @@
+# Synthetic fixture content. Not real.
+
+title: Conference Two
+year: "2024"
+listing:
+  name: Conference Two 2024
+  image:
+    id: 39caf486763c4929
+    w: 200
+    h: 100
+    widths: [100, 200]
+    alt: Conference Two 2024
+links: []

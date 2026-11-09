@@ -11,6 +11,7 @@ describe('parseConfig', () => {
       host: '0.0.0.0',
       mode: 'v1',
       cspReportOnly: false,
+      cspEnforce: false,
       edgeHeaders: false,
       imgDir: undefined,
       imgOrigin: undefined,
@@ -26,11 +27,12 @@ describe('parseConfig', () => {
     expect(parseConfig(['--help'])).toEqual({ help: true });
     expect(parseConfig(['-h'])).toEqual({ help: true });
     expect(HELP).toContain('--csp-report-only');
+    expect(HELP).toContain('--csp-enforce');
   });
 
   it('reads all options', () => {
     const c = parseConfig(
-      ['--dir', 'd', '--port', '5000', '--host', '127.0.0.1', '--mode', 'v2', '--csp-report-only', '--edge-headers', '--img-origin', 'https://example.com/path'],
+      ['--dir', 'd', '--port', '5000', '--host', '127.0.0.1', '--mode', 'v2', '--csp-report-only', '--csp-enforce', '--edge-headers', '--img-origin', 'https://example.com/path'],
       { PREVIEW_ORIGIN_SECRET: 's' },
     );
     expect(c).toMatchObject({
@@ -38,6 +40,7 @@ describe('parseConfig', () => {
       host: '127.0.0.1',
       mode: 'v2',
       cspReportOnly: true,
+      cspEnforce: true,
       edgeHeaders: true,
       imgOrigin: 'https://example.com',
       originSecret: 's',

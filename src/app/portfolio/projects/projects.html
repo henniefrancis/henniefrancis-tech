@@ -5,42 +5,44 @@
         <ol class="breadcrumb">
           <a routerLink="/portfolio" title="Go Back" class="back">&#10531;</a>
           <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-          <li class="breadcrumb-item"><a routerLink="/portfolio">Portfolio of Evidence</a></li>
-          <li class="breadcrumb-item current" aria-current="page">Projects</li>
+          <li class="breadcrumb-item"><a routerLink="/portfolio">{{ pages.portfolio.breadcrumb }}</a></li>
+          <li class="breadcrumb-item current" aria-current="page">{{ pages.projects.breadcrumb }}</li>
         </ol>
       </nav>
     </div>
   </div>
   <div class="row heading">
-    <div class="col"><h1>Projects</h1></div>
+    <div class="col"><h1>{{ pages.projects.heading }}</h1></div>
   </div>
   <hr />
 </div>
 <div class="container-fluid-content px-4">
-  <div class="row text-center">
-    <div class="col">
-      <h2>This website</h2>
-      <span class="badge bg-warning">Project Outdated</span>
+  @for (project of projects; track $index) {
+    <div class="row text-center">
+      <div class="col">
+        <h2>{{ project.name }}</h2>
+        @if (project.badge) { <span class="badge bg-warning">{{ project.badge }}</span> }
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-1"></div>
-    <div class="col-10">
-      <h4>Project Description</h4>
-      <p>
-        A Website that showcase my personal brand. The website contains a detailed biography, my current role, showcasing my portfolio of evidence, access to all my social media, the events I have been publicly speaking at, my technical blogs, a full list of my technical stack, all of my certifications and my special awards.
-      </p>
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <h4>Project Description</h4>
+        @for (para of project.description; track $index) { <p>{{ para }}</p> }
+      </div>
+      <div class="col-1"></div>
     </div>
-    <div class="col-1"></div>
-  </div>
-  <div class="row">
-    <div class="col-1"></div>
-    <div class="col-10"><h4>Diagram</h4></div>
-    <div class="col-1"></div>
-  </div>
-  <div class="row text-center">
-    <div class="col">
-      <img [ngSrc]="diagram.ngSrc" [ngSrcset]="diagram.ngSrcset" [sizes]="diagram.sizes" [width]="diagram.width" [height]="diagram.height" [loaderParams]="diagram.loaderParams" class="img-fluid" alt="Website Diagram">
-    </div>
-  </div>
+    @if (project.diagram) {
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10"><h4>Diagram</h4></div>
+        <div class="col-1"></div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <img [ngSrc]="project.diagram.ngSrc" [ngSrcset]="project.diagram.ngSrcset" [sizes]="project.diagram.sizes" [width]="project.diagram.width" [height]="project.diagram.height" [loaderParams]="project.diagram.loaderParams" class="img-fluid" [alt]="project.diagram.alt">
+        </div>
+      </div>
+    }
+  }
 </div>

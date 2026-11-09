@@ -1,6 +1,6 @@
 import { IMAGE_LOADER } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { IMAGE_BASE, IMAGE_LOADER_PROVIDER, imageLoader, imageSrc, imageView } from './image';
+import { IMAGE_BASE, IMAGE_LOADER_PROVIDER, imageLoader, imageSrc, imageView, imageViewOf } from './image';
 
 describe('image', () => {
   const ref = { id: '0123456789abcdef', w: 960, h: 480, widths: [480, 960] };
@@ -68,5 +68,17 @@ describe('imageView', () => {
 
   it('takes the displayed size from the caller when it is given', () => {
     expect(imageView(ref, '100vw').sizes).toBe('100vw');
+  });
+});
+
+describe('imageViewOf', () => {
+  const img = { id: 'fedcba9876543210', w: 898, h: 351, widths: [449, 898], alt: 'Tile' };
+
+  it('adds the alternative text to the view', () => {
+    expect(imageViewOf(img)).toEqual({ ...imageView(img), alt: 'Tile' });
+  });
+
+  it('passes the displayed size on', () => {
+    expect(imageViewOf(img, '100vw').sizes).toBe('100vw');
   });
 });

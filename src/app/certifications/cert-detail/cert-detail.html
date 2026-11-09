@@ -6,7 +6,7 @@
           <ol class="breadcrumb">
             <a routerLink="/certifications" title="Go Back" class="back">&#10531;</a>
             <li class="breadcrumb-item root"><a routerLink="/">root@hennie</a><b>: </b></li>
-            <li class="breadcrumb-item"><a routerLink="/certifications">Certifications</a></li>
+            <li class="breadcrumb-item"><a routerLink="/certifications">{{ pages.certifications.breadcrumb }}</a></li>
             <li class="breadcrumb-item">Microsoft</li>
             <li class="breadcrumb-item">{{ typeName() }}</li>
             <li class="breadcrumb-item current" aria-current="page">{{ d.title }}</li>
@@ -23,8 +23,8 @@
       <div class="col-3"></div>
       <div class="col-6">
         <div class="certificate zoom">
-          @let v = imageView(d.image, '(max-width: 600px) 420px, 800px');
-          <img [ngSrc]="v.ngSrc" [ngSrcset]="v.ngSrcset" [sizes]="v.sizes" [width]="v.width" [height]="v.height" [loaderParams]="v.loaderParams" [alt]="d.title" priority>
+          @let v = imageViewOf(d.image, '(max-width: 600px) 420px, 800px');
+          <img [ngSrc]="v.ngSrc" [ngSrcset]="v.ngSrcset" [sizes]="v.sizes" [width]="v.width" [height]="v.height" [loaderParams]="v.loaderParams" [alt]="v.alt" priority>
         </div>
       </div>
       <div class="col-3"></div>

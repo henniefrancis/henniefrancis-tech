@@ -42,7 +42,7 @@ export interface Snapshot {
  * Collects geometry and text from the live DOM. Runs inside the page, so the
  * evaluated function is self-contained. Visually hidden nodes (1px clip
  * pattern, display none, visibility hidden) are excluded: they are not
- * visible, so they are neither geometry nor text for the visual comparison.
+ * visible, so they are neither geometry nor text for the no-visible-change comparison.
  */
 export async function collectSnapshot(page: Page): Promise<Snapshot> {
   return page.evaluate(() => {

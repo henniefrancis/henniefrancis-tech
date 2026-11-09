@@ -1,0 +1,22 @@
+# Synthetic fixture content. Not real.
+
+categories:
+  - name: AWS Certified
+    items:
+      - aws-cert-a
+      - aws-cert-b
+      - aws-extra
+  - name: AWS Partner
+    items:
+      - aws-partner
+      - aws-todo
+      - aws-inprogress
+  - name: Other
+    items:
+      - other-cert
+      - mongo-cert
+  - name: Microsoft
+    items:
+      - ms-cert-1
+      - ms-trainer-2022
+      - ms-trainer-2023
