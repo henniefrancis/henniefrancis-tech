@@ -200,6 +200,11 @@ run "cloudfront_enforces_https_and_modern_tls" {
     condition     = aws_cloudfront_distribution.frontend.http_version == "http2and3"
     error_message = "HTTP/2 + HTTP/3 must be enabled."
   }
+
+  assert {
+    condition     = aws_cloudfront_distribution.frontend.default_root_object == ""
+    error_message = "No default root object: the origin serves / and redirects /index.html to /, so a root object loops."
+  }
 }
 
 # ── Naming convention ────────────────────────────────────────
