@@ -88,9 +88,7 @@ jobs:
             echo "::error::tools/budgets/check-dist.mjs is missing."
             exit 1
           fi
-          # TEMPORARY: the amazonaws and cdn-host rules only warn for now.
-          # Remove the --warn flag once images are served from the site domain.
-          node tools/budgets/check-dist.mjs "$DIST_DIR" --warn amazonaws,cdn-host
+          node tools/budgets/check-dist.mjs "$DIST_DIR"
 
       - name: Dependency audit (runtime dependencies)
         run: |
@@ -204,21 +202,25 @@ jobs:
           tflint --chdir terraform --init
           tflint --chdir terraform --recursive --format compact
 
-      # MEDIUM and above. Accepted findings live in terraform/.trivyignore.yaml
-      # when that file exists; the step works with or without it.
+      # MEDIUM and above. The accepted-risk list is kept private and supplied
+      # through the TRIVY_IGNORE_YAML secret; without it every finding fails.
       - name: Terraform security scan (trivy config)
         if: steps.tf.outputs.changed == 'true'
+        env:
+          TRIVY_IGNORE_YAML: ${{ secrets.TRIVY_IGNORE_YAML }}
         run: |
           set -euo pipefail
           args=(--severity "MEDIUM,HIGH,CRITICAL" --exit-code 1)
-          if [ -f terraform/.trivyignore.yaml ]; then
-            args+=(--ignorefile terraform/.trivyignore.yaml)
+          if [ -n "${TRIVY_IGNORE_YAML:-}" ]; then
+            ignorefile="${RUNNER_TEMP}/trivyignore.yaml"
+            printf '%s\n' "$TRIVY_IGNORE_YAML" > "$ignorefile"
+            args+=(--ignorefile "$ignorefile")
           fi
           trivy config "${args[@]}" terraform
 
       - name: CloudFront function tests
         if: steps.tf.outputs.changed == 'true'
-        run: node --test terraform/functions
+        run: node --test "terraform/functions/*.test.js"
 
       - name: Retained resources check
         if: steps.tf.outputs.changed == 'true'
@@ -234,3 +236,9 @@ jobs:
       - name: Origin verify render test
         if: steps.tf.outputs.deploy == 'true'
         run: bash deploy/nginx/render-origin-verify.test.sh
+
+      # Real nginx in Docker: redirects cannot leave the site, queries are
+      # kept, the limit answers 429, and 64 character verify values load.
+      - name: Origin nginx config test
+        if: steps.tf.outputs.deploy == 'true'
+        run: bash deploy/nginx/nginx-config.test.sh

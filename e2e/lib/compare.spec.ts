@@ -72,4 +72,7 @@ test('approvals match by route, kind, project and path', () => {
   expect(applyApprovals(diffs, '/r', 'android', [{ ...rule, pathContains: 'a[1]' }]).approved).toHaveLength(1);
   expect(applyApprovals(diffs, '/r', 'android', [{ ...rule, pathContains: 'zzz' }]).approved).toEqual([]);
   expect(applyApprovals(diffs, '/x', 'android', [{ ...rule, route: '*' }]).approved).toHaveLength(1);
+  expect(applyApprovals(diffs, '/r/deep/page', 'android', [{ ...rule, route: '/r/*' }]).approved).toHaveLength(1);
+  expect(applyApprovals(diffs, '/r', 'android', [{ ...rule, route: '/r/*' }]).approved).toEqual([]);
+  expect(applyApprovals(diffs, '/rx/y', 'android', [{ ...rule, route: '/r/*' }]).approved).toEqual([]);
 });

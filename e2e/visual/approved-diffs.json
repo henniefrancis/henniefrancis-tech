@@ -1,5 +1,5 @@
 {
-  "_comment": "Diffs the owner has approved against the live-site baseline (build plan section 11). Add an entry only with the owner's approval.",
+  "_comment": "Diffs the owner has approved against the live-site baseline. Add an entry only with the owner's approval.",
   "approved": [
     {
       "route": "/social-media",
@@ -8,7 +8,8 @@
         "style",
         "pixels"
       ],
-      "reason": "The dotcoresolutions.io link becomes plain text."
+      "reason": "The dotcoresolutions.io link becomes plain text.",
+      "pathContains": "div[19]"
     },
     {
       "route": "/404.html",
@@ -25,8 +26,6 @@
       "route": "/",
       "kinds": [
         "text",
-        "geometry",
-        "style",
         "pixels"
       ],
       "reason": "Owner content update: home tagline now reads 4x AWS Certified."
@@ -35,8 +34,6 @@
       "route": "/biography",
       "kinds": [
         "text",
-        "geometry",
-        "style",
         "pixels"
       ],
       "reason": "Owner content update: biography paragraph now reads 4 AWS Certifications."
@@ -50,7 +47,164 @@
         "pixels",
         "page"
       ],
-      "reason": "Owner content update: three new certification and badge entries (AI Business Strategist, its Early Adopter badge, AWS Partner Containers Essentials). Their badge images are not uploaded yet, so broken-image and bad-response entries are expected until upload."
+      "reason": "Owner content update: three new certification and badge entries (AI Business Strategist, its Early Adopter badge, AWS Partner Containers Essentials). Their badge images are not uploaded yet, so broken-image and bad-response entries are expected until upload. Two badges whose pages were removed (DeepRacer, Storage Core) are shown without a link; the label and image look the same but are no longer a link."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-blog[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-portfolio[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-projects[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-public-speaking[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-special-awards[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-tech-stack[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-event-detail[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-gallery[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "geometry",
+        "pixels"
+      ],
+      "pathContains": "app-cert-detail[1]",
+      "reason": "The certificate image failed to load on the original site (access denied), so its box was the size of the missing-image placeholder. It now shows the certificate."
+    },
+    {
+      "route": "/certifications/microsoft/*",
+      "kinds": [
+        "pixels"
+      ],
+      "projects": [
+        "ipad-landscape",
+        "ipad-portrait",
+        "iphone-landscape",
+        "iphone-portrait"
+      ],
+      "reason": "Text-region pixels differ on certificate pages because the original page showed the alternative text of a missing image where the certificate now appears."
+    },
+    {
+      "route": "/public-speaking/*",
+      "kinds": [
+        "pixels"
+      ],
+      "projects": [
+        "android",
+        "iphone-portrait",
+        "ipad-portrait"
+      ],
+      "reason": "Text under resized images sits a fraction of a pixel lower, which changes its anti-aliasing. Text content and positions match within one pixel."
+    },
+    {
+      "route": "/public-speaking",
+      "kinds": [
+        "pixels"
+      ],
+      "projects": [
+        "ipad-portrait",
+        "android"
+      ],
+      "reason": "Text under resized images sits a fraction of a pixel lower, which changes its anti-aliasing. Text content and positions match within one pixel."
+    },
+    {
+      "route": "/public-speaking",
+      "kinds": [
+        "geometry"
+      ],
+      "pathContains": "app-public-speaking[1]",
+      "projects": [
+        "desktop-1280",
+        "iphone-portrait",
+        "android"
+      ],
+      "reason": "Rounding of resized image heights moves later rows of tiles by about one pixel (at most 1.3 px)."
+    },
+    {
+      "route": "/public-speaking/eks-masterclass-cape-town/photos/2026",
+      "kinds": [
+        "geometry"
+      ],
+      "pathContains": "app-gallery[1]",
+      "projects": [
+        "iphone-landscape"
+      ],
+      "reason": "A resized photo is 1.2 px narrower than the original."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-home[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-biography[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
+    },
+    {
+      "route": "*",
+      "kinds": [
+        "pixels"
+      ],
+      "pathContains": "app-social-media[1]",
+      "reason": "Images are re-encoded as WebP at display size, so pixels inside the image boxes differ slightly from the original files. Position, size and text are not affected."
     }
   ]
 }

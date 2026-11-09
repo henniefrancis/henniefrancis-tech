@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "imageBaseUrl": "https://henniefrancis-511489843375-af-south-1-an.s3.af-south-1.amazonaws.com/public/henniefrancis-tech/tech-stack/",
   "categories": [
     {
       "name": "Languages",
@@ -9,37 +8,37 @@
         {
           "name": "C#",
           "url": "https://learn.microsoft.com/en-us/dotnet/csharp",
-          "image": "CSharp.png",
+          "image": { "id": "bdb6da3eae0e218f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Java",
           "url": "https://www.java.com",
-          "image": "java.png",
+          "image": { "id": "5cbdd56b7add0a45", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Javascript",
           "url": "https://www.javascript.com",
-          "image": "js.png",
+          "image": { "id": "f072e96c41dbe7aa", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Python",
           "url": "https://www.python.org",
-          "image": "python.png",
+          "image": { "id": "d93197e1e57a7379", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Angular",
           "url": "https://angular.io",
-          "image": "angular.png",
+          "image": { "id": "bb48d82c4b62aaaa", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "React",
           "url": "https://react.dev",
-          "image": "react.png",
+          "image": { "id": "0eb43d3c0ccadbb4", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         }
       ]
@@ -51,19 +50,19 @@
         {
           "name": ".NET",
           "url": "https://dotnet.microsoft.com/en-us/download/dotnet-framework",
-          "image": "dotnet-framework.png",
+          "image": { "id": "aea55495f60649ae", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": ".NET Core",
           "url": "https://dotnet.microsoft.com",
-          "image": "dotnet-core.png",
+          "image": { "id": "f1920274bfe89f59", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Spring",
           "url": "https://spring.io/",
-          "image": "spring.png",
+          "image": { "id": "0204dee731099312", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         }
       ]
@@ -75,25 +74,25 @@
         {
           "name": "ODBC",
           "url": "https://learn.microsoft.com/en-us/sql/odbc/microsoft-open-database-connectivity-odbc?view=sql-server-ver16",
-          "image": "odbc.png",
+          "image": { "id": "174a748ca1514195", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Entity Framework",
           "url": "https://learn.microsoft.com/en-us/ef",
-          "image": "ef.png",
+          "image": { "id": "1581f1506fad6b3e", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "EF Core",
           "url": "https://learn.microsoft.com/en-us/ef/core",
-          "image": "ef-core.png",
+          "image": { "id": "38c18d8f6f27f156", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "JDBC",
           "url": "https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc",
-          "image": "jdbc.png",
+          "image": { "id": "8d9469819076627d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         }
       ]
@@ -105,109 +104,109 @@
         {
           "name": "Java",
           "url": "https://www.java.com",
-          "image": "java.png",
+          "image": { "id": "5cbdd56b7add0a45", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "JavaScript",
           "url": "https://www.javascript.com",
-          "image": "js.png",
+          "image": { "id": "f072e96c41dbe7aa", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Python",
           "url": "https://www.python.org",
-          "image": "python.png",
+          "image": { "id": "d93197e1e57a7379", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Angular",
           "url": "https://angular.io",
-          "image": "angular.png",
+          "image": { "id": "bb48d82c4b62aaaa", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "React",
           "url": "https://react.dev",
-          "image": "react.png",
+          "image": { "id": "0eb43d3c0ccadbb4", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "HTML 5",
           "url": "https://www.w3schools.com/html",
-          "image": "html5.png",
+          "image": { "id": "ac5461e89b3795f2", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         },
         {
           "name": "HTML Boilerplate",
           "url": "https://html5boilerplate.com",
-          "image": "html5-boilerplate.png",
+          "image": { "id": "0c2e1c368a9a5c16", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 7
         },
         {
           "name": "CSS",
           "url": "https://www.w3schools.com/css",
-          "image": "css.png",
+          "image": { "id": "d2af5723b06df3d6", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 8
         },
         {
           "name": "jQuery",
           "url": "https://jquery.com",
-          "image": "jquery.png",
+          "image": { "id": "21dbc7989d3332ac", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 9
         },
         {
           "name": "Bootstrap",
           "url": "https://getbootstrap.com",
-          "image": "bootstrap5.png",
+          "image": { "id": "459e89856808cd8f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 10
         },
         {
           "name": "ASP.NET",
           "url": "https://dotnet.microsoft.com/en-us/apps/aspnet",
-          "image": "asp.net.png",
+          "image": { "id": "03eaadaabaaf0752", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 11
         },
         {
           "name": "ASP.NET Core MVC",
           "url": "https://dotnet.microsoft.com/en-us/apps/aspnet/mvc",
-          "image": "asp.net-core-mvc.png",
+          "image": { "id": "2372b386332b9df3", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 12
         },
         {
           "name": "Blazor",
           "url": "https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor",
-          "image": "blazor.png",
+          "image": { "id": "38337a13c987afb7", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 13
         },
         {
           "name": "WPF",
           "url": "https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-7.0",
-          "image": "wpf.png",
+          "image": { "id": "e65bb1ac7af7da5d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 14
         },
         {
           "name": "Windows Forms",
           "url": "https://learn.microsoft.com/en-us/visualstudio/ide/create-csharp-winform-visual-studio?view=vs-2022",
-          "image": "windows-forms.png",
+          "image": { "id": "9db96a822f6babbb", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 15
         },
         {
           "name": ".NET MAUI",
           "url": "https://dotnet.microsoft.com/en-us/apps/maui",
-          "image": "maui.png",
+          "image": { "id": "a354a1490aa87c21", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 16
         },
         {
           "name": "Xamarin",
           "url": "https://dotnet.microsoft.com/en-us/apps/xamarin",
-          "image": "xamarin.png",
+          "image": { "id": "8a5cdaf1fd0a5e54", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 17
         },
         {
           "name": "SharePoint",
           "url": "https://www.microsoft.com/en-za/microsoft-365/sharepoint/collaboration",
-          "image": "sharepoint.png",
+          "image": { "id": "edc8a4055199a22d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 18
         }
       ]
@@ -219,31 +218,31 @@
         {
           "name": "WCF",
           "url": "https://learn.microsoft.com/en-us/dotnet/framework/wcf/whats-wcf",
-          "image": "wcf.png",
+          "image": { "id": "fb76a6314a5d54f3", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "ASP.NET Core API",
           "url": "https://dotnet.microsoft.com/en-us/apps/aspnet/apis",
-          "image": "dotnet-core-restful api.png",
+          "image": { "id": "fd18b3bdd3ed2b17", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Microservices",
           "url": "https://microservices.io",
-          "image": "microservices.png",
+          "image": { "id": "7733782358d1a9e1", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Swagger",
           "url": "https://swagger.io",
-          "image": "swagger.png",
+          "image": { "id": "3dbc453801a0d55b", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Spring Boot",
           "url": "https://spring.io/projects/spring-boot",
-          "image": "spring-boot.png",
+          "image": { "id": "28d7b41fe42b3a46", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         }
       ]
@@ -255,19 +254,19 @@
         {
           "name": "AWS",
           "url": "https://aws.amazon.com",
-          "image": "aws.png",
+          "image": { "id": "11f8d4231d6231d2", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Azure",
           "url": "https://azure.microsoft.com",
-          "image": "azure.png",
+          "image": { "id": "c5c619fcb6221e73", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Google Cloud",
           "url": "https://cloud.google.com",
-          "image": "google-cloud.png",
+          "image": { "id": "da0a8b4a29dffc16", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         }
       ]
@@ -279,19 +278,19 @@
         {
           "name": "Arduino",
           "url": "https://www.arduino.cc",
-          "image": "arduino.png",
+          "image": { "id": "121700a8fa40b6b9", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "MQTT",
           "url": "https://mqtt.org",
-          "image": "mqtt.png",
+          "image": { "id": "88518dc746cfaec7", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Raspberry PI",
           "url": "https://www.raspberrypi.com",
-          "image": "raspberry.png",
+          "image": { "id": "c7f87e246a0ac009", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         }
       ]
@@ -303,25 +302,25 @@
         {
           "name": "Apache Kafka",
           "url": "https://kafka.apache.org",
-          "image": "kafka.png",
+          "image": { "id": "52179a0a2a5f3b89", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Amazon MSK",
           "url": "https://aws.amazon.com/msk",
-          "image": "amazon-msk.png",
+          "image": { "id": "78724d83017b9af4", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Kafka UI",
           "url": "https://docs.kafka-ui.provectus.io",
-          "image": "kafka-ui.png",
+          "image": { "id": "8a014169fce4905b", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Redpanda",
           "url": "https://redpanda.com",
-          "image": "redpanda.png",
+          "image": { "id": "02870ed95b5b57d2", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         }
       ]
@@ -333,19 +332,19 @@
         {
           "name": "Google Analytics",
           "url": "https://analytics.google.com/analytics/academy",
-          "image": "google-analytics.png",
+          "image": { "id": "90e185197976dd0f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Power BI",
           "url": "https://www.microsoft.com/en-us/power-platform/products/power-bi",
-          "image": "powerbi.png",
+          "image": { "id": "2b123d01d0bcd4f6", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "OLAP Cubes",
           "url": "https://learn.microsoft.com/en-us/system-center/scsm/olap-cubes-overview?view=sc-sm-2022",
-          "image": "olap.png",
+          "image": { "id": "c490e342a2ec537f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         }
       ]
@@ -357,49 +356,49 @@
         {
           "name": "Apache HTTPD",
           "url": "https://httpd.apache.org",
-          "image": "apache-server.png",
+          "image": { "id": "cfe6dd3732491678", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Apache XAMPP",
           "url": "https://www.apachefriends.org",
-          "image": "xampp.png",
+          "image": { "id": "dbb1fa7580baee9d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "nginx",
           "url": "https://www.nginx.com",
-          "image": "nginx.png",
+          "image": { "id": "319da40dfe175d98", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "cPanel",
           "url": "https://cpanel.net",
-          "image": "cpanel.png",
+          "image": { "id": "21e11bdac2f2e0a1", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Joomla",
           "url": "https://www.joomla.org",
-          "image": "joomla.png",
+          "image": { "id": "04f988777ab0492d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "Wordpress",
           "url": "https://wordpress.com",
-          "image": "wordpress.png",
+          "image": { "id": "e4e2e48b53180a7d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         },
         {
           "name": "Bitnami Stack",
           "url": "https://bitnami.com",
-          "image": "bitnami.png",
+          "image": { "id": "38575936bc49ccd1", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 7
         },
         {
           "name": "Microsoft IIS",
           "url": "https://www.iis.net",
-          "image": "microsoft-iis.png",
+          "image": { "id": "dd5e2dd3f1b3fd33", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 8
         }
       ]
@@ -411,55 +410,55 @@
         {
           "name": "Git",
           "url": "https://git-scm.com",
-          "image": "git.png",
+          "image": { "id": "2cab820ab309cd1a", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "GitHub",
           "url": "https://github.com",
-          "image": "github.png",
+          "image": { "id": "81c70b2e0a0402b7", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "GitLab",
           "url": "https://about.gitlab.com",
-          "image": "gitlab.png",
+          "image": { "id": "e3fa184baddde423", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "AWS Code Commit",
           "url": "https://aws.amazon.com/codecommit",
-          "image": "aws-codecommit.png",
+          "image": { "id": "0123ad38cf40c61a", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "TFS Server",
           "url": "https://azure.microsoft.com/en-us/products/devops/server",
-          "image": "tfs.png",
+          "image": { "id": "48cdc040c7a99132", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "Azure DevOps",
           "url": "https://azure.microsoft.com/en-us/products/devops/server",
-          "image": "azure-devops.png",
+          "image": { "id": "ed4bd12e6a41cc7b", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         },
         {
           "name": "Bitbucket",
           "url": "https://bitbucket.org",
-          "image": "bitbucket.png",
+          "image": { "id": "47981619cbced74e", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 7
         },
         {
           "name": "Tortoise SVN",
           "url": "https://tortoisesvn.net",
-          "image": "tortoise-svn.png",
+          "image": { "id": "b0be6b7a157d3364", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 8
         },
         {
           "name": "Visual SVN",
           "url": "https://www.visualsvn.com",
-          "image": "visual-svn.png",
+          "image": { "id": "bc1f25398b2b3c56", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 9
         }
       ]
@@ -471,31 +470,31 @@
         {
           "name": "jMeter",
           "url": "https://jmeter.apache.org",
-          "image": "apache-jmeter.png",
+          "image": { "id": "bca156c497e91bd0", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Insomnia",
           "url": "https://insomnia.rest",
-          "image": "insomnia.png",
+          "image": { "id": "ce574ef5ed9481ad", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Postman",
           "url": "https://www.postman.com",
-          "image": "postman.png",
+          "image": { "id": "ff3e539d2cd7e7a7", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Smartbear ReadyAPI",
           "url": "https://smartbear.com/product/ready-api",
-          "image": "smartbear-readyapi.png",
+          "image": { "id": "726046d0dd7de188", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Smartbear TestComplete",
           "url": "https://smartbear.com/product/testcomplete",
-          "image": "smartbear-testcomplete.png",
+          "image": { "id": "da25a74b508c455f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         }
       ]
@@ -507,79 +506,79 @@
         {
           "name": "Rancher by Suse",
           "url": "https://www.rancher.com",
-          "image": "rancher.png",
+          "image": { "id": "7e8b23fbc55a9e5a", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "HashiCorp Consul",
           "url": "https://www.consul.io",
-          "image": "consul.png",
+          "image": { "id": "2b866b7e4ab09291", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Mirantis",
           "url": "https://www.mirantis.com/software/mirantis-kubernetes-engine",
-          "image": "mirantis.png",
+          "image": { "id": "f2685a4a9646b63b", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Ansible",
           "url": "https://www.ansible.com",
-          "image": "ansible.png",
+          "image": { "id": "fd2ae037e29be07f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Jenkins",
           "url": "https://www.jenkins.io",
-          "image": "jenkins.png",
+          "image": { "id": "2c828f27facdeeab", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "Docker",
           "url": "https://www.docker.com",
-          "image": "docker.png",
+          "image": { "id": "b908e099c2d5e2f3", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         },
         {
           "name": "HashiCorp Terraform",
           "url": "https://www.terraform.io",
-          "image": "terraform.png",
+          "image": { "id": "1ae5e4ef7e1ab5bf", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 7
         },
         {
           "name": "Kubernetes",
           "url": "https://kubernetes.io",
-          "image": "kubernetes.png",
+          "image": { "id": "e4905b28013e6e5c", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 8
         },
         {
           "name": "Apache Maven",
           "url": "https://maven.apache.org",
-          "image": "apache-maven.png",
+          "image": { "id": "461dfe18e237f7e0", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 9
         },
         {
           "name": "ArgoCD",
           "url": "https://argo-cd.readthedocs.io",
-          "image": "argocd.png",
+          "image": { "id": "aac16f531996fb86", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 10
         },
         {
           "name": "Backstage",
           "url": "https://backstage.io",
-          "image": "backstage.png",
+          "image": { "id": "cea03c7b573a527f", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 11
         },
         {
           "name": "HELM",
           "url": "https://helm.sh",
-          "image": "helm.png",
+          "image": { "id": "efbc4e47f0dc0014", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 12
         },
         {
           "name": "unleash",
           "url": "https://www.getunleash.io",
-          "image": "unleash.png",
+          "image": { "id": "22ad92455eb25bc2", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 13
         }
       ]
@@ -591,31 +590,31 @@
         {
           "name": "Instana",
           "url": "https://www.ibm.com/products/instana",
-          "image": "instana.png",
+          "image": { "id": "563ae3d9282cd76b", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Grafana",
           "url": "https://grafana.com",
-          "image": "grafana.png",
+          "image": { "id": "f5ee61d27126796b", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "Open Search",
           "url": "https://opensearch.org",
-          "image": "opensearch.png",
+          "image": { "id": "4eb6633f3bafdc18", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Elastic Search",
           "url": "https://www.elastic.co/elasticsearch",
-          "image": "elasctic.png",
+          "image": { "id": "a5189853b19240c0", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "PagerDuty",
           "url": "https://www.pagerduty.com",
-          "image": "pagerduty.png",
+          "image": { "id": "74439ddb52ca5dfe", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         }
       ]
@@ -627,109 +626,109 @@
         {
           "name": "Microsoft SQL Server",
           "url": "https://www.microsoft.com/en-us/sql-server",
-          "image": "azure-sql.png",
+          "image": { "id": "78f004642481fd2d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "MySQL",
           "url": "https://www.mysql.com",
-          "image": "azure-mysql.png",
+          "image": { "id": "82e7f3bd046dbbe0", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "PostgreSQL",
           "url": "https://www.postgresql.org",
-          "image": "postgresql.png",
+          "image": { "id": "ac64952383c0e3af", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Amazon DynamoDB",
           "url": "https://aws.amazon.com/dynamodb",
-          "image": "amazon-dynamodb.png",
+          "image": { "id": "21a1c91e1f97eb46", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Amazon RDS",
           "url": "https://aws.amazon.com/rds",
-          "image": "amazon-rds.png",
+          "image": { "id": "0110763966fd6497", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "Amazon RDS Aurora",
           "url": "https://aws.amazon.com/rds/aurora",
-          "image": "amazon-aurora.png",
+          "image": { "id": "1e557906d84cd796", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         },
         {
           "name": "Amazon RDS MySQL",
           "url": "https://aws.amazon.com/rds/mysql",
-          "image": "rds-mysql.png",
+          "image": { "id": "8401127e34d6a7b8", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 7
         },
         {
           "name": "Amazon RDS for PostgreSQL",
           "url": "https://aws.amazon.com/rds/postgresql",
-          "image": "amazon-rds-postgre.png",
+          "image": { "id": "fbe639ed637e3504", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 8
         },
         {
           "name": "Amazon RDS for SQL Server",
           "url": "https://aws.amazon.com/rds/sqlserver",
-          "image": "amazon-rds-sql.png",
+          "image": { "id": "046f8948f6e70696", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 9
         },
         {
           "name": "Amazon RDS Custom",
           "url": "https://aws.amazon.com/rds",
-          "image": "amazon-rds-custom.png",
+          "image": { "id": "c85d591029131a63", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 10
         },
         {
           "name": "Amazon DocumentDB",
           "url": "https://aws.amazon.com/documentdb",
-          "image": "amazon-documentdb.png",
+          "image": { "id": "dd1a0531ed6895ed", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 11
         },
         {
           "name": "Amazon Redshift",
           "url": "https://aws.amazon.com/redshift",
-          "image": "amazon-redshift.png",
+          "image": { "id": "695093868f258947", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 12
         },
         {
           "name": "Azure Cosmos DB",
           "url": "https://azure.microsoft.com/en-us/products/cosmos-db",
-          "image": "azure-cosmos.png",
+          "image": { "id": "d9f52c8e8e08ab69", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 13
         },
         {
           "name": "Azure SQL Server",
           "url": "https://azure.microsoft.com/en-us/products/azure-sql/database",
-          "image": "azure-sql.png",
+          "image": { "id": "78f004642481fd2d", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 14
         },
         {
           "name": "Azure PostgreSQL",
           "url": "https://azure.microsoft.com/en-us/products/postgresql",
-          "image": "azure-postgre-sql.png",
+          "image": { "id": "2703da6f04d76e27", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 15
         },
         {
           "name": "Azure MySQL",
           "url": "https://azure.microsoft.com/en-us/products/mysql",
-          "image": "azure-mysql.png",
+          "image": { "id": "82e7f3bd046dbbe0", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 16
         },
         {
           "name": "Azure Redis",
           "url": "https://azure.microsoft.com/en-us/products/cache",
-          "image": "azure-redis.png",
+          "image": { "id": "4c4f26a9f793f5cf", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 17
         },
         {
           "name": "Redis",
           "url": "https://redis.io",
-          "image": "redis.png",
+          "image": { "id": "ac26beda3821e890", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 18
         }
       ]
@@ -741,7 +740,7 @@
         {
           "name": "HashiCorp Vault",
           "url": "https://www.hashicorp.com/products/vault",
-          "image": "hashicorp-vault.png",
+          "image": { "id": "b99b61585c79eb49", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         }
       ]
@@ -753,85 +752,85 @@
         {
           "name": "JIRA",
           "url": "https://www.atlassian.com/software/jira",
-          "image": "jira.png",
+          "image": { "id": "239aaa35fdee74b4", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 1
         },
         {
           "name": "Confluence",
           "url": "https://www.atlassian.com/software/confluence",
-          "image": "confluence.png",
+          "image": { "id": "36c86c05846ab29c", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 2
         },
         {
           "name": "JIRA Service Management",
           "url": "https://www.atlassian.com/software/jira/service-management",
-          "image": "jira-services-management.png",
+          "image": { "id": "5c9c89994f2a3f2c", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 3
         },
         {
           "name": "Slack",
           "url": "https://slack.com",
-          "image": "slack.png",
+          "image": { "id": "e8c0dd676bdc2674", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 4
         },
         {
           "name": "Trello",
           "url": "https://trello.com",
-          "image": "trello.png",
+          "image": { "id": "7354d8574f74ed46", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 5
         },
         {
           "name": "Terraform Enterprise",
           "url": "https://developer.hashicorp.com/terraform/enterprise",
-          "image": "terraform.png",
+          "image": { "id": "1ae5e4ef7e1ab5bf", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 6
         },
         {
           "name": "Terraform Cloud",
           "url": "https://developer.hashicorp.com/terraform/cloud-docs",
-          "image": "terraform.png",
+          "image": { "id": "1ae5e4ef7e1ab5bf", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 7
         },
         {
           "name": "Lucidchart",
           "url": "https://www.lucidchart.com",
-          "image": "lucidchart.png",
+          "image": { "id": "56f72bc7d030f9da", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 8
         },
         {
           "name": "Lucidspark",
           "url": "https://lucidspark.com",
-          "image": "lucidspark.png",
+          "image": { "id": "0e158cf01e347c4c", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 9
         },
         {
           "name": "Lucidscale",
           "url": "https://lucidscale.com",
-          "image": "lucidscale.png",
+          "image": { "id": "f5c0ba25dc4ffd8e", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 10
         },
         {
           "name": "draw.io",
           "url": "https://draw.io",
-          "image": "draw.io.png",
+          "image": { "id": "3dd78c72c32dea37", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 11
         },
         {
           "name": "Enterprise Architect",
           "url": "https://sparxsystems.com/products/ea",
-          "image": "enterprise-architect.png",
+          "image": { "id": "a9ae582c15bdd155", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 12
         },
         {
           "name": "C4 Models",
           "url": "https://c4model.com",
-          "image": "c4-model.png",
+          "image": { "id": "427d665f1f089e45", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 13
         },
         {
           "name": "Miro",
           "url": "https://miro.com",
-          "image": "miro.png",
+          "image": { "id": "fe1c43b1c91ad83e", "w": 200, "h": 200, "widths": [100, 200] },
           "order": 14
         }
       ]

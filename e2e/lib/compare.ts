@@ -17,7 +17,7 @@ export interface Diff {
 }
 
 export interface ApprovedDiff {
-  /** Route this entry applies to, or "*" for every route. */
+  /** Route this entry applies to, "*" for every route, or a prefix ending in "/*" (for example "/events/*"). */
   route: string;
   /** Diff kinds covered. */
   kinds: DiffKind[];
@@ -144,7 +144,7 @@ export function applyApprovals(
   for (const d of diffs) {
     const hit = approved.some(
       (a) =>
-        (a.route === '*' || a.route === route) &&
+        routeMatches(a.route, route) &&
         a.kinds.includes(d.kind) &&
         (!a.projects || a.projects.includes(project)) &&
         (!a.pathContains || (d.path ?? '').includes(a.pathContains)),
@@ -152,6 +152,11 @@ export function applyApprovals(
     (hit ? ok : bad).push(d);
   }
   return { approved: ok, unapproved: bad };
+}
+
+function routeMatches(pattern: string, route: string): boolean {
+  if (pattern === '*' || pattern === route) return true;
+  return pattern.endsWith('/*') && route.startsWith(pattern.slice(0, -1));
 }
 
 function fmt(b: Box): string {

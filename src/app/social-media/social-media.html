@@ -17,9 +17,13 @@
     @for (social of socials; track $index) {
       <div class="col-2">
         <div class="socials zoom">
-          <a [href]="social.url" [title]="social.name" target="_blank" rel="noopener noreferrer">
-            <img [src]="social.src" [alt]="social.name" loading="lazy">
-          </a>
+          @if (social.url) {
+            <a [href]="social.url" [title]="social.name" target="_blank" rel="noopener noreferrer">
+              <img [ngSrc]="social.image.ngSrc" [ngSrcset]="social.image.ngSrcset" [sizes]="social.image.sizes" [width]="social.image.width" [height]="social.image.height" [loaderParams]="social.image.loaderParams" [alt]="social.name">
+            </a>
+          } @else {
+            <img [ngSrc]="social.image.ngSrc" [ngSrcset]="social.image.ngSrcset" [sizes]="social.image.sizes" [width]="social.image.width" [height]="social.image.height" [loaderParams]="social.image.loaderParams" [alt]="social.name">
+          }
         </div>
       </div>
     }

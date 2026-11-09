@@ -17,7 +17,7 @@
   </div>
   <div class="row bio">
     <div class="col-3">
-      <img [src]="portrait" class="portrait" alt="Portrait">
+      <img [ngSrc]="portrait.ngSrc" [ngSrcset]="portrait.ngSrcset" [sizes]="portrait.sizes" [width]="portrait.width" [height]="portrait.height" [loaderParams]="portrait.loaderParams" class="portrait" alt="Portrait" priority>
     </div>
     <div class="col-9">
       <div class="biography">

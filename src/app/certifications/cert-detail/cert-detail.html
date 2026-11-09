@@ -23,7 +23,8 @@
       <div class="col-3"></div>
       <div class="col-6">
         <div class="certificate zoom">
-          <img [src]="d.image" [alt]="d.title">
+          @let v = imageView(d.image, '(max-width: 600px) 420px, 800px');
+          <img [ngSrc]="v.ngSrc" [ngSrcset]="v.ngSrcset" [sizes]="v.sizes" [width]="v.width" [height]="v.height" [loaderParams]="v.loaderParams" [alt]="d.title" priority>
         </div>
       </div>
       <div class="col-3"></div>

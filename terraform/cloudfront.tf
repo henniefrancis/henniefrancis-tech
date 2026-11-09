@@ -2,11 +2,13 @@
 # cloudfront.tf — CloudFront CDN in front of the EC2/nginx origin
 #
 # WHY:
-#   Global CDN + TLS at the edge + IPv6 for viewers, same as
-#   passembly.co.za. Combined with the nginx cache rules in the
-#   user_data template (HTML no-cache, assets short-cache) and the /*
-#   invalidation on every deploy, users always get fresh HTML while
-#   assets stay cached at the edge.
+#   Global CDN + TLS at the edge + IPv6 for viewers. The origin
+#   Cache-Control header decides caching (HTML no-cache with
+#   stale-if-error, hashed assets immutable), see deploy/nginx and the
+#   cache policy in cloudfront_policies.tf. Images are served from a
+#   private S3 bucket at /img/* through Origin Access Control.
+#   The origin is reached over HTTPS only and must see the secret
+#   X-Origin-Verify header.
 #
 # COST (small site): within the CloudFront always-free tier
 #   (1 TB egress + 10M requests/month). Realistically ≈ $0/month.
@@ -16,7 +18,7 @@
 #      EIP (A) and the instance IPv6 address (AAAA).
 #   2. Create the ACM validation CNAMEs from `acm_validation_records`.
 #   3. After the cert is ISSUED, cut henniefrancis.tech + www over to
-#      `cloudfront_domain_name`.
+#      `cloudfront_domain_name` (see the cutover runbook).
 # ============================================================
 
 # CloudFront certificates MUST live in us-east-1, regardless of where
@@ -38,8 +40,11 @@ resource "aws_acm_certificate" "frontend" {
   subject_alternative_names = var.frontend_alternate_domains
   validation_method         = "DNS"
 
+  # RETAINED: losing the certificate means an owner DNS change. Keep the
+  # validation CNAMEs at the DNS provider forever so it auto-renews.
   lifecycle {
     create_before_destroy = true
+    prevent_destroy       = true
   }
 
   tags = { Name = "${local.name_prefix_us_east_1}-frontend-cert" }
@@ -58,23 +63,15 @@ resource "aws_acm_certificate_validation" "frontend" {
   }
 }
 
-# AWS-managed cache policy "UseOriginCacheControlHeaders" — honours the
-# origin's Cache-Control header (Min/Default TTL 0), so HTML (no-cache)
-# revalidates while CSS/JS/images cache at the edge for exactly as long
-# as nginx says. Referenced by its stable global ID because its API name
-# is NOT prefixed with "Managed-", which makes a name lookup error-prone.
-locals {
-  # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
-  cache_policy_use_origin_cache_control = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
-}
-
 # ── Distribution ─────────────────────────────────────────────
 
 resource "aws_cloudfront_distribution" "frontend" {
-  enabled             = true
-  is_ipv6_enabled     = true
-  comment             = "${local.name_prefix} frontend CDN"
-  default_root_object = "index.html"
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "${local.name_prefix} frontend CDN"
+  # No default root object: the origin serves "/" itself and redirects
+  # "/index.html" to "/", so asking it for index.html would loop.
+  default_root_object = ""
   price_class         = var.cloudfront_price_class
   http_version        = "http2and3"
   aliases             = concat([var.frontend_primary_domain], var.frontend_alternate_domains)
@@ -89,6 +86,19 @@ resource "aws_cloudfront_distribution" "frontend" {
       origin_protocol_policy = var.cloudfront_origin_protocol_policy
       origin_ssl_protocols   = ["TLSv1.2"]
     }
+
+    # Shared secret that nginx checks (log-only first, enforced later).
+    custom_header {
+      name  = "X-Origin-Verify"
+      value = var.origin_verify_secret
+    }
+  }
+
+  # Private image bucket, read through Origin Access Control (s3_images.tf).
+  origin {
+    domain_name              = aws_s3_bucket.images.bucket_regional_domain_name
+    origin_id                = "s3-images"
+    origin_access_control_id = aws_cloudfront_origin_access_control.images.id
   }
 
   default_cache_behavior {
@@ -97,7 +107,30 @@ resource "aws_cloudfront_distribution" "frontend" {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
     compress               = true
-    cache_policy_id        = local.cache_policy_use_origin_cache_control
+    cache_policy_id        = aws_cloudfront_cache_policy.site.id
+
+    origin_request_policy_id   = aws_cloudfront_origin_request_policy.site.id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.site.id
+
+    # www -> apex 301 at the edge (the origin never sees the viewer Host).
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
+  }
+
+  # Images: served from the private bucket, cached for a year (the objects
+  # carry immutable Cache-Control and content-hashed names).
+  ordered_cache_behavior {
+    path_pattern           = "/img/*"
+    target_origin_id       = "s3-images"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    cache_policy_id        = local.cache_policy_caching_optimized
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.site.id
   }
 
   # Static multi-page site: nginx serves the styled 404/50x pages itself
@@ -141,4 +174,10 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   tags = { Name = "${local.name_prefix}-cdn" }
+
+  # RETAINED: recreating the distribution changes its hostname, which means
+  # an owner DNS change at the DNS provider.
+  lifecycle {
+    prevent_destroy = true
+  }
 }

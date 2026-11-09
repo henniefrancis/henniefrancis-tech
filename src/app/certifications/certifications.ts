@@ -1,5 +1,7 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ImageView, imageView } from '../content/image';
 import { byOrder } from '../shared/by-order';
 import raw from './certifications.json';
 
@@ -9,7 +11,7 @@ export interface CertBadge {
   name: string;
   status: string;
   statusText: string;
-  src: string;
+  image: ImageView;
   external: boolean;
   href: string | null;
   route: string | null;
@@ -26,7 +28,6 @@ export function isExternal(u: string): boolean {
 
 /** Sorted certification categories and badges, with the link target resolved (external href or internal route). */
 export function buildCertGroups(data: any): CertGroup[] {
-  const base: string = data.imageBaseUrl ?? '';
   return (data.categories ?? [])
     .slice()
     .sort(byOrder)
@@ -36,15 +37,16 @@ export function buildCertGroups(data: any): CertGroup[] {
         .slice()
         .sort(byOrder)
         .map((i: any) => {
-          const ext = isExternal(i.url as string);
+          const url = i.url as string | undefined;
+          const ext = url !== undefined && isExternal(url);
           return {
             name: i.name as string,
             status: i.status as string,
             statusText: STATUS_TEXT[i.status] ?? i.status,
-            src: base + i.image,
+            image: imageView(i.image),
             external: ext,
-            href: ext ? (i.url as string) : null,
-            route: ext ? null : (i.url as string).replace('/pages/', '/').replace(/\.html$/, ''),
+            href: ext ? url : null,
+            route: url === undefined || ext ? null : url.replace('/pages/', '/').replace(/\.html$/, ''),
           };
         }),
     }));
@@ -52,7 +54,7 @@ export function buildCertGroups(data: any): CertGroup[] {
 
 @Component({
   selector: 'app-certifications',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './certifications.html',
 })
 export class Certifications {

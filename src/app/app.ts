@@ -1,5 +1,6 @@
-import { Component, afterNextRender } from '@angular/core';
+import { Component, afterNextRender, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Seo } from './shared/seo';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   constructor() {
+    inject(Seo).start();
+
     // Flow-field canvas background. Browser-only (SSR-safe via afterNextRender)
     // and loaded in order so index.js sees the helpers from vector.js/noise.js.
     afterNextRender(() => {

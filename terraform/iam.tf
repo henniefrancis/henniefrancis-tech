@@ -219,6 +219,28 @@ resource "aws_iam_role_policy" "ec2_artifacts_read" {
   policy = data.aws_iam_policy_document.ec2_artifacts_read.json
 }
 
+# Read the two origin verify parameters (ssm.tf) so each deploy can render
+# the nginx map. Those two ARNs only. Decryption uses the AWS managed
+# key aws/ssm, whose key policy already allows this account's principals
+# through SSM, so no kms statement is needed.
+data "aws_iam_policy_document" "ec2_origin_verify_read" {
+  statement {
+    sid     = "ReadOriginVerifyParameters"
+    effect  = "Allow"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.origin_verify_current.arn,
+      aws_ssm_parameter.origin_verify_previous.arn,
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "ec2_origin_verify_read" {
+  name   = "${var.project_name}-origin-verify-read"
+  role   = aws_iam_role.ec2.id
+  policy = data.aws_iam_policy_document.ec2_origin_verify_read.json
+}
+
 resource "aws_iam_instance_profile" "ec2" {
   name = "${var.project_name}-ec2"
   role = aws_iam_role.ec2.name

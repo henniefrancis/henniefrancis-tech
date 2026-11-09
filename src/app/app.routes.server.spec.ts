@@ -12,6 +12,12 @@ describe('serverRoutes', () => {
     expect(serverRoutes[serverRoutes.length - 1].path).toBe('**');
   });
 
+  it('prerenders the 404 path so the build can write 404.html, before the catch-all', () => {
+    const paths = serverRoutes.map((r) => r.path);
+    expect(paths.indexOf('404')).toBeGreaterThanOrEqual(0);
+    expect(paths.indexOf('404')).toBeLessThan(paths.indexOf('**'));
+  });
+
   async function params(path: string) {
     const r = route(path) as { getPrerenderParams: () => Promise<Record<string, string>[]> };
     return r.getPrerenderParams();

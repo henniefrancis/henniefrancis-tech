@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "profile": {
+    "image": { "id": "66772866cac1d4c0", "w": 350, "h": 351, "widths": [175, 350] },
+    "alt": "Profile Picture"
+  },
+  "tiles": [
+    {
+      "id": "biography",
+      "name": "Biography",
+      "route": "/biography",
+      "image": { "id": "d3f8f9eb8536d77d", "w": 898, "h": 351, "widths": [449, 898] }
+    },
+    {
+      "id": "current-role",
+      "name": "Current Role",
+      "route": "/current-role",
+      "image": { "id": "497dd33d3a57f86a", "w": 898, "h": 525, "widths": [449, 898] }
+    },
+    {
+      "id": "portfolio",
+      "name": "Portfolio of Evidence",
+      "route": "/portfolio",
+      "image": { "id": "7d969b6cddce136b", "w": 898, "h": 438, "widths": [449, 898] }
+    },
+    {
+      "id": "social-media",
+      "name": "Social Media",
+      "route": "/social-media",
+      "image": { "id": "c2dabbe147f36a17", "w": 898, "h": 485, "widths": [449, 898] }
+    },
+    {
+      "id": "public-speaking",
+      "name": "Public Speaking",
+      "route": "/public-speaking",
+      "image": { "id": "91948155b59b3a4d", "w": 898, "h": 468, "widths": [449, 898] }
+    },
+    {
+      "id": "blog",
+      "name": "Blog",
+      "route": "/blog",
+      "image": { "id": "8c38eddee8422ce1", "w": 898, "h": 445, "widths": [449, 898] }
+    },
+    {
+      "id": "tech-stack",
+      "name": "Tech Stack",
+      "route": "/tech-stack",
+      "image": { "id": "262e871349afef2e", "w": 898, "h": 440, "widths": [449, 898] }
+    },
+    {
+      "id": "certifications",
+      "name": "Certifications",
+      "route": "/certifications",
+      "image": { "id": "4b2e25cfd5fe6e4c", "w": 898, "h": 405, "widths": [449, 898] }
+    },
+    {
+      "id": "special-awards",
+      "name": "Special Awards",
+      "route": "/special-awards",
+      "image": { "id": "c45cbe336086ce8f", "w": 898, "h": 477, "widths": [449, 898] }
+    }
+  ]
+}

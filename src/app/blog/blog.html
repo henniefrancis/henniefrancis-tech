@@ -25,7 +25,7 @@
     @for (link of links; track $index) {
       <div class="col-sm-2">
         <a [href]="link.url" [title]="link.name" target="_blank" rel="noopener noreferrer">
-          <img [src]="link.src" class="blog" [alt]="link.name">
+          <img [ngSrc]="link.image.ngSrc" [ngSrcset]="link.image.ngSrcset" [sizes]="link.image.sizes" [width]="link.image.width" [height]="link.image.height" [loaderParams]="link.image.loaderParams" class="blog" [alt]="link.name">
         </a>
       </div>
     }

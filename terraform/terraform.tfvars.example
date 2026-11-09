@@ -33,3 +33,12 @@
 # create_github_oidc_provider = false   # true only for a greenfield account
 
 # artifact_retention_days = 30
+
+# ── Edge, origin protection, content pipeline ────────────────
+# Sensitive values are set as HCP Terraform workspace variables
+# (category Terraform, Sensitive). NEVER put them in this file.
+#   origin_verify_secret            (required)
+#   origin_verify_secret_previous   (empty unless rotating)
+#   alarm_email                     (optional)
+# hsts_include_subdomains = false
+# config_repository       = "henniefrancis/config"
