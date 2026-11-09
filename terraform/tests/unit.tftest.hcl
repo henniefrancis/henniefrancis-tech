@@ -1030,6 +1030,11 @@ run "domain_registration_points_at_this_zone" {
   }
 
   assert {
+    condition     = aws_route53domains_registered_domain.site[0].tags["Name"] == "henniefrancis-123456789012-us-east-1-henniefrancis-tech-domain"
+    error_message = "The registration is served from us-east-1, so its Name tag must use the us-east-1 prefix."
+  }
+
+  assert {
     condition = (
       length(aws_route53domains_registered_domain.site[0].registrant_contact) == 0 &&
       length(aws_route53domains_registered_domain.site[0].admin_contact) == 0

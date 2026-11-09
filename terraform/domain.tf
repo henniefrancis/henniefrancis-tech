@@ -50,5 +50,5 @@ resource "aws_route53domains_registered_domain" "site" {
     }
   }
 
-  tags = { Name = "${local.name_prefix}-domain" }
+  tags = { Name = "${local.name_prefix_us_east_1}-domain" }
 }
