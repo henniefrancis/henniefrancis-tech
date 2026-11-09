@@ -835,15 +835,6 @@ run "no_email_records" {
   }
 }
 
-run "caa_allows_only_acm_and_lets_encrypt" {
-  command = plan
-
-  assert {
-    condition     = aws_route53_record.caa.records == toset(["0 issue \"amazon.com\"", "0 issue \"letsencrypt.org\""])
-    error_message = "CAA must allow only amazon.com and letsencrypt.org."
-  }
-}
-
 run "acm_validation_records_match_the_certificate" {
   command = plan
 

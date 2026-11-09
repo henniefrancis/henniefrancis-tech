@@ -13,7 +13,7 @@
 #     plus the retained validation CNAMEs of earlier certificates
 #   - other projects on subdomains (var.other_project_records, data)
 #   - no email: null MX, SPF -all, DMARC reject
-#   - CAA: amazon.com (ACM) and letsencrypt.org (origin certificate)
+#   - No CAA record: other projects under this zone may use other certificate authorities
 #
 # CUTOVER: creating the zone changes nothing publicly. Traffic moves
 # only when the registrar name servers are switched to the
@@ -173,17 +173,3 @@ resource "aws_route53_record" "dmarc" {
   records = ["\"v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s\""]
 }
 
-# ── Certificate authority authorization ──────────────────────
-
-# amazon.com: ACM (CloudFront certificate). letsencrypt.org: the
-# certificate on the origin host.
-resource "aws_route53_record" "caa" {
-  zone_id = aws_route53_zone.frontend.zone_id
-  name    = local.zone_name
-  type    = "CAA"
-  ttl     = var.dns_default_ttl
-  records = [
-    "0 issue \"amazon.com\"",
-    "0 issue \"letsencrypt.org\"",
-  ]
-}
