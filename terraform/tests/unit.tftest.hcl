@@ -417,7 +417,7 @@ run "site_cache_policy_has_empty_key" {
   }
 }
 
-run "response_headers_policy_has_security_headers_and_no_enforced_csp_by_default" {
+run "response_headers_policy_has_security_headers_and_enforced_csp_by_default" {
   command = plan
 
   assert {
@@ -449,8 +449,8 @@ run "response_headers_policy_has_security_headers_and_no_enforced_csp_by_default
   }
 
   assert {
-    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 0
-    error_message = "The default mode is report-only, so no enforced CSP block (see the csp_ runs below)."
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 1
+    error_message = "The default mode is enforce, so the enforced CSP block is set (see the csp_ runs below)."
   }
 }
 
@@ -1094,12 +1094,30 @@ run "domain_registration_points_at_this_zone" {
 # Enforce mode sends it.
 # ------------------------------------------------------------
 
-run "csp_report_only_is_the_default_mode" {
+run "csp_enforce_is_the_default_mode" {
   command = plan
 
   assert {
-    condition     = var.csp_header_mode == "report-only"
-    error_message = "csp_header_mode must default to report-only."
+    condition     = var.csp_header_mode == "enforce"
+    error_message = "csp_header_mode must default to enforce."
+  }
+
+  assert {
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 1
+    error_message = "The default must send the enforced Content-Security-Policy."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Content-Security-Policy-Report-Only"]) == 0
+    error_message = "The default must not send a Content-Security-Policy-Report-Only header."
+  }
+}
+
+run "csp_report_only_mode_is_the_rollback" {
+  command = plan
+
+  variables {
+    csp_header_mode = "report-only"
   }
 
   assert {

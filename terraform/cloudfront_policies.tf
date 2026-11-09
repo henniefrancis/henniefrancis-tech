@@ -103,8 +103,8 @@ locals {
 
 # Response headers policy. override = true so these values win over any
 # header the origin (or S3) also sets. The CSP is sent as
-# Content-Security-Policy ("enforce") or as the custom header
-# Content-Security-Policy-Report-Only ("report-only", the default), chosen by
+# Content-Security-Policy ("enforce", the default) or as the custom header
+# Content-Security-Policy-Report-Only ("report-only", the rollback), chosen by
 # var.csp_header_mode. It must OMIT script-src and default-src (see above).
 # The report-only value also omits upgrade-insecure-requests (see above).
 resource "aws_cloudfront_response_headers_policy" "site" {
