@@ -5,7 +5,7 @@
 #
 # Retained resources:
 #   image bucket, artifacts bucket, Elastic IP, CloudFront distribution,
-#   ACM certificate.
+#   ACM certificate, Route 53 hosted zone.
 set -euo pipefail
 
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -18,6 +18,7 @@ retained=(
   "aws_eip:web"
   "aws_cloudfront_distribution:frontend"
   "aws_acm_certificate:frontend"
+  "aws_route53_zone:frontend"
 )
 
 for item in "${retained[@]}"; do

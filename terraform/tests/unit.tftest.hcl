@@ -46,6 +46,44 @@ override_resource {
   }
 }
 
+override_resource {
+  target          = aws_acm_certificate.frontend
+  override_during = plan
+  values = {
+    arn = "arn:aws:acm:us-east-1:123456789012:certificate/00000000-0000-0000-0000-000000000000"
+    domain_validation_options = [
+      {
+        domain_name           = "henniefrancis.tech"
+        resource_record_name  = "_4348ded496f47caded56a708f410bc35.henniefrancis.tech."
+        resource_record_type  = "CNAME"
+        resource_record_value = "_aaaa.zfyfvmchrl.acm-validations.aws."
+      },
+      {
+        domain_name           = "www.henniefrancis.tech"
+        resource_record_name  = "_fc9ad38f3f66378bd8eacb1c8e5e00cc.www.henniefrancis.tech."
+        resource_record_type  = "CNAME"
+        resource_record_value = "_bbbb.zfyfvmchrl.acm-validations.aws."
+      },
+    ]
+  }
+}
+
+override_resource {
+  target          = aws_instance.web
+  override_during = plan
+  values = {
+    ipv6_addresses = ["2406:da11:8db:7300:4ec1:cdc9:b1b7:9b1e"]
+  }
+}
+
+override_resource {
+  target          = aws_eip.web
+  override_during = plan
+  values = {
+    public_ip = "13.245.103.63"
+  }
+}
+
 # Test-only fake value, 64 characters (the length of openssl rand -hex 32). The real secret is a sensitive HCP variable.
 variables {
   origin_verify_secret = "fakefakefakefakefakefakefakefakefakefakefakefakefakefakefakefake"
@@ -752,4 +790,176 @@ run "rejects_invalid_config_repository" {
   }
 
   expect_failures = [var.config_repository]
+}
+
+# ── Route 53 zone (dns.tf) ───────────────────────────────────
+
+run "public_names_alias_to_cloudfront" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      for k, r in aws_route53_record.alias :
+      r.alias[0].name == aws_cloudfront_distribution.frontend.domain_name &&
+      r.alias[0].zone_id == aws_cloudfront_distribution.frontend.hosted_zone_id &&
+      r.alias[0].evaluate_target_health == false
+    ])
+    error_message = "Every ALIAS record must target the CloudFront distribution domain and hosted zone, with evaluate_target_health false."
+  }
+
+  assert {
+    condition = toset(keys(aws_route53_record.alias)) == toset([
+      "henniefrancis.tech/A", "henniefrancis.tech/AAAA",
+      "www.henniefrancis.tech/A", "www.henniefrancis.tech/AAAA",
+    ])
+    error_message = "Apex and www must each have an A and an AAAA ALIAS record."
+  }
+}
+
+run "no_email_records" {
+  command = plan
+
+  assert {
+    condition     = aws_route53_record.null_mx.records == toset(["0 ."]) && aws_route53_record.null_mx.name == "henniefrancis.tech"
+    error_message = "The apex must have a null MX record (0 .)."
+  }
+
+  assert {
+    condition     = aws_route53_record.spf.records == toset(["\"v=spf1 -all\""])
+    error_message = "The apex SPF must be v=spf1 -all."
+  }
+
+  assert {
+    condition     = aws_route53_record.dmarc.name == "_dmarc.henniefrancis.tech" && aws_route53_record.dmarc.records == toset(["\"v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s\""])
+    error_message = "_dmarc must be the strict reject policy."
+  }
+}
+
+run "acm_validation_records_match_the_certificate" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      for o in aws_acm_certificate.frontend.domain_validation_options :
+      aws_route53_record.acm_validation[o.domain_name].name == o.resource_record_name &&
+      aws_route53_record.acm_validation[o.domain_name].type == o.resource_record_type &&
+      one(aws_route53_record.acm_validation[o.domain_name].records) == o.resource_record_value
+    ])
+    error_message = "ACM validation records must match the certificate validation options."
+  }
+
+  assert {
+    condition     = length(aws_route53_record.acm_validation) == 2
+    error_message = "The apex and www names must each have one generated validation record."
+  }
+
+  assert {
+    condition = toset(keys(aws_route53_record.retained_acm_validation)) == toset([
+      "_cc838156ee6825daa26f7ce9bbc943e2",
+      "_418d8b89ae00f8d1d2842116e4c591b0.www",
+      "_f01d7b80add8acd175c19ea4ec5e70ea.demo",
+    ])
+    error_message = "The three retained validation CNAMEs must be present."
+  }
+}
+
+run "origin_records_come_from_the_instance" {
+  command = plan
+
+  assert {
+    condition     = aws_route53_record.origin_a[0].name == "origin.henniefrancis.tech" && one(aws_route53_record.origin_a[0].records) == aws_eip.web[0].public_ip && aws_route53_record.origin_a[0].ttl == 300
+    error_message = "origin A must carry the Elastic IP with TTL 300."
+  }
+
+  assert {
+    condition     = aws_route53_record.origin_aaaa[0].name == "origin.henniefrancis.tech" && one(aws_route53_record.origin_aaaa[0].records) == one(aws_instance.web.ipv6_addresses)
+    error_message = "origin AAAA must carry the instance IPv6 address."
+  }
+}
+
+run "other_project_records_are_kept" {
+  command = plan
+
+  assert {
+    condition     = aws_route53_record.other_project["demo-cname"].name == "demo.henniefrancis.tech" && one(aws_route53_record.other_project["demo-cname"].records) == "tvn0gb9caj.execute-api.af-south-1.amazonaws.com"
+    error_message = "demo CNAME must be kept."
+  }
+
+  assert {
+    condition     = one(aws_route53_record.other_project["demo-asuid"].records) == "\"6DC2FBAD3EC03CB4699320AF7AF7E1941247F53D78443120853FA976D97110EE\""
+    error_message = "asuid.demo TXT must be kept and quoted."
+  }
+
+  assert {
+    condition     = one(aws_route53_record.other_project["bingo-a"].records) == "13.246.19.103" && one(aws_route53_record.other_project["bingo-services-a"].records) == "13.245.206.161"
+    error_message = "bingo A records must be kept."
+  }
+}
+
+run "zone_is_tagged_and_named" {
+  command = plan
+
+  assert {
+    condition     = aws_route53_zone.frontend.name == "henniefrancis.tech" && aws_route53_zone.frontend.tags["Name"] == "henniefrancis-123456789012-af-south-1-henniefrancis-tech-zone"
+    error_message = "Zone name and Name tag must follow the convention."
+  }
+}
+
+run "rejects_bad_other_project_type" {
+  command = plan
+
+  variables {
+    other_project_records = {
+      x = { name = "x", type = "MX", records = ["0 mail.example.com"] }
+    }
+  }
+
+  expect_failures = [var.other_project_records]
+}
+
+run "rejects_bad_other_project_ip" {
+  command = plan
+
+  variables {
+    other_project_records = {
+      x = { name = "x", type = "A", records = ["999.1.1.1"] }
+    }
+  }
+
+  expect_failures = [var.other_project_records]
+}
+
+run "rejects_bad_other_project_name" {
+  command = plan
+
+  variables {
+    other_project_records = {
+      x = { name = "Bad Name.", type = "A", records = ["1.2.3.4"] }
+    }
+  }
+
+  expect_failures = [var.other_project_records]
+}
+
+run "rejects_duplicate_other_project_records" {
+  command = plan
+
+  variables {
+    other_project_records = {
+      a = { name = "x", type = "A", records = ["1.2.3.4"] }
+      b = { name = "x", type = "A", records = ["1.2.3.5"] }
+    }
+  }
+
+  expect_failures = [var.other_project_records]
+}
+
+run "rejects_bad_retained_validation_cname" {
+  command = plan
+
+  variables {
+    retained_acm_validation_cnames = { "not-underscore" = "example.com" }
+  }
+
+  expect_failures = [var.retained_acm_validation_cnames]
 }

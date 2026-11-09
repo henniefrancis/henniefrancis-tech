@@ -108,7 +108,7 @@ Also create a **`production` environment** (Settings → Environments) — the d
 
 ### 5. Cut public DNS over + first deploy
 
-1. Point `www.henniefrancis.tech` CNAME → `cloudfront_domain_name`; apex `henniefrancis.tech` via ALIAS/ANAME (or CNAME-flattening).
+1. Point `www.henniefrancis.tech` CNAME → `cloudfront_domain_name`; apex `henniefrancis.tech` via ALIAS/ANAME (or CNAME-flattening). With the Route 53 zone (`dns.tf`), the ALIAS records for the apex and www already exist in the zone; switch the registrar name servers to the `name_servers` output instead of creating records by hand.
 2. Push to `main` → the deploy workflow ships the site through the new pipeline.
 3. Verify: `curl -I https://henniefrancis.tech` (expect `via: … cloudfront`), and IPv6: `curl -6 -I https://henniefrancis.tech`.
 

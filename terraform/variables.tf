@@ -81,6 +81,126 @@ variable "origin_domain_name" {
   default     = "origin.henniefrancis.tech"
 }
 
+# ── DNS (Route 53) ───────────────────────────────────────────
+
+variable "dns_default_ttl" {
+  description = "TTL in seconds for the standard records in the Route 53 zone."
+  type        = number
+  default     = 300
+
+  validation {
+    condition     = var.dns_default_ttl >= 60 && var.dns_default_ttl <= 86400
+    error_message = "dns_default_ttl must be between 60 and 86400 seconds."
+  }
+}
+
+variable "retained_acm_validation_cnames" {
+  description = <<-EOT
+    ACM validation CNAMEs of earlier certificates that are kept in the zone
+    (harmless, and they keep those certificates renewable). Map of record
+    name relative to the zone => validation target. The CloudFront
+    certificate's own records are generated and must not be listed here.
+  EOT
+  type        = map(string)
+  default = {
+    "_cc838156ee6825daa26f7ce9bbc943e2"      = "_c881f53b4cfdaf1e7f0fe6e8389f185c.zfyfvmchrl.acm-validations.aws"
+    "_418d8b89ae00f8d1d2842116e4c591b0.www"  = "_acf40e7bbbc8ae395ebe56b5f1551711.zfyfvmchrl.acm-validations.aws"
+    "_f01d7b80add8acd175c19ea4ec5e70ea.demo" = "_af15502936f5f1e4b539348f51fc6442.jkddzztszm.acm-validations.aws"
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.retained_acm_validation_cnames :
+      can(regex("^_[a-z0-9]+(\\.[a-z0-9-]+)*$", k)) && can(regex("^_[a-z0-9]+\\.[a-z0-9]+\\.acm-validations\\.aws$", v))
+    ])
+    error_message = "retained_acm_validation_cnames keys must be relative names starting with an underscore, and values must be ACM validation targets (_<id>.<id>.acm-validations.aws)."
+  }
+}
+
+variable "other_project_records" {
+  description = <<-EOT
+    Records for other projects hosted on subdomains of this domain. This is
+    data, not code: add or change entries here. Map of a free label =>
+    record, where name is relative to the zone (no trailing dot). TXT values
+    are given unquoted; the stack adds the quotes Route 53 requires.
+  EOT
+  type = map(object({
+    name    = string
+    type    = string
+    ttl     = optional(number, 300)
+    records = list(string)
+  }))
+  default = {
+    demo-cname = {
+      name    = "demo"
+      type    = "CNAME"
+      records = ["tvn0gb9caj.execute-api.af-south-1.amazonaws.com"]
+    }
+    demo-asuid = {
+      name    = "asuid.demo"
+      type    = "TXT"
+      records = ["6DC2FBAD3EC03CB4699320AF7AF7E1941247F53D78443120853FA976D97110EE"]
+    }
+    bingo-a = {
+      name    = "bingo"
+      type    = "A"
+      records = ["13.246.19.103"]
+    }
+    bingo-services-a = {
+      name    = "services.bingo"
+      type    = "A"
+      records = ["13.245.206.161"]
+    }
+  }
+
+  validation {
+    condition = alltrue([
+      for k, r in var.other_project_records :
+      can(regex("^[a-z0-9_]([a-z0-9_-]{0,61}[a-z0-9_])?(\\.[a-z0-9_]([a-z0-9_-]{0,61}[a-z0-9_])?)*$", r.name))
+    ])
+    error_message = "other_project_records names must be lowercase DNS names relative to the zone, with no trailing dot."
+  }
+
+  validation {
+    condition     = alltrue([for k, r in var.other_project_records : contains(["A", "AAAA", "CNAME", "TXT"], r.type)])
+    error_message = "other_project_records type must be one of A, AAAA, CNAME, TXT."
+  }
+
+  validation {
+    condition     = alltrue([for k, r in var.other_project_records : length(r.records) > 0 && r.ttl >= 60 && r.ttl <= 86400])
+    error_message = "other_project_records entries need at least one value and a TTL between 60 and 86400."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, r in var.other_project_records :
+      r.type != "A" || alltrue([for v in r.records : can(regex("^((25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])$", v))])
+    ])
+    error_message = "other_project_records A values must be IPv4 addresses."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, r in var.other_project_records :
+      r.type != "CNAME" || (length(r.records) == 1 && can(regex("^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$", r.records[0])))
+    ])
+    error_message = "other_project_records CNAME entries need exactly one target hostname (no trailing dot)."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, r in var.other_project_records :
+      r.type != "TXT" || alltrue([for v in r.records : length(v) <= 255 && !strcontains(v, "\"")])
+    ])
+    error_message = "other_project_records TXT values must be at most 255 characters and contain no double quotes."
+  }
+
+  validation {
+    condition     = length(distinct([for k, r in var.other_project_records : "${r.name}/${r.type}"])) == length(var.other_project_records)
+    error_message = "other_project_records must not contain two entries with the same name and type."
+  }
+}
+
 # ── Networking ───────────────────────────────────────────────
 
 variable "vpc_cidr" {
