@@ -72,7 +72,7 @@ override_resource {
   target          = aws_instance.web
   override_during = plan
   values = {
-    ipv6_addresses = ["2406:da11:8db:7300:4ec1:cdc9:b1b7:9b1e"]
+    ipv6_addresses = ["2001:db8::1"]
   }
 }
 
@@ -80,7 +80,7 @@ override_resource {
   target          = aws_eip.web
   override_during = plan
   values = {
-    public_ip = "13.245.103.63"
+    public_ip = "192.0.2.10"
   }
 }
 
@@ -902,7 +902,7 @@ run "other_project_records_are_kept" {
   }
 
   assert {
-    condition     = one(aws_route53_record.other_project["bingo-a"].records) == "13.246.19.103" && one(aws_route53_record.other_project["bingo-services-a"].records) == "13.245.206.161"
+    condition     = aws_route53_record.other_project["bingo-a"].records == toset(var.other_project_records["bingo-a"].records) && aws_route53_record.other_project["bingo-services-a"].records == toset(var.other_project_records["bingo-services-a"].records)
     error_message = "bingo A records must be kept."
   }
 }
@@ -945,7 +945,7 @@ run "rejects_bad_other_project_name" {
 
   variables {
     other_project_records = {
-      x = { name = "Bad Name.", type = "A", records = ["1.2.3.4"] }
+      x = { name = "Bad Name.", type = "A", records = ["192.0.2.12"] }
     }
   }
 
@@ -957,8 +957,8 @@ run "rejects_duplicate_other_project_records" {
 
   variables {
     other_project_records = {
-      a = { name = "x", type = "A", records = ["1.2.3.4"] }
-      b = { name = "x", type = "A", records = ["1.2.3.5"] }
+      a = { name = "x", type = "A", records = ["192.0.2.12"] }
+      b = { name = "x", type = "A", records = ["192.0.2.13"] }
     }
   }
 

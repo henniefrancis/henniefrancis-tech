@@ -122,7 +122,7 @@ variable "other_project_records" {
     Records for other projects hosted on subdomains of this domain. This is
     data, not code: add or change entries here. Map of a free label =>
     record, where name is relative to the zone (no trailing dot). TXT values
-    are given unquoted; the stack adds the quotes Route 53 requires.
+    are given unquoted; the AWS provider adds the quotes Route 53 requires.
   EOT
   type = map(object({
     name    = string
