@@ -33,6 +33,10 @@ const REPORT_ONLY = POLICY.filter((d) => d !== 'upgrade-insecure-requests').join
 const REMOTE = Boolean(process.env['BASE_URL']);
 const ENFORCED_LOCAL = Boolean(process.env['E2E_CSP_ENFORCE']);
 const CSP_CONSOLE = /content security policy|\[report only\]|refused to (load|apply|execute|connect|frame|create|run)/i;
+// WebKit ignores a report-only policy that has no report-to directive and logs a notice saying so. That notice
+// is not a violation: in report-only mode the check relies on Chromium, and WebKit is covered once the header is
+// enforced (and locally with E2E_CSP_ENFORCE=1).
+const WEBKIT_REPORT_ONLY_NOTICE = /delivered in report-only mode, but does not specify a 'report-to'/i;
 
 declare global {
   interface Window {
@@ -52,7 +56,7 @@ for (const route of targets) {
   test(`no policy violations on ${route}`, async ({ page }) => {
     const problems: string[] = [];
     page.on('console', (m) => {
-      if (CSP_CONSOLE.test(m.text())) problems.push(`console: ${m.text().slice(0, 240)}`);
+      if (CSP_CONSOLE.test(m.text()) && !WEBKIT_REPORT_ONLY_NOTICE.test(m.text())) problems.push(`console: ${m.text().slice(0, 240)}`);
     });
     page.on('pageerror', (e) => problems.push(`page error: ${e.message.slice(0, 200)}`));
     await page.addInitScript(() => {
