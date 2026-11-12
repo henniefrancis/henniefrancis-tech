@@ -72,7 +72,40 @@ override_resource {
   target          = aws_instance.web
   override_during = plan
   values = {
-    ipv6_addresses = ["2406:da11:8db:7300:4ec1:cdc9:b1b7:9b1e"]
+    ipv6_addresses = ["2001:db8::1"]
+  }
+}
+
+override_resource {
+  target          = aws_kms_key.alarms
+  override_during = plan
+  values = {
+    arn = "arn:aws:kms:us-east-1:123456789012:key/00000000-0000-0000-0000-000000000000"
+  }
+}
+
+# Known group ids so the test can check which groups the instance carries.
+override_resource {
+  target          = aws_security_group.web
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000a"
+  }
+}
+
+override_resource {
+  target          = aws_security_group.cf_origin_v4
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000b"
+  }
+}
+
+override_resource {
+  target          = aws_security_group.cf_origin_v6
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000c"
   }
 }
 
@@ -80,7 +113,7 @@ override_resource {
   target          = aws_eip.web
   override_during = plan
   values = {
-    public_ip = "13.245.103.63"
+    public_ip = "192.0.2.10"
   }
 }
 
@@ -90,6 +123,12 @@ variables {
 }
 
 mock_provider "aws" {
+  mock_data "aws_ec2_managed_prefix_list" {
+    defaults = {
+      id = "pl-0123456789abcdef0"
+    }
+  }
+
   mock_data "aws_ssm_parameter" {
     defaults = {
       value = "ami-0123456789abcdef0"
@@ -214,8 +253,8 @@ run "stack_is_dual_stack" {
   }
 
   assert {
-    condition     = aws_vpc_security_group_ingress_rule.https_ipv6.cidr_ipv6 == "::/0"
-    error_message = "HTTPS must be reachable over IPv6."
+    condition     = aws_vpc_security_group_ingress_rule.https_cloudfront_v6.ip_protocol == "tcp" && aws_vpc_security_group_ingress_rule.https_cloudfront_v6.to_port == 443
+    error_message = "HTTPS must be reachable over IPv6 (from the CloudFront IPv6 prefix list)."
   }
 }
 
@@ -378,7 +417,7 @@ run "site_cache_policy_has_empty_key" {
   }
 }
 
-run "response_headers_policy_has_security_headers_without_csp" {
+run "response_headers_policy_has_security_headers_and_enforced_csp_by_default" {
   command = plan
 
   assert {
@@ -410,8 +449,8 @@ run "response_headers_policy_has_security_headers_without_csp" {
   }
 
   assert {
-    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 0
-    error_message = "No CSP header until the CSP change."
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 1
+    error_message = "The default mode is enforce, so the enforced CSP block is set (see the csp_ runs below)."
   }
 }
 
@@ -902,7 +941,7 @@ run "other_project_records_are_kept" {
   }
 
   assert {
-    condition     = one(aws_route53_record.other_project["bingo-a"].records) == "13.246.19.103" && one(aws_route53_record.other_project["bingo-services-a"].records) == "13.245.206.161"
+    condition     = aws_route53_record.other_project["bingo-a"].records == toset(var.other_project_records["bingo-a"].records) && aws_route53_record.other_project["bingo-services-a"].records == toset(var.other_project_records["bingo-services-a"].records)
     error_message = "bingo A records must be kept."
   }
 }
@@ -945,7 +984,7 @@ run "rejects_bad_other_project_name" {
 
   variables {
     other_project_records = {
-      x = { name = "Bad Name.", type = "A", records = ["1.2.3.4"] }
+      x = { name = "Bad Name.", type = "A", records = ["192.0.2.12"] }
     }
   }
 
@@ -957,8 +996,8 @@ run "rejects_duplicate_other_project_records" {
 
   variables {
     other_project_records = {
-      a = { name = "x", type = "A", records = ["1.2.3.4"] }
-      b = { name = "x", type = "A", records = ["1.2.3.5"] }
+      a = { name = "x", type = "A", records = ["192.0.2.12"] }
+      b = { name = "x", type = "A", records = ["192.0.2.13"] }
     }
   }
 
@@ -973,4 +1012,486 @@ run "rejects_bad_retained_validation_cname" {
   }
 
   expect_failures = [var.retained_acm_validation_cnames]
+}
+
+# ── Domain registration (adopted after the transfer) ────────
+
+run "domain_registration_off_by_default" {
+  command = plan
+
+  assert {
+    condition     = length(aws_route53domains_registered_domain.site) == 0
+    error_message = "The registration must not be managed until the transfer has completed."
+  }
+}
+
+run "domain_registration_points_at_this_zone" {
+  command = plan
+
+  variables {
+    manage_domain_registration = true
+  }
+
+  override_resource {
+    target          = aws_route53_zone.frontend
+    override_during = plan
+    values = {
+      name_servers = ["ns-2.example.org", "ns-1.example.com"]
+    }
+  }
+
+  assert {
+    condition     = aws_route53domains_registered_domain.site[0].domain_name == var.frontend_primary_domain
+    error_message = "The registration must be for the primary domain."
+  }
+
+  assert {
+    condition     = [for ns in aws_route53domains_registered_domain.site[0].name_server : ns.name] == ["ns-1.example.com", "ns-2.example.org"]
+    error_message = "The registration must use this zone's name servers, sorted."
+  }
+
+  assert {
+    condition = (
+      aws_route53domains_registered_domain.site[0].transfer_lock &&
+      aws_route53domains_registered_domain.site[0].auto_renew
+    )
+    error_message = "Transfer lock and auto renew must stay on."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_route53domains_registered_domain.site[0].admin_privacy,
+      aws_route53domains_registered_domain.site[0].registrant_privacy,
+      aws_route53domains_registered_domain.site[0].tech_privacy,
+      aws_route53domains_registered_domain.site[0].billing_privacy,
+    ])
+    error_message = "WHOIS privacy must be on for every contact."
+  }
+
+  assert {
+    condition     = aws_route53domains_registered_domain.site[0].tags["Name"] == "henniefrancis-123456789012-us-east-1-henniefrancis-tech-domain"
+    error_message = "The registration is served from us-east-1, so its Name tag must use the us-east-1 prefix."
+  }
+
+  assert {
+    condition = (
+      length(aws_route53domains_registered_domain.site[0].registrant_contact) == 0 &&
+      length(aws_route53domains_registered_domain.site[0].admin_contact) == 0
+    )
+    error_message = "Contact details are personal data and must not be set in this public repo."
+  }
+}
+
+# ------------------------------------------------------------
+# Content security policy header. The policy text lives in
+# csp/content-security-policy.txt (single source, also read by the
+# preview server and the browser tests). The literals below are
+# deliberately a second copy: changing the policy must be a conscious
+# edit in both places.
+#
+# Report-only mode sends the policy WITHOUT upgrade-insecure-requests,
+# which browsers ignore (and warn about) in a report-only header.
+# Enforce mode sends it.
+# ------------------------------------------------------------
+
+run "csp_enforce_is_the_default_mode" {
+  command = plan
+
+  assert {
+    condition     = var.csp_header_mode == "enforce"
+    error_message = "csp_header_mode must default to enforce."
+  }
+
+  assert {
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 1
+    error_message = "The default must send the enforced Content-Security-Policy."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Content-Security-Policy-Report-Only"]) == 0
+    error_message = "The default must not send a Content-Security-Policy-Report-Only header."
+  }
+}
+
+run "csp_report_only_mode_is_the_rollback" {
+  command = plan
+
+  variables {
+    csp_header_mode = "report-only"
+  }
+
+  assert {
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 0
+    error_message = "Report-only mode must not send the enforced Content-Security-Policy."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Content-Security-Policy-Report-Only"]) == 1
+    error_message = "Report-only mode must send exactly one Content-Security-Policy-Report-Only custom header."
+  }
+
+  assert {
+    condition     = one([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i.value if i.header == "Content-Security-Policy-Report-Only"]) == "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; frame-src 'none'; form-action 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; media-src 'self'; worker-src 'none'"
+    error_message = "The report-only value must be the exact policy without upgrade-insecure-requests."
+  }
+
+  assert {
+    condition     = !strcontains(one([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i.value if i.header == "Content-Security-Policy-Report-Only"]), "upgrade-insecure-requests")
+    error_message = "A report-only header must not carry upgrade-insecure-requests: browsers ignore it there and log a warning."
+  }
+
+  assert {
+    condition     = one([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i.override if i.header == "Content-Security-Policy-Report-Only"]) == true
+    error_message = "The report-only header must override any origin value."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Permissions-Policy"]) == 1
+    error_message = "Permissions-Policy must stay in report-only mode."
+  }
+}
+
+run "csp_enforce_mode_sends_the_enforced_header" {
+  command = plan
+
+  variables {
+    csp_header_mode = "enforce"
+  }
+
+  assert {
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 1
+    error_message = "Enforce mode must set security_headers_config.content_security_policy."
+  }
+
+  assert {
+    condition     = aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy[0].content_security_policy == "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; frame-src 'none'; form-action 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; media-src 'self'; worker-src 'none'; upgrade-insecure-requests"
+    error_message = "The enforced value must be the exact policy, including upgrade-insecure-requests."
+  }
+
+  assert {
+    condition     = aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy[0].override == true
+    error_message = "The enforced header must override any origin value."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Content-Security-Policy-Report-Only"]) == 0
+    error_message = "Enforce mode must not also send the report-only header."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Permissions-Policy"]) == 1
+    error_message = "Permissions-Policy must stay in enforce mode."
+  }
+}
+
+# The policy must never carry default-src or script-src (autoCsp puts them in
+# the meta tag; here they would block the hashed scripts), must fit the
+# CloudFront limit, and must keep the directives that make it useful.
+run "csp_policy_text_rules" {
+  command = plan
+
+  assert {
+    condition     = !can(regex("(^|; )(default-src|script-src)", local.edge_csp_value))
+    error_message = "The edge policy must not contain default-src or script-src."
+  }
+
+  assert {
+    condition     = length(local.edge_csp_value) <= 1783
+    error_message = "CloudFront limits the policy value to 1783 characters."
+  }
+
+  assert {
+    condition     = alltrue([for d in ["object-src 'none'", "base-uri 'self'", "frame-ancestors 'self'", "form-action 'self'", "upgrade-insecure-requests"] : contains(local.edge_csp_directives, d)])
+    error_message = "Core directives are missing from the policy."
+  }
+
+  assert {
+    condition     = !can(regex("[\\r\\n;]$", local.edge_csp_value)) && !can(regex("\\s{2,}", local.edge_csp_value))
+    error_message = "The policy must be one clean line without trailing separators or repeated spaces."
+  }
+
+  assert {
+    condition     = local.edge_csp_value_report_only == join("; ", [for d in local.edge_csp_directives : d if d != "upgrade-insecure-requests"]) && length(split("; ", local.edge_csp_value_report_only)) == length(local.edge_csp_directives) - 1
+    error_message = "The report-only value must be the single source minus exactly the upgrade-insecure-requests directive."
+  }
+}
+
+run "csp_invalid_mode_is_rejected" {
+  command = plan
+
+  variables {
+    csp_header_mode = "log-only"
+  }
+
+  expect_failures = [var.csp_header_mode]
+}
+
+# ── Origin lockdown: 443 only from CloudFront ────────────────
+
+run "https_is_not_open_to_the_world" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.cidr_ipv4 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.cidr_ipv6 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.cidr_ipv4 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.cidr_ipv6 == null,
+    ])
+    error_message = "The 443 rules must use a prefix list only, never 0.0.0.0/0 or ::/0 (or any CIDR)."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.http.from_port != 443,
+      aws_vpc_security_group_ingress_rule.http_ipv6.from_port != 443,
+      aws_vpc_security_group_ingress_rule.http.to_port != 443,
+      aws_vpc_security_group_ingress_rule.http_ipv6.to_port != 443,
+    ])
+    error_message = "The world-open rules on the web group must not cover port 443."
+  }
+
+  assert {
+    condition     = length(aws_vpc_security_group_ingress_rule.ssh) == 0
+    error_message = "SSH stays closed by default."
+  }
+}
+
+run "cloudfront_groups_use_the_two_prefix_lists" {
+  command = plan
+
+  assert {
+    condition     = data.aws_ec2_managed_prefix_list.cloudfront_origin_v4.name == "com.amazonaws.global.cloudfront.origin-facing"
+    error_message = "The IPv4 group must use the CloudFront origin-facing prefix list."
+  }
+
+  assert {
+    condition     = data.aws_ec2_managed_prefix_list.cloudfront_origin_v6.name == "com.amazonaws.global.ipv6.cloudfront.origin-facing"
+    error_message = "The IPv6 group must use the CloudFront IPv6 origin-facing prefix list."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.prefix_list_id == data.aws_ec2_managed_prefix_list.cloudfront_origin_v4.id,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.prefix_list_id == data.aws_ec2_managed_prefix_list.cloudfront_origin_v6.id,
+    ])
+    error_message = "Each group's rule must reference its own prefix list."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.from_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.to_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.ip_protocol == "tcp",
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.from_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.to_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.ip_protocol == "tcp",
+    ])
+    error_message = "The CloudFront rules must be TCP 443 only."
+  }
+
+  assert {
+    condition     = aws_security_group.cf_origin_v4.name != aws_security_group.cf_origin_v6.name && endswith(aws_security_group.cf_origin_v4.name, "-cf-origin-v4") && endswith(aws_security_group.cf_origin_v6.name, "-cf-origin-v6")
+    error_message = "Two separate groups, one per prefix list (each list counts 55 of the 60 rules per group)."
+  }
+
+  assert {
+    condition     = aws_instance.web.vpc_security_group_ids == toset([aws_security_group.web.id, aws_security_group.cf_origin_v4.id, aws_security_group.cf_origin_v6.id])
+    error_message = "The instance must carry the web group and both CloudFront groups."
+  }
+}
+
+run "port_80_stays_open_for_acme" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.http.from_port == 80,
+      aws_vpc_security_group_ingress_rule.http.to_port == 80,
+      aws_vpc_security_group_ingress_rule.http.cidr_ipv4 == "0.0.0.0/0",
+      aws_vpc_security_group_ingress_rule.http_ipv6.from_port == 80,
+      aws_vpc_security_group_ingress_rule.http_ipv6.to_port == 80,
+      aws_vpc_security_group_ingress_rule.http_ipv6.cidr_ipv6 == "::/0",
+    ])
+    error_message = "Port 80 must stay open to the world on IPv4 and IPv6 for the ACME HTTP-01 challenge."
+  }
+}
+
+# ── CloudFront 5xx alarm ─────────────────────────────────────
+
+run "cloudfront_5xx_alarm_thresholds" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.namespace == "AWS/CloudFront",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.metric_name == "5xxErrorRate",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.statistic == "Average",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.period == 300,
+    ])
+    error_message = "The alarm must watch the 5xxErrorRate average over five-minute periods."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.threshold == 5,
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.comparison_operator == "GreaterThanThreshold",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.evaluation_periods == 3,
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.datapoints_to_alarm == 2,
+    ])
+    error_message = "The alarm must fire above 5 percent for 2 of 3 periods."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.cloudfront_5xx.treat_missing_data == "notBreaching"
+    error_message = "Missing data must not count as a breach."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.cloudfront_5xx.dimensions["Region"] == "Global" && contains(keys(aws_cloudwatch_metric_alarm.cloudfront_5xx.dimensions), "DistributionId")
+    error_message = "The alarm needs the DistributionId and Region=Global dimensions."
+  }
+
+  assert {
+    condition     = length(aws_cloudwatch_metric_alarm.cloudfront_5xx.alarm_actions) == 1
+    error_message = "The alarm must notify the topic."
+  }
+}
+
+run "alarm_topic_is_encrypted" {
+  command = plan
+
+  assert {
+    condition     = aws_kms_key.alarms.enable_key_rotation == true
+    error_message = "The alarm topic key must rotate."
+  }
+
+  assert {
+    condition     = aws_sns_topic.alarms.kms_master_key_id != null
+    error_message = "The alarm topic must be encrypted."
+  }
+}
+
+run "no_alarm_subscription_without_an_email" {
+  command = plan
+
+  variables {
+    alarm_email = ""
+  }
+
+  assert {
+    condition     = length(aws_sns_topic_subscription.alarm_email) == 0
+    error_message = "No subscription may exist while alarm_email is empty."
+  }
+}
+
+run "alarm_subscription_with_an_email" {
+  command = plan
+
+  variables {
+    alarm_email = "alarms@example.test"
+  }
+
+  assert {
+    condition     = length(aws_sns_topic_subscription.alarm_email) == 1
+    error_message = "One subscription must exist when alarm_email is set."
+  }
+
+  assert {
+    condition     = aws_sns_topic_subscription.alarm_email[0].protocol == "email"
+    error_message = "The subscription must use the email protocol."
+  }
+}
+
+# ── Uptime health check and alarm ────────────────────────────
+
+run "site_health_check_is_https_with_sni" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_route53_health_check.site.type == "HTTPS",
+      aws_route53_health_check.site.fqdn == var.frontend_primary_domain,
+      aws_route53_health_check.site.port == 443,
+      aws_route53_health_check.site.resource_path == "/",
+      aws_route53_health_check.site.enable_sni == true,
+    ])
+    error_message = "The health check must be HTTPS on port 443 for the primary domain, path /, with SNI."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_route53_health_check.site.request_interval == 30,
+      aws_route53_health_check.site.failure_threshold == 3,
+    ])
+    error_message = "The health check must use a 30 second interval and three failures."
+  }
+
+  assert {
+    condition     = length(aws_route53_health_check.site.regions) == 3
+    error_message = "Use the minimum of three checking regions to keep the load low."
+  }
+}
+
+run "site_uptime_alarm_follows_the_aws_guidance" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.site_uptime.namespace == "AWS/Route53",
+      aws_cloudwatch_metric_alarm.site_uptime.metric_name == "HealthCheckStatus",
+      aws_cloudwatch_metric_alarm.site_uptime.statistic == "Minimum",
+      aws_cloudwatch_metric_alarm.site_uptime.period == 60,
+    ])
+    error_message = "The alarm must watch the Minimum of HealthCheckStatus over one-minute periods."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.site_uptime.threshold == 1,
+      aws_cloudwatch_metric_alarm.site_uptime.comparison_operator == "LessThanThreshold",
+      aws_cloudwatch_metric_alarm.site_uptime.evaluation_periods == 2,
+      aws_cloudwatch_metric_alarm.site_uptime.datapoints_to_alarm == 2,
+    ])
+    error_message = "The alarm must fire below 1 for 2 consecutive periods."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.site_uptime.treat_missing_data == "breaching"
+    error_message = "A health check that stops reporting must count as a breach."
+  }
+
+  assert {
+    condition     = length(aws_cloudwatch_metric_alarm.site_uptime.alarm_actions) == 1 && length(aws_cloudwatch_metric_alarm.site_uptime.ok_actions) == 1
+    error_message = "The alarm must notify the same topic on alarm and on recovery."
+  }
+
+  assert {
+    condition     = contains(keys(aws_cloudwatch_metric_alarm.site_uptime.dimensions), "HealthCheckId")
+    error_message = "The alarm needs the HealthCheckId dimension."
+  }
+}
+
+run "alarm_key_policy_is_scoped_to_alarms_in_this_account" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for s in data.aws_iam_policy_document.alarm_key.statement : anytrue([
+        for c in s.condition :
+        c.test == "ArnLike" && c.variable == "aws:SourceArn" && contains(c.values, "arn:aws:cloudwatch:us-east-1:123456789012:alarm:*")
+      ]) if s.sid == "CloudWatchAlarmsPublish"
+    ])
+    error_message = "The CloudWatch statement must carry an ArnLike aws:SourceArn condition for alarms in this account in us-east-1."
+  }
+
+  assert {
+    condition = anytrue([
+      for s in data.aws_iam_policy_document.alarm_key.statement : anytrue([
+        for c in s.condition :
+        c.test == "StringEquals" && c.variable == "aws:SourceAccount"
+      ]) if s.sid == "CloudWatchAlarmsPublish"
+    ])
+    error_message = "The aws:SourceAccount condition must stay next to the SourceArn one."
+  }
 }

@@ -24,12 +24,16 @@
 # ============================================================
 
 resource "aws_instance" "web" {
-  ami                    = data.aws_ssm_parameter.al2023_arm64.value
-  instance_type          = var.instance_type
-  subnet_id              = aws_subnet.public_1a.id
-  iam_instance_profile   = aws_iam_instance_profile.ec2.name
-  vpc_security_group_ids = [aws_security_group.web.id]
-  key_name               = aws_key_pair.web.key_name
+  ami                  = data.aws_ssm_parameter.al2023_arm64.value
+  instance_type        = var.instance_type
+  subnet_id            = aws_subnet.public_1a.id
+  iam_instance_profile = aws_iam_instance_profile.ec2.name
+  vpc_security_group_ids = [
+    aws_security_group.web.id,
+    aws_security_group.cf_origin_v4.id,
+    aws_security_group.cf_origin_v6.id,
+  ]
+  key_name = aws_key_pair.web.key_name
 
   # One IPv6 address from the subnet's /64.
   ipv6_address_count = var.assign_ipv6_address ? 1 : 0

@@ -75,13 +75,41 @@ resource "aws_cloudfront_origin_request_policy" "site" {
   }
 }
 
+# Content-Security-Policy sent by the edge. One directive per line in the
+# file below, which is the single source: this module reads it, and the local
+# preview server and the browser tests read the same file. It carries every
+# directive EXCEPT script-src and default-src, which Angular autoCsp writes
+# into a meta tag on each page; both policies apply, and a script-src or
+# default-src here would block the hashed scripts (Angular security guide:
+# https://angular.dev/best-practices/security).
+# CloudFront limits the value to 1783 characters (checked in the tests).
+locals {
+  edge_csp_directives = [
+    for line in split("\n", file("${path.module}/csp/content-security-policy.txt")) : trimspace(line)
+    if trimspace(line) != ""
+  ]
+  edge_csp_value = join("; ", local.edge_csp_directives)
+
+  # Report-only value: the same policy without upgrade-insecure-requests.
+  # The W3C Upgrade Insecure Requests specification (section 3.1) says the
+  # directive is ignored in a Content-Security-Policy-Report-Only header, and
+  # Chromium logs a console warning for it. Enforce mode keeps it.
+  # https://www.w3.org/TR/upgrade-insecure-requests/
+  edge_csp_value_report_only = join("; ", [
+    for d in local.edge_csp_directives : d
+    if d != "upgrade-insecure-requests"
+  ])
+}
+
 # Response headers policy. override = true so these values win over any
-# header the origin (or S3) also sets. NO Content-Security-Policy here:
-# it arrives in a later change, and must then OMIT script-src and default-src
-# because Angular autoCsp supplies those in a meta tag.
+# header the origin (or S3) also sets. The CSP is sent as
+# Content-Security-Policy ("enforce", the default) or as the custom header
+# Content-Security-Policy-Report-Only ("report-only", the rollback), chosen by
+# var.csp_header_mode. It must OMIT script-src and default-src (see above).
+# The report-only value also omits upgrade-insecure-requests (see above).
 resource "aws_cloudfront_response_headers_policy" "site" {
   name    = "${var.project_name}-site-security"
-  comment = "HSTS, nosniff, frame options, referrer policy and permissions policy. CSP is added in a later change."
+  comment = "HSTS, nosniff, frame options, referrer policy, permissions policy and the content security policy (${var.csp_header_mode})."
 
   security_headers_config {
     strict_transport_security {
@@ -104,14 +132,34 @@ resource "aws_cloudfront_response_headers_policy" "site" {
       referrer_policy = "strict-origin-when-cross-origin"
       override        = true
     }
+
+    dynamic "content_security_policy" {
+      for_each = var.csp_header_mode == "enforce" ? [local.edge_csp_value] : []
+
+      content {
+        content_security_policy = content_security_policy.value
+        override                = true
+      }
+    }
   }
 
-  # No first-class block exists for Permissions-Policy, so it is a custom header.
+  # No first-class block exists for Permissions-Policy or for the report-only
+  # CSP, so they are custom headers.
   custom_headers_config {
     items {
       header   = "Permissions-Policy"
       value    = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()"
       override = true
+    }
+
+    dynamic "items" {
+      for_each = var.csp_header_mode == "report-only" ? [local.edge_csp_value_report_only] : []
+
+      content {
+        header   = "Content-Security-Policy-Report-Only"
+        value    = items.value
+        override = true
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
   CSP_DIRECTIVES,
+  CSP_FILE,
   HTML_CACHE,
   IMMUTABLE,
   cacheControlFor,
@@ -25,6 +27,18 @@ describe('cacheControlFor', () => {
     expect(cacheControlFor('/img/abc/480.webp', '/x/480.webp')).toBe(IMMUTABLE);
     expect(cacheControlFor('/main-ABCD1234.js', '/s/main-ABCD1234.js')).toBe(IMMUTABLE);
     expect(cacheControlFor('/media/font-Z6A7XZ4N.woff2', '/s/media/font-Z6A7XZ4N.woff2')).toBe(IMMUTABLE);
+  });
+  it('treats mixed-case lazy chunks as immutable but not plain words', () => {
+    expect(cacheControlFor('/chunk-AbC12xYz.js', '/s/chunk-AbC12xYz.js')).toBe(IMMUTABLE);
+    expect(cacheControlFor('/chunk-q7Zk3mWp.js', '/s/chunk-q7Zk3mWp.js')).toBe(IMMUTABLE);
+    for (const name of ['chunk-BNxVV_zf.js', 'chunk-BmH-7wXC.js', 'chunk-Bs-9zVH8.js', 'chunk-C7ga-4Cc.js', 'chunk-Wuje_-av.js']) {
+      expect(cacheControlFor(`/${name}`, `/s/${name}`)).toBe(IMMUTABLE);
+    }
+    expect(cacheControlFor('/chunk-abc-defg.js', '/s/chunk-abc-defg.js')).toBe('no-cache');
+    expect(cacheControlFor('/lazy-document.js', '/s/lazy-document.js')).toBe('no-cache');
+    expect(cacheControlFor('/chunk-abcdefgh.js', '/s/chunk-abcdefgh.js')).toBe('no-cache');
+    expect(cacheControlFor('/chunk-AbC12xY.js', '/s/chunk-AbC12xY.js')).toBe('no-cache');
+    expect(cacheControlFor('/app.js', '/s/app.js')).toBe('no-cache');
   });
   it('gives HTML no-cache with stale-if-error', () => {
     expect(cacheControlFor('/biography', '/s/biography.html')).toBe(HTML_CACHE);
@@ -73,5 +87,16 @@ describe('csp', () => {
     expect(joined).not.toContain('script-src');
     expect(joined).not.toContain('default-src');
     expect(joined).toContain("object-src 'none'");
+  });
+});
+
+describe('csp single source', () => {
+  it('is read from the file Terraform uses, one directive per entry, with no empty entries', () => {
+    const fromFile = readFileSync(CSP_FILE, 'utf8')
+      .split(/\r?\n/)
+      .filter((l) => l.trim() !== '');
+    expect(CSP_DIRECTIVES).toEqual(fromFile);
+    expect(CSP_DIRECTIVES).toContain('upgrade-insecure-requests');
+    expect(CSP_DIRECTIVES.every((d) => d === d.trim() && !d.includes(';'))).toBe(true);
   });
 });

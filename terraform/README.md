@@ -18,7 +18,8 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 |---|---|
 | `versions.tf` | Terraform/provider pins + HCP Terraform workspace |
 | `vpc.tf` | Dual-stack VPC (IPv4 /16 + AWS IPv6 /56), 2 public subnets, IGW, routes |
-| `security_groups.tf` | 80/443 open v4+v6 (443 is locked to CloudFront in the lockdown change), SSH closed by default, rule resources (no inline) |
+| `security_groups.tf` | 80 open v4+v6 (ACME only), 443 only from the CloudFront origin-facing prefix lists (two groups, one per list), SSH closed by default, rule resources (no inline) |
+| `alarms.tf` | CloudFront 5xx rate alarm, encrypted SNS topic and optional email subscription, all in us-east-1 |
 | `keypair.tf` | ED25519 emergency-SSH key pair; private key only in Secrets Manager |
 | `iam.tf` | GitHub OIDC deploy role + EC2 instance role — least-privilege, Terraform-managed |
 | `s3.tf` | Versioned, encrypted, TLS-only artifacts bucket with lifecycle expiry |
@@ -30,6 +31,7 @@ This stack is **self-contained** (one AWS account, one site, one workspace). If 
 | `cloudfront.tf` | Distribution (http2and3, IPv6, https-only origin with secret header, `/img/*` behaviour) + ACM cert in us-east-1 |
 | `cloudfront_policies.tf` | Site cache policy (empty key), origin request policy (forwards the query string, not keyed) and response headers policy |
 | `cloudfront_functions.tf`, `functions/` | www to apex 301 at the edge, with a Node unit test |
+| `domain.tf` | Route 53 Domains registration (name servers, transfer lock, auto renew, WHOIS privacy); off until `manage_domain_registration` is true after the transfer |
 | `tests/unit.tftest.hcl` | Plan-only tests with mock providers — no credentials needed |
 | `tests/retained-resources.sh` | Static check that retained resources keep `prevent_destroy` |
 | `.tflint.hcl` | Lint settings (the misconfiguration scan's accepted-risk list is kept private) |
@@ -84,7 +86,7 @@ The account already has the GitHub OIDC identity provider (created manually per 
 |---|---|
 | `origin_verify_secret` | Required. Value of the `X-Origin-Verify` header, 32 to 64 alphanumeric characters (generate with `openssl rand -hex 32`, which is 64). |
 | `origin_verify_secret_previous` | Leave empty except during a rotation. Same format and length limits. |
-| `alarm_email` | Optional, used by the alarm change. |
+| `alarm_email` | Optional. Address for the CloudFront 5xx alarm. Empty means no subscription. SNS emails a confirmation link that must be clicked. |
 
 ### 4. GitHub repository settings
 

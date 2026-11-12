@@ -1,21 +1,15 @@
+import { readFileSync } from 'node:fs';
 import { extname } from 'node:path';
 
-/** Content-Security-Policy for the local report-only phase (no script-src or default-src yet). */
-export const CSP_DIRECTIVES = [
-  "object-src 'none'",
-  "base-uri 'self'",
-  "frame-ancestors 'self'",
-  "frame-src 'none'",
-  "form-action 'self'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "style-src 'self' 'unsafe-inline'",
-  "connect-src 'self'",
-  "manifest-src 'self'",
-  "media-src 'self'",
-  "worker-src 'none'",
-  'upgrade-insecure-requests',
-];
+/**
+ * The edge content security policy (no script-src or default-src: they come from the page meta tag). The text is
+ * read from the one file Terraform also reads, so the preview, the browser tests and the edge cannot drift.
+ */
+export const CSP_FILE = new URL('../../../terraform/csp/content-security-policy.txt', import.meta.url);
+export const CSP_DIRECTIVES = readFileSync(CSP_FILE, 'utf8')
+  .split('\n')
+  .map((line) => line.trim())
+  .filter((line) => line !== '');
 
 /** Headers the CloudFront response headers policy adds in production (no HSTS: the preview is plain http). */
 export const EDGE_HEADERS = {
@@ -53,8 +47,13 @@ export function mimeFor(file) {
   return MIME[extname(file).toLowerCase()] ?? 'application/octet-stream';
 }
 
-/** Angular output hashing: a dash, eight upper-case letters or digits, then the extension. */
-const HASHED = /-[A-Z0-9]{8}\.(?:js|css|woff2?|png|jpe?g|webp|svg|gif|ico)$/;
+/**
+ * Angular output hashing: a dash, eight base64url characters (letters, digits, _ or -), then the extension.
+ * Main and styles hashes are upper case, lazy chunks are mixed case. The lookahead
+ * wants a digit or an upper-case letter, so a plain lower-case word is not a hash.
+ * Keep in line with the cache map in deploy/nginx/henniefrancis-tech.conf.
+ */
+const HASHED = /-(?=[A-Za-z0-9_-]*[A-Z0-9])[A-Za-z0-9_-]{8}\.(?:js|css|woff2?|png|jpe?g|webp|svg|gif|ico)$/;
 
 /** Cache-Control rules. `file` is the served file path, `urlPath` the request path. */
 export function cacheControlFor(urlPath, file) {

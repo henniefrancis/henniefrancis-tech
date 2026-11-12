@@ -63,6 +63,12 @@ variable "frontend_primary_domain" {
   default     = "henniefrancis.tech"
 }
 
+variable "manage_domain_registration" {
+  description = "Manage the Route 53 Domains registration of the primary domain. Set to true only after the domain transfer to Route 53 has completed."
+  type        = bool
+  default     = false
+}
+
 variable "frontend_alternate_domains" {
   description = "Additional public domains (SANs / CloudFront aliases)."
   type        = list(string)
@@ -122,7 +128,7 @@ variable "other_project_records" {
     Records for other projects hosted on subdomains of this domain. This is
     data, not code: add or change entries here. Map of a free label =>
     record, where name is relative to the zone (no trailing dot). TXT values
-    are given unquoted; the stack adds the quotes Route 53 requires.
+    are given unquoted; the AWS provider adds the quotes Route 53 requires.
   EOT
   type = map(object({
     name    = string
@@ -351,6 +357,17 @@ variable "hsts_include_subdomains" {
   default     = false
 }
 
+variable "csp_header_mode" {
+  description = "How the edge sends the content security policy: \"report-only\" (Content-Security-Policy-Report-Only, nothing is blocked) or \"enforce\" (Content-Security-Policy, the default). Report-only is the rollback setting if the enforced policy blocks something on production."
+  type        = string
+  default     = "enforce"
+
+  validation {
+    condition     = contains(["report-only", "enforce"], var.csp_header_mode)
+    error_message = "csp_header_mode must be \"report-only\" or \"enforce\"."
+  }
+}
+
 # ── Content pipeline and alarms ──────────────────────────────
 
 variable "config_repository" {
@@ -364,8 +381,7 @@ variable "config_repository" {
   }
 }
 
-# Consumed by the CloudFront 5xx alarm in a later change.
-# tflint-ignore: terraform_unused_declarations
+# Consumed by the CloudFront 5xx alarm (alarms.tf).
 variable "alarm_email" {
   description = "Email address for CloudFront 5xx alarms. Sensitive HCP Terraform variable; empty means an alarm without a subscriber."
   type        = string
