@@ -378,7 +378,7 @@ run "site_cache_policy_has_empty_key" {
   }
 }
 
-run "response_headers_policy_has_security_headers_without_csp" {
+run "response_headers_policy_has_security_headers_and_no_enforced_csp_by_default" {
   command = plan
 
   assert {
@@ -411,7 +411,7 @@ run "response_headers_policy_has_security_headers_without_csp" {
 
   assert {
     condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 0
-    error_message = "No CSP header until the CSP change."
+    error_message = "The default mode is report-only, so no enforced CSP block (see the csp_ runs below)."
   }
 }
 
@@ -1041,4 +1041,130 @@ run "domain_registration_points_at_this_zone" {
     )
     error_message = "Contact details are personal data and must not be set in this public repo."
   }
+}
+
+# ------------------------------------------------------------
+# Content security policy header. The policy text lives in
+# csp/content-security-policy.txt (single source, also read by the
+# preview server and the browser tests). The literals below are
+# deliberately a second copy: changing the policy must be a conscious
+# edit in both places.
+#
+# Report-only mode sends the policy WITHOUT upgrade-insecure-requests,
+# which browsers ignore (and warn about) in a report-only header.
+# Enforce mode sends it.
+# ------------------------------------------------------------
+
+run "csp_report_only_is_the_default_mode" {
+  command = plan
+
+  assert {
+    condition     = var.csp_header_mode == "report-only"
+    error_message = "csp_header_mode must default to report-only."
+  }
+
+  assert {
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 0
+    error_message = "Report-only mode must not send the enforced Content-Security-Policy."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Content-Security-Policy-Report-Only"]) == 1
+    error_message = "Report-only mode must send exactly one Content-Security-Policy-Report-Only custom header."
+  }
+
+  assert {
+    condition     = one([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i.value if i.header == "Content-Security-Policy-Report-Only"]) == "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; frame-src 'none'; form-action 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; media-src 'self'; worker-src 'none'"
+    error_message = "The report-only value must be the exact policy without upgrade-insecure-requests."
+  }
+
+  assert {
+    condition     = !strcontains(one([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i.value if i.header == "Content-Security-Policy-Report-Only"]), "upgrade-insecure-requests")
+    error_message = "A report-only header must not carry upgrade-insecure-requests: browsers ignore it there and log a warning."
+  }
+
+  assert {
+    condition     = one([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i.override if i.header == "Content-Security-Policy-Report-Only"]) == true
+    error_message = "The report-only header must override any origin value."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Permissions-Policy"]) == 1
+    error_message = "Permissions-Policy must stay in report-only mode."
+  }
+}
+
+run "csp_enforce_mode_sends_the_enforced_header" {
+  command = plan
+
+  variables {
+    csp_header_mode = "enforce"
+  }
+
+  assert {
+    condition     = length(aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy) == 1
+    error_message = "Enforce mode must set security_headers_config.content_security_policy."
+  }
+
+  assert {
+    condition     = aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy[0].content_security_policy == "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; frame-src 'none'; form-action 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; media-src 'self'; worker-src 'none'; upgrade-insecure-requests"
+    error_message = "The enforced value must be the exact policy, including upgrade-insecure-requests."
+  }
+
+  assert {
+    condition     = aws_cloudfront_response_headers_policy.site.security_headers_config[0].content_security_policy[0].override == true
+    error_message = "The enforced header must override any origin value."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Content-Security-Policy-Report-Only"]) == 0
+    error_message = "Enforce mode must not also send the report-only header."
+  }
+
+  assert {
+    condition     = length([for i in aws_cloudfront_response_headers_policy.site.custom_headers_config[0].items : i if i.header == "Permissions-Policy"]) == 1
+    error_message = "Permissions-Policy must stay in enforce mode."
+  }
+}
+
+# The policy must never carry default-src or script-src (autoCsp puts them in
+# the meta tag; here they would block the hashed scripts), must fit the
+# CloudFront limit, and must keep the directives that make it useful.
+run "csp_policy_text_rules" {
+  command = plan
+
+  assert {
+    condition     = !can(regex("(^|; )(default-src|script-src)", local.edge_csp_value))
+    error_message = "The edge policy must not contain default-src or script-src."
+  }
+
+  assert {
+    condition     = length(local.edge_csp_value) <= 1783
+    error_message = "CloudFront limits the policy value to 1783 characters."
+  }
+
+  assert {
+    condition     = alltrue([for d in ["object-src 'none'", "base-uri 'self'", "frame-ancestors 'self'", "form-action 'self'", "upgrade-insecure-requests"] : contains(local.edge_csp_directives, d)])
+    error_message = "Core directives are missing from the policy."
+  }
+
+  assert {
+    condition     = !can(regex("[\\r\\n;]$", local.edge_csp_value)) && !can(regex("\\s{2,}", local.edge_csp_value))
+    error_message = "The policy must be one clean line without trailing separators or repeated spaces."
+  }
+
+  assert {
+    condition     = local.edge_csp_value_report_only == join("; ", [for d in local.edge_csp_directives : d if d != "upgrade-insecure-requests"]) && length(split("; ", local.edge_csp_value_report_only)) == length(local.edge_csp_directives) - 1
+    error_message = "The report-only value must be the single source minus exactly the upgrade-insecure-requests directive."
+  }
+}
+
+run "csp_invalid_mode_is_rejected" {
+  command = plan
+
+  variables {
+    csp_header_mode = "log-only"
+  }
+
+  expect_failures = [var.csp_header_mode]
 }

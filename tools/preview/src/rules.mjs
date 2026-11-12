@@ -1,21 +1,15 @@
+import { readFileSync } from 'node:fs';
 import { extname } from 'node:path';
 
-/** Content-Security-Policy for the local report-only phase (no script-src or default-src yet). */
-export const CSP_DIRECTIVES = [
-  "object-src 'none'",
-  "base-uri 'self'",
-  "frame-ancestors 'self'",
-  "frame-src 'none'",
-  "form-action 'self'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "style-src 'self' 'unsafe-inline'",
-  "connect-src 'self'",
-  "manifest-src 'self'",
-  "media-src 'self'",
-  "worker-src 'none'",
-  'upgrade-insecure-requests',
-];
+/**
+ * The edge content security policy (no script-src or default-src: they come from the page meta tag). The text is
+ * read from the one file Terraform also reads, so the preview, the browser tests and the edge cannot drift.
+ */
+export const CSP_FILE = new URL('../../../terraform/csp/content-security-policy.txt', import.meta.url);
+export const CSP_DIRECTIVES = readFileSync(CSP_FILE, 'utf8')
+  .split('\n')
+  .map((line) => line.trim())
+  .filter((line) => line !== '');
 
 /** Headers the CloudFront response headers policy adds in production (no HSTS: the preview is plain http). */
 export const EDGE_HEADERS = {

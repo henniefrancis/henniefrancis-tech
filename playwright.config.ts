@@ -12,6 +12,8 @@ import { PROJECTS } from './e2e/lib/devices';
  * - EXPECT_EDGE=1: with BASE_URL set, also run the edge header checks (production after cutover).
  * - E2E_CSP_ENFORCE=1: the local preview also sends the enforced Content-Security-Policy header (the policy the
  *   edge carries). Images come from the site origin, so use it together with E2E_IMG_DIR.
+ *   The text is read from terraform/csp/content-security-policy.txt. e2e/functional/csp-header.spec.ts needs this (or
+ *   BASE_URL) and fails on any policy violation on every route and the 404 page.
  * - E2E_DIST: directory the preview serves (default: the Angular browser output).
  * - E2E_IMG_DIR: serve /img/* from this directory (layout <id>/<width>.webp) instead of the site image store.
  * - Suites are selected with tags: `--grep @visual`, `--grep @capture`, and

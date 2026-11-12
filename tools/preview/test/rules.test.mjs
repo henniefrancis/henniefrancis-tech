@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
   CSP_DIRECTIVES,
+  CSP_FILE,
   HTML_CACHE,
   IMMUTABLE,
   cacheControlFor,
@@ -73,5 +75,16 @@ describe('csp', () => {
     expect(joined).not.toContain('script-src');
     expect(joined).not.toContain('default-src');
     expect(joined).toContain("object-src 'none'");
+  });
+});
+
+describe('csp single source', () => {
+  it('is read from the file Terraform uses, one directive per entry, with no empty entries', () => {
+    const fromFile = readFileSync(CSP_FILE, 'utf8')
+      .split(/\r?\n/)
+      .filter((l) => l.trim() !== '');
+    expect(CSP_DIRECTIVES).toEqual(fromFile);
+    expect(CSP_DIRECTIVES).toContain('upgrade-insecure-requests');
+    expect(CSP_DIRECTIVES.every((d) => d === d.trim() && !d.includes(';'))).toBe(true);
   });
 });

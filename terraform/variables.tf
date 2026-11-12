@@ -357,6 +357,17 @@ variable "hsts_include_subdomains" {
   default     = false
 }
 
+variable "csp_header_mode" {
+  description = "How the edge sends the content security policy: \"report-only\" (Content-Security-Policy-Report-Only, nothing is blocked) or \"enforce\" (Content-Security-Policy). Start in report-only, switch to enforce after a clean check on production."
+  type        = string
+  default     = "report-only"
+
+  validation {
+    condition     = contains(["report-only", "enforce"], var.csp_header_mode)
+    error_message = "csp_header_mode must be \"report-only\" or \"enforce\"."
+  }
+}
+
 # ── Content pipeline and alarms ──────────────────────────────
 
 variable "config_repository" {
