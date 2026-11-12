@@ -358,9 +358,9 @@ variable "hsts_include_subdomains" {
 }
 
 variable "csp_header_mode" {
-  description = "How the edge sends the content security policy: \"report-only\" (Content-Security-Policy-Report-Only, nothing is blocked) or \"enforce\" (Content-Security-Policy). Start in report-only, switch to enforce after a clean check on production."
+  description = "How the edge sends the content security policy: \"report-only\" (Content-Security-Policy-Report-Only, nothing is blocked) or \"enforce\" (Content-Security-Policy, the default). Report-only is the rollback setting if the enforced policy blocks something on production."
   type        = string
-  default     = "report-only"
+  default     = "enforce"
 
   validation {
     condition     = contains(["report-only", "enforce"], var.csp_header_mode)
