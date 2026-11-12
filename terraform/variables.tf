@@ -63,6 +63,12 @@ variable "frontend_primary_domain" {
   default     = "henniefrancis.tech"
 }
 
+variable "manage_domain_registration" {
+  description = "Manage the Route 53 Domains registration of the primary domain. Set to true only after the domain transfer to Route 53 has completed."
+  type        = bool
+  default     = false
+}
+
 variable "frontend_alternate_domains" {
   description = "Additional public domains (SANs / CloudFront aliases)."
   type        = list(string)
