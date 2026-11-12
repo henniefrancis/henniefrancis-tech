@@ -216,93 +216,38 @@ http {
 __NGINX_MAIN__
 
 # ── 6. Site config (bootstrap) ────────────────────────────────
-# HTTP-only bootstrap, so a rebuilt instance can answer the ACME
-# challenge and serve the placeholder page. The full config, with the
-# 443 server for the CloudFront origin, ships with every deploy from
-# deploy/nginx/henniefrancis-tech.conf in the site repo. That file is the
-# source of truth; the deploy installs it over this one after `nginx -t`.
-# Keep the caching and clean URL rules below in line with it.
+# ACME-only bootstrap, the same shape as port 80 in the full config: a
+# rebuilt instance can answer the Let's Encrypt challenge for
+# ${domain_name} and nothing else (everything else gets no response, 444).
+# The origin is locked down to CloudFront on 443 and serves no public
+# content on port 80. The full config, with the 443 server for the
+# CloudFront origin and the origin verify check, ships with every deploy
+# from deploy/nginx/henniefrancis-tech.conf in the site repo. That file is
+# the source of truth; the deploy installs it over this one after
+# `nginx -t`. Keep the port 80 block below in line with it.
 #
 # ORDER FOR A REBUILD (see the origin certificate runbook):
 #   1. this bootstrap runs (port 80, ACME works)
 #   2. the owner runs certbot for ${domain_name} (webroot)
 #   3. the next deploy installs the full config and renders the origin
 #      verify include from SSM
-#
-# CACHING:
-#   HTML                         no-cache, stale-if-error=86400
-#   hashed JS/CSS/fonts/images   public, max-age=31536000, immutable
-#   everything else              no-cache
-# CloudFront honours these through the site cache policy (origin
-# Cache-Control decides).
 mkdir -p /etc/nginx/origin-verify.d
 
 cat > /etc/nginx/conf.d/${project_name}.conf << '__NGINX_SITE__'
-map_hash_bucket_size 128;
-
-map $uri $hft_cache_control {
-    default "no-cache";
-    "~\.html$" "no-cache, stale-if-error=86400";
-    "~-[A-Z0-9]{8}\.(?:js|css|woff2?|svg|png|jpe?g|gif|webp|ico)$" "public, max-age=31536000, immutable";
-}
-
-# www -> apex.
-server {
-    listen 80;
-    listen [::]:80;
-    server_name ${www_domain};
-
-    location ^~ /.well-known/acme-challenge/ {
-        alias /var/www/certbot/.well-known/acme-challenge/;
-    }
-
-    location / {
-        return 301 https://${public_domain}$request_uri;
-    }
-}
-
-# Public names and the origin name, HTTP only until the full config arrives.
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
-    server_name ${public_domain} ${domain_name};
-
-    root /var/www/${project_name}/html;
-    index index.html;
-
-    limit_req zone=general burst=30 nodelay;
-
-    add_header X-Frame-Options        "SAMEORIGIN"                              always;
-    add_header X-Content-Type-Options "nosniff"                                 always;
-    add_header Referrer-Policy        "strict-origin-when-cross-origin"         always;
-    add_header Permissions-Policy     "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()" always;
-    add_header Cache-Control          $hft_cache_control                        always;
-
-    # Location stays relative: behind CloudFront the Host header is the
-    # origin hostname, which must never leak into a redirect.
-    absolute_redirect off;
+    server_name _;
 
     location ^~ /.well-known/acme-challenge/ {
         alias /var/www/certbot/.well-known/acme-challenge/;
+
+        limit_req zone=general burst=30 nodelay;
+        limit_req_status 429;
     }
 
-    error_page 404 /404.html;
-    location = /404.html {
-    }
-
-    error_page 500 502 503 504 /50x.html;
-    location = /50x.html {
-    }
-
-    location ~ /\. {
-        deny all;
-        access_log off;
-        log_not_found off;
-    }
-
-    # Clean URLs without a directory redirect.
     location / {
-        try_files $uri $uri/index.html $uri.html =404;
+        return 444;
     }
 }
 __NGINX_SITE__

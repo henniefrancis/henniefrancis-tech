@@ -95,6 +95,12 @@ jobs:
       - name: Production build
         run: npm run build
 
+      # The immutable cache rule in the nginx file must match every hashed
+      # script, style and font the build emitted, and no file copied from
+      # public/ (the rule is read from the nginx file, so it cannot drift).
+      - name: Cache rule check on the build output
+        run: node deploy/nginx/check-cache-map.mjs "$DIST_DIR" public
+
       # Every page has one policy, every inline script is hashed in it and no
       # external script tag or inline event handler is left.
       - name: Script policy check on the build output
@@ -208,6 +214,13 @@ jobs:
           else
             echo "deploy=false" >> "$GITHUB_OUTPUT"
           fi
+          # Shell scripts live in deploy/, terraform/tests/ and .github/scripts/:
+          # a change to any of them runs shellcheck.
+          if grep -qE '^(deploy/.*\.sh|terraform/tests/.*\.sh|\.github/scripts/.*\.sh)$' <<< "$changed"; then
+            echo "shell=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "shell=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Setup Terraform
         if: steps.tf.outputs.changed == 'true'
@@ -277,12 +290,16 @@ jobs:
         if: steps.tf.outputs.changed == 'true'
         run: bash terraform/tests/retained-resources.sh
 
-      - name: Shellcheck (deploy scripts)
-        if: steps.tf.outputs.deploy == 'true'
+      - name: No world-open 443 check
+        if: steps.tf.outputs.changed == 'true'
+        run: bash terraform/tests/no-world-443.sh
+
+      - name: Shellcheck (deploy, terraform test and CI scripts)
+        if: steps.tf.outputs.shell == 'true'
         run: |
           set -euo pipefail
           shopt -s nullglob
-          shellcheck -x deploy/nginx/*.sh
+          shellcheck -x deploy/nginx/*.sh deploy/checks/*.sh terraform/tests/*.sh .github/scripts/*.sh
 
       - name: Origin verify render test
         if: steps.tf.outputs.deploy == 'true'
@@ -293,3 +310,11 @@ jobs:
       - name: Origin nginx config test
         if: steps.tf.outputs.deploy == 'true'
         run: bash deploy/nginx/nginx-config.test.sh
+
+      - name: Lockdown check script test
+        if: steps.tf.outputs.deploy == 'true'
+        run: bash deploy/checks/lockdown-check.test.sh
+
+      - name: Cache map check script test
+        if: steps.tf.outputs.deploy == 'true'
+        run: node --test deploy/nginx/check-cache-map.test.mjs

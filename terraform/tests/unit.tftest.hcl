@@ -77,6 +77,39 @@ override_resource {
 }
 
 override_resource {
+  target          = aws_kms_key.alarms
+  override_during = plan
+  values = {
+    arn = "arn:aws:kms:us-east-1:123456789012:key/00000000-0000-0000-0000-000000000000"
+  }
+}
+
+# Known group ids so the test can check which groups the instance carries.
+override_resource {
+  target          = aws_security_group.web
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000a"
+  }
+}
+
+override_resource {
+  target          = aws_security_group.cf_origin_v4
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000b"
+  }
+}
+
+override_resource {
+  target          = aws_security_group.cf_origin_v6
+  override_during = plan
+  values = {
+    id = "sg-0000000000000000c"
+  }
+}
+
+override_resource {
   target          = aws_eip.web
   override_during = plan
   values = {
@@ -90,6 +123,12 @@ variables {
 }
 
 mock_provider "aws" {
+  mock_data "aws_ec2_managed_prefix_list" {
+    defaults = {
+      id = "pl-0123456789abcdef0"
+    }
+  }
+
   mock_data "aws_ssm_parameter" {
     defaults = {
       value = "ami-0123456789abcdef0"
@@ -214,8 +253,8 @@ run "stack_is_dual_stack" {
   }
 
   assert {
-    condition     = aws_vpc_security_group_ingress_rule.https_ipv6.cidr_ipv6 == "::/0"
-    error_message = "HTTPS must be reachable over IPv6."
+    condition     = aws_vpc_security_group_ingress_rule.https_cloudfront_v6.ip_protocol == "tcp" && aws_vpc_security_group_ingress_rule.https_cloudfront_v6.to_port == 443
+    error_message = "HTTPS must be reachable over IPv6 (from the CloudFront IPv6 prefix list)."
   }
 }
 
@@ -1167,4 +1206,274 @@ run "csp_invalid_mode_is_rejected" {
   }
 
   expect_failures = [var.csp_header_mode]
+}
+
+# ── Origin lockdown: 443 only from CloudFront ────────────────
+
+run "https_is_not_open_to_the_world" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.cidr_ipv4 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.cidr_ipv6 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.cidr_ipv4 == null,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.cidr_ipv6 == null,
+    ])
+    error_message = "The 443 rules must use a prefix list only, never 0.0.0.0/0 or ::/0 (or any CIDR)."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.http.from_port != 443,
+      aws_vpc_security_group_ingress_rule.http_ipv6.from_port != 443,
+      aws_vpc_security_group_ingress_rule.http.to_port != 443,
+      aws_vpc_security_group_ingress_rule.http_ipv6.to_port != 443,
+    ])
+    error_message = "The world-open rules on the web group must not cover port 443."
+  }
+
+  assert {
+    condition     = length(aws_vpc_security_group_ingress_rule.ssh) == 0
+    error_message = "SSH stays closed by default."
+  }
+}
+
+run "cloudfront_groups_use_the_two_prefix_lists" {
+  command = plan
+
+  assert {
+    condition     = data.aws_ec2_managed_prefix_list.cloudfront_origin_v4.name == "com.amazonaws.global.cloudfront.origin-facing"
+    error_message = "The IPv4 group must use the CloudFront origin-facing prefix list."
+  }
+
+  assert {
+    condition     = data.aws_ec2_managed_prefix_list.cloudfront_origin_v6.name == "com.amazonaws.global.ipv6.cloudfront.origin-facing"
+    error_message = "The IPv6 group must use the CloudFront IPv6 origin-facing prefix list."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.prefix_list_id == data.aws_ec2_managed_prefix_list.cloudfront_origin_v4.id,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.prefix_list_id == data.aws_ec2_managed_prefix_list.cloudfront_origin_v6.id,
+    ])
+    error_message = "Each group's rule must reference its own prefix list."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.from_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.to_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v4.ip_protocol == "tcp",
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.from_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.to_port == 443,
+      aws_vpc_security_group_ingress_rule.https_cloudfront_v6.ip_protocol == "tcp",
+    ])
+    error_message = "The CloudFront rules must be TCP 443 only."
+  }
+
+  assert {
+    condition     = aws_security_group.cf_origin_v4.name != aws_security_group.cf_origin_v6.name && endswith(aws_security_group.cf_origin_v4.name, "-cf-origin-v4") && endswith(aws_security_group.cf_origin_v6.name, "-cf-origin-v6")
+    error_message = "Two separate groups, one per prefix list (each list counts 55 of the 60 rules per group)."
+  }
+
+  assert {
+    condition     = aws_instance.web.vpc_security_group_ids == toset([aws_security_group.web.id, aws_security_group.cf_origin_v4.id, aws_security_group.cf_origin_v6.id])
+    error_message = "The instance must carry the web group and both CloudFront groups."
+  }
+}
+
+run "port_80_stays_open_for_acme" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_vpc_security_group_ingress_rule.http.from_port == 80,
+      aws_vpc_security_group_ingress_rule.http.to_port == 80,
+      aws_vpc_security_group_ingress_rule.http.cidr_ipv4 == "0.0.0.0/0",
+      aws_vpc_security_group_ingress_rule.http_ipv6.from_port == 80,
+      aws_vpc_security_group_ingress_rule.http_ipv6.to_port == 80,
+      aws_vpc_security_group_ingress_rule.http_ipv6.cidr_ipv6 == "::/0",
+    ])
+    error_message = "Port 80 must stay open to the world on IPv4 and IPv6 for the ACME HTTP-01 challenge."
+  }
+}
+
+# ── CloudFront 5xx alarm ─────────────────────────────────────
+
+run "cloudfront_5xx_alarm_thresholds" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.namespace == "AWS/CloudFront",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.metric_name == "5xxErrorRate",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.statistic == "Average",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.period == 300,
+    ])
+    error_message = "The alarm must watch the 5xxErrorRate average over five-minute periods."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.threshold == 5,
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.comparison_operator == "GreaterThanThreshold",
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.evaluation_periods == 3,
+      aws_cloudwatch_metric_alarm.cloudfront_5xx.datapoints_to_alarm == 2,
+    ])
+    error_message = "The alarm must fire above 5 percent for 2 of 3 periods."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.cloudfront_5xx.treat_missing_data == "notBreaching"
+    error_message = "Missing data must not count as a breach."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.cloudfront_5xx.dimensions["Region"] == "Global" && contains(keys(aws_cloudwatch_metric_alarm.cloudfront_5xx.dimensions), "DistributionId")
+    error_message = "The alarm needs the DistributionId and Region=Global dimensions."
+  }
+
+  assert {
+    condition     = length(aws_cloudwatch_metric_alarm.cloudfront_5xx.alarm_actions) == 1
+    error_message = "The alarm must notify the topic."
+  }
+}
+
+run "alarm_topic_is_encrypted" {
+  command = plan
+
+  assert {
+    condition     = aws_kms_key.alarms.enable_key_rotation == true
+    error_message = "The alarm topic key must rotate."
+  }
+
+  assert {
+    condition     = aws_sns_topic.alarms.kms_master_key_id != null
+    error_message = "The alarm topic must be encrypted."
+  }
+}
+
+run "no_alarm_subscription_without_an_email" {
+  command = plan
+
+  variables {
+    alarm_email = ""
+  }
+
+  assert {
+    condition     = length(aws_sns_topic_subscription.alarm_email) == 0
+    error_message = "No subscription may exist while alarm_email is empty."
+  }
+}
+
+run "alarm_subscription_with_an_email" {
+  command = plan
+
+  variables {
+    alarm_email = "alarms@example.test"
+  }
+
+  assert {
+    condition     = length(aws_sns_topic_subscription.alarm_email) == 1
+    error_message = "One subscription must exist when alarm_email is set."
+  }
+
+  assert {
+    condition     = aws_sns_topic_subscription.alarm_email[0].protocol == "email"
+    error_message = "The subscription must use the email protocol."
+  }
+}
+
+# ── Uptime health check and alarm ────────────────────────────
+
+run "site_health_check_is_https_with_sni" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_route53_health_check.site.type == "HTTPS",
+      aws_route53_health_check.site.fqdn == var.frontend_primary_domain,
+      aws_route53_health_check.site.port == 443,
+      aws_route53_health_check.site.resource_path == "/",
+      aws_route53_health_check.site.enable_sni == true,
+    ])
+    error_message = "The health check must be HTTPS on port 443 for the primary domain, path /, with SNI."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_route53_health_check.site.request_interval == 30,
+      aws_route53_health_check.site.failure_threshold == 3,
+    ])
+    error_message = "The health check must use a 30 second interval and three failures."
+  }
+
+  assert {
+    condition     = length(aws_route53_health_check.site.regions) == 3
+    error_message = "Use the minimum of three checking regions to keep the load low."
+  }
+}
+
+run "site_uptime_alarm_follows_the_aws_guidance" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.site_uptime.namespace == "AWS/Route53",
+      aws_cloudwatch_metric_alarm.site_uptime.metric_name == "HealthCheckStatus",
+      aws_cloudwatch_metric_alarm.site_uptime.statistic == "Minimum",
+      aws_cloudwatch_metric_alarm.site_uptime.period == 60,
+    ])
+    error_message = "The alarm must watch the Minimum of HealthCheckStatus over one-minute periods."
+  }
+
+  assert {
+    condition = alltrue([
+      aws_cloudwatch_metric_alarm.site_uptime.threshold == 1,
+      aws_cloudwatch_metric_alarm.site_uptime.comparison_operator == "LessThanThreshold",
+      aws_cloudwatch_metric_alarm.site_uptime.evaluation_periods == 2,
+      aws_cloudwatch_metric_alarm.site_uptime.datapoints_to_alarm == 2,
+    ])
+    error_message = "The alarm must fire below 1 for 2 consecutive periods."
+  }
+
+  assert {
+    condition     = aws_cloudwatch_metric_alarm.site_uptime.treat_missing_data == "breaching"
+    error_message = "A health check that stops reporting must count as a breach."
+  }
+
+  assert {
+    condition     = length(aws_cloudwatch_metric_alarm.site_uptime.alarm_actions) == 1 && length(aws_cloudwatch_metric_alarm.site_uptime.ok_actions) == 1
+    error_message = "The alarm must notify the same topic on alarm and on recovery."
+  }
+
+  assert {
+    condition     = contains(keys(aws_cloudwatch_metric_alarm.site_uptime.dimensions), "HealthCheckId")
+    error_message = "The alarm needs the HealthCheckId dimension."
+  }
+}
+
+run "alarm_key_policy_is_scoped_to_alarms_in_this_account" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for s in data.aws_iam_policy_document.alarm_key.statement : anytrue([
+        for c in s.condition :
+        c.test == "ArnLike" && c.variable == "aws:SourceArn" && contains(c.values, "arn:aws:cloudwatch:us-east-1:123456789012:alarm:*")
+      ]) if s.sid == "CloudWatchAlarmsPublish"
+    ])
+    error_message = "The CloudWatch statement must carry an ArnLike aws:SourceArn condition for alarms in this account in us-east-1."
+  }
+
+  assert {
+    condition = anytrue([
+      for s in data.aws_iam_policy_document.alarm_key.statement : anytrue([
+        for c in s.condition :
+        c.test == "StringEquals" && c.variable == "aws:SourceAccount"
+      ]) if s.sid == "CloudWatchAlarmsPublish"
+    ])
+    error_message = "The aws:SourceAccount condition must stay next to the SourceArn one."
+  }
 }

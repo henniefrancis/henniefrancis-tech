@@ -87,7 +87,8 @@ resource "aws_cloudfront_distribution" "frontend" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
 
-    # Shared secret that nginx checks (log-only first, enforced later).
+    # Shared secret that nginx enforces: the origin answers 403 on 443 when this
+    # header is missing or wrong (only CloudFront can reach port 443 anyway).
     custom_header {
       name  = "X-Origin-Verify"
       value = var.origin_verify_secret
